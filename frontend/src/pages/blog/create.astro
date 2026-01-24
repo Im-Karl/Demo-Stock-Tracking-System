@@ -1,0 +1,11 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BlogEditor from '../../components/blog/BlogEditor.jsx';
+---
+
+<Layout title="Viết bài mới">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6 text-center">Soạn thảo bài viết</h1>
+    <BlogEditor client:only="react" />
+  </main>
+</Layout>

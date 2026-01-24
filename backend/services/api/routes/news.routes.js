@@ -1,0 +1,5 @@
+const express = require('express');
+const router = express.Router();
+const controller = require('../controllers/news.controller');
+router.get('/searchVN', controller.searchNews);
+module.exports = router;

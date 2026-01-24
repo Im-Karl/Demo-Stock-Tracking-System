@@ -1,0 +1,13 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BlogDetail from '../../components/blog/BlogDetail.jsx';
+
+const { slug } = Astro.params;
+if (!slug) return Astro.redirect('/404');
+---
+
+<Layout title="Chi tiết bài viết">
+  <main class="min-h-screen bg-gray-50 pb-10">
+    <BlogDetail slug={slug} client:only="react" />
+  </main>
+</Layout>

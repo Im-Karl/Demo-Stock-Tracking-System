@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StockBoard from '../components/dashboard/StockBoard.jsx';
+import NewsFeed from '../components/dashboard/NewsFeed.jsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import NewsFeedWrapper from '../components/dashboard/NewsFeedWrapper';
+
+// Astro chạy trên server, nhưng React component cần chạy trên client để có realtime
+---
+
+<Layout title="Ngân Hàng Stock Dashboard">
+  <main class="container mx-auto px-4 py-8 bg-gray-50 min-h-screen">
+    
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Thị Trường Ngân Hàng <span class="text-blue-600">Live</span></h1>
+      <p class="text-gray-600">Cập nhật chỉ số và tin tức từ các nguồn uy tín.</p>
+    </header>
+
+    {/* Khu vực Stock Dashboard */}
+    <section class="mb-12">
+      <h2 class="text-xl font-semibold mb-4">Chỉ số Realtime</h2>
+      {/* client:load để React chạy ngay khi trang load */}
+      <StockBoard client:load />
+    </section>
+
+    {/* Khu vực Tin tức & Blog */}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      {/* Cột chính: News Feed từ Crawler */}
+      <section class="lg:col-span-2">
+        <h2 class="text-xl font-semibold mb-4">Tin tức thị trường (Crawler)</h2>
+        {/* Cần bọc QueryClientProvider cho React Query */}
+        <NewsFeedWrapper client:visible /> 
+      </section>
+
+      {/* Cột phụ: Blog cá nhân (Dùng Astro Content Collection) */}
+      <aside>
+        <h2 class="text-xl font-semibold mb-4">Blog Phân Tích</h2>
+        <div class="bg-white p-6 rounded-lg shadow">
+           <p class="text-gray-500 italic">Tính năng viết blog đang phát triển...</p>
+           {/* Sau này bạn sẽ list các bài viết Markdown ở đây */}
+        </div>
+      </aside>
+
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Script này chạy ngay lập tức ở trình duyệt
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    // 1. Chưa đăng nhập -> Đá về trang Login
+    window.location.href = '/login';
+  } else {
+    // 2. Đã đăng nhập -> Hiện nội dung Dashboard lên
+    const content = document.getElementById('protected-content');
+    if (content) content.style.display = 'block';
+  }
+</script>
