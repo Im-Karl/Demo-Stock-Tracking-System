@@ -73,7 +73,7 @@ export default function BlogDetail({ slug }) {
 
   // Kiểm tra xem người xem có phải là tác giả không
   // Lưu ý: blog.author giờ là String (tên username)
-  const isAuthor = currentUser && currentUser.username === blog.author;
+  const isAuthor = currentUser && blog.author && (currentUser.username === blog.author.username);
 
   return (
     <article className="max-w-3xl mx-auto py-10 px-4 bg-white shadow-sm mt-4 rounded-lg relative">
@@ -106,7 +106,10 @@ export default function BlogDetail({ slug }) {
       <header className="mb-8 text-center border-b pb-4">
         <h1 className="text-4xl font-bold text-gray-900 mb-3">{blog.title}</h1>
         <div className="text-gray-500 text-sm">
-          Đăng bởi <span className="font-semibold text-blue-600">{blog.author}</span> 
+          Đăng bởi:  
+<span className="font-semibold text-blue-600">
+            {blog.author?.displayName || blog.author?.username || "Ẩn danh"}
+          </span>          
           {' • '} 
           {blog.publishedDate ? new Date(blog.publishedDate).toLocaleDateString('vi-VN') : 'Chưa xuất bản'}
         </div>

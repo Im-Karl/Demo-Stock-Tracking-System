@@ -6,7 +6,11 @@ const BlogSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
   content: { type: String, required: true },
   
-  author: { type: String, required: true }, 
+  author: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  },
 
   thumbnail: String,
   isPublic: { type: Boolean, default: false },

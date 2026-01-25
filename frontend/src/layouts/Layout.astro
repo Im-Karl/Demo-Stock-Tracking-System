@@ -1,92 +1,47 @@
 ---
 import "../styles/global.css";
-
-interface Props {
-  title: string;
-}
+import Header from '../components/common/Header.jsx';
+import Footer from '../components/common/Footer.astro';
 
 const { title } = Astro.props;
+
+const pathname = Astro.url.pathname;
 ---
 
 <!doctype html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Dự án chứng khoán ngân hàng" />
+    <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <title>{title} - StockBank</title>
   </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col font-sans text-gray-900">
+    
+    <Header client:load />
 
-  <body class="bg-gray-50 text-gray-900">
-    <!-- Navbar -->
-    <nav class="bg-white border-b shadow-sm">
-      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-        <a href="/" class="text-xl font-bold text-blue-700">StockBank</a>
+    <div class="flex-1">
+      <slot />
+    </div>
 
-        <div class="flex items-center gap-4 text-sm font-medium">
-          <a href="/" class="hover:text-blue-600">Dashboard</a>
-          <a href="/blog" class="hover:text-blue-600">Cộng đồng</a>
+    <Footer />
+    <script define:vars={{ pathname }}>
+       // Script này chạy ở trình duyệt
+       const token = localStorage.getItem('token');
+       
+       // Danh sách các trang được phép vào mà không cần login
+       const publicPages = ['/login', '/register'];
 
-          <!-- Auth buttons -->
-          <div id="auth-buttons" class="flex items-center gap-2">
-            <a href="/login" class="text-gray-600 hover:text-blue-600">
-              Đăng nhập
-            </a>
-            <a
-              href="/register"
-              class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Đăng ký
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Page content -->
-    <slot />
-
-    <!-- Client-side auth script -->
-    <script is:inline>
-      const token = localStorage.getItem('token');
-      const userStr = localStorage.getItem('user');
-      const authContainer = document.getElementById('auth-buttons');
-
-      if (token && userStr && authContainer) {
-        try {
-          const user = JSON.parse(userStr);
-
-          authContainer.innerHTML = `
-            <span class="text-gray-500">
-              Xin chào, <b>${user.username}</b>
-            </span>
-            <a
-              href="/blog/create"
-              class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-            >
-              Viết bài
-            </a>
-            <button
-              id="btn-logout"
-              class="text-red-500 hover:underline"
-            >
-              Đăng xuất
-            </button>
-          `;
-
-          document
-            .getElementById('btn-logout')
-            ?.addEventListener('click', () => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              window.location.href = '/';
-            });
-        } catch (err) {
-          console.error('Invalid user data');
-        }
-      }
+       // Kiểm tra: Nếu trang hiện tại KHÔNG nằm trong publicPages
+       // VÀ không có token
+       if (!publicPages.includes(pathname) && !token) {
+           // Lưu lại trang họ đang định vào để redirect lại sau (nếu muốn xịn xò)
+           // localStorage.setItem('redirectAfterLogin', pathname);
+           
+           // Đá về trang Login
+           window.location.href = '/login';
+       }
     </script>
   </body>
 </html>

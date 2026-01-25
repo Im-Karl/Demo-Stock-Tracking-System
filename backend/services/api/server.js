@@ -6,6 +6,7 @@ const http = require("http");
 const authRoutes = require("./routes/auth.routes");
 const blogRoutes = require("./routes/blog.routes");
 const newsRoutes = require("./routes/news.routes");
+const userRoutes = require("./routes/user.routes");
 const { setupWebSocket } = require("./socket/socketManager");
 
 const app = express();
@@ -22,9 +23,10 @@ mongoose.connect("mongodb://127.0.0.1:27017/stock_app_db")
   .then(() => console.log("✅ MongoDB Connected"))
   .catch(err => console.error("❌ MongoDB Error:", err));
 
-app.use("/api", authRoutes); // /api/register, /api/login
+app.use("/api", authRoutes); 
 app.use("/api/blogs", blogRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/user", userRoutes);
 
 setupWebSocket(server);
 

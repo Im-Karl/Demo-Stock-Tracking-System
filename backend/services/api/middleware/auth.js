@@ -1,26 +1,23 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const SECRET_KEY = "bi_mat_cua_du_an_nay"; // Trong thực tế nên để trong .env
+// Đặt key bí mật ở đây (hoặc lấy từ biến môi trường)
+const SECRET_KEY = "STOCK_APP_SECRET_KEY_123!@#"; 
 
-const verifyToken = (req, res, next) => {
-  const tokenHeader = req.headers['authorization'];
-  
-  // Token thường gửi dạng: "Bearer <token>"
-  const token = tokenHeader && tokenHeader.split(' ')[1];
+// --- QUAN TRỌNG: PHẢI EXPORT BIẾN NÀY RA ---
+exports.SECRET_KEY = SECRET_KEY; 
+// -------------------------------------------
 
-  if (!token) {
-    return res.status(403).json({ message: "Bạn cần đăng nhập để thực hiện việc này!" });
-  }
+exports.verifyToken = (req, res, next) => {
+  const tokenHeader = req.headers["authorization"];
+  if (!tokenHeader) return res.status(403).json({ message: "No token provided" });
+
+  const token = tokenHeader.split(" ")[1];
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Phiên đăng nhập không hợp lệ hoặc đã hết hạn." });
-    }
-    // Lưu thông tin user đã giải mã vào request để dùng ở bước sau
-    req.userId = decoded.id;
-    req.username = decoded.username;
+    if (err) return res.status(401).json({ message: "Unauthorized" });
+    
+    req.userId = decoded.id; 
+    req.username = decoded.username; // Lưu thêm username để dùng cho blog
     next();
   });
 };
-
-module.exports = { verifyToken, SECRET_KEY };

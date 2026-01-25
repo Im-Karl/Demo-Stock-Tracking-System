@@ -3,12 +3,12 @@ const Blog = require("../models/Blog");
 exports.createBlog = async (req, res) => {
   try {
     const { title, content, isPublic } = req.body;
-    const authorName = req.username; 
+    const authorId = req.userId;
     const slug = title.toLowerCase().replace(/ /g, "-") + "-" + Date.now();
 
     const newBlog = new Blog({
       title, slug, content, 
-      author: authorName, 
+      author: authorId, 
       isPublic,
       publishedDate: isPublic ? new Date() : null,
     });
@@ -23,7 +23,9 @@ exports.createBlog = async (req, res) => {
 exports.getAllBlogs = async (req, res) => {
   try {
     // Logic: Lấy bài public HOẶC bài của chính mình (nếu đang login, đoạn này có thể mở rộng sau)
-    const blogs = await Blog.find({ isPublic: true }).sort({ publishedDate: -1 });
+    const blogs = await Blog.find({ isPublic: true })
+        .populate('author', 'username displayName') 
+        .sort({ publishedDate: -1 });
     res.json(blogs);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -32,9 +34,22 @@ exports.getAllBlogs = async (req, res) => {
 
 exports.getBlogBySlug = async (req, res) => {
   try {
-    const blog = await Blog.findOne({ slug: req.params.slug });
+    const blog = await Blog.findOne({ slug: req.params.slug })
+        .populate('author', 'username displayName'); 
     if (!blog) return res.status(404).json({ message: "Not found" });
     res.json(blog);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ isPublic: true })
+        .populate('author', 'username displayName') 
+        .sort({ publishedDate: -1 });
+    
+    res.json(blogs);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

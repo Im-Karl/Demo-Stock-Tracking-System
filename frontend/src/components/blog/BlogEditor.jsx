@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useCreateBlog } from '../../hooks/useBlogs';
 import ReactMarkdown from 'react-markdown';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import MarkdownHelpModal from "./MarkdownHelpModal";
 
 const queryClient = new QueryClient();
 
@@ -10,6 +11,7 @@ function BlogEditorContent() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(true);
+  const [showHelp, setShowHelp] = useState(false);
   
   const { mutate: createPost, isPending } = useCreateBlog();
 
@@ -93,9 +95,21 @@ function BlogEditorContent() {
                 ${isPending ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"}
             `}
         >
-          {isPending ? "⏳ Đang xuất bản..." : "🚀 Đăng bài ngay"}
+          {isPending ? " Đang xuất bản..." : " Đăng bài ngay"}
         </button>
       </div>
+      <button
+  onClick={() => setShowHelp(true)}
+  className="cursor-pointer font-bold fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-105 transition"
+  title="Xem hướng dẫn Markdown"
+>
+  ?
+</button>
+
+<MarkdownHelpModal
+  isOpen={showHelp}
+  onClose={() => setShowHelp(false)}
+/>
     </div>
   );
 }
