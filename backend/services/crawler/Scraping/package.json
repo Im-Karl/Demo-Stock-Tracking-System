@@ -1,0 +1,29 @@
+{
+  "name": "scraping",
+  "version": "1.0.0",
+  "description": "",
+  "main": "db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "axios": "^1.13.3",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "cron": "^4.3.5",
+    "express": "^5.2.1",
+    "html-entities": "^2.6.0",
+    "jsdom": "^27.2.0",
+    "p-limit": "^7.2.0",
+    "rss-parser": "^3.13.0",
+    "sqlite3": "^5.1.7",
+    "ws": "^8.19.0",
+    "xml2js": "^0.6.2"
+  }
+}

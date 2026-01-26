@@ -1,35 +1,31 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-// Import NewsFeed (đã có sẵn Provider bên trong)
-import NewsFeed from '../../components/dashboard/NewsFeed.jsx'; 
+import NewsFeedWrapper from '../../components/dashboard/NewsFeedWrapper.jsx';
 ---
 
 <Layout title="Tin tức 24h">
   <main class="container mx-auto px-4 py-8">
     <header class="mb-8 border-b pb-4">
       <h1 class="text-3xl font-bold text-gray-900">Tin Tức Tài Chính</h1>
-      <p class="text-gray-500 mt-1">Tổng hợp tự động từ các nguồn uy tín nhất Việt Nam</p>
+      <p class="text-gray-500 mt-1">Cập nhật liên tục từ các nguồn uy tín trong nước và quốc tế</p>
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Cột chính: Danh sách tin */}
       <div class="lg:col-span-2">
-        
-        {/* QUAN TRỌNG: Chỉ cần gọi NewsFeed với client:only="react" */}
-        {/* KHÔNG bọc QueryWrapper ở đây nữa */}
-        <NewsFeed client:only="react" />
-
+        {/* client:load để React chạy fetch API */}
+        <NewsFeedWrapper client:load />
       </div>
 
       {/* Cột phụ (Sidebar) */}
       <aside class="space-y-6">
-        <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-           <h3 class="font-bold text-lg mb-4">Xu hướng tìm kiếm</h3>
-           <div class="flex flex-wrap gap-2">
-             <span class="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">#Vietcombank</span>
-             <span class="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">#Lãi suất</span>
-             <span class="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">#Vàng SJC</span>
-           </div>
+        {/* ... (Giữ nguyên sidebar cũ) ... */}
+        <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+           <h3 class="font-bold text-blue-800 mb-2">Mẹo theo dõi</h3>
+           <ul class="text-sm text-blue-700 space-y-2 list-disc pl-4">
+             <li>Chọn tab <b>Chứng khoán VN</b> để xem tin liên quan trực tiếp đến các mã (VCB, HPG...).</li>
+             <li>Chọn tab <b>Quốc Tế</b> để theo dõi diễn biến FED và thị trường Mỹ.</li>
+           </ul>
         </div>
       </aside>
     </div>

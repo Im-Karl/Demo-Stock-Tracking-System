@@ -5,12 +5,14 @@ const http = require("http");
 
 const authRoutes = require("./routes/auth.routes");
 const blogRoutes = require("./routes/blog.routes");
-const newsRoutes = require("./routes/news.routes");
+// const newsRoutes = require("./routes/news.routes");
 const userRoutes = require("./routes/user.routes");
-const { setupWebSocket } = require("./socket/socketManager");
 
 const app = express();
 const server = http.createServer(app);
+
+const { setupWebSocket } = require("./socket/socketManager");
+
 
 app.use(cors({
   origin: '*', // Hoặc cụ thể 'http://localhost:4321' để an toàn hơn
@@ -25,7 +27,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/stock_app_db")
 
 app.use("/api", authRoutes); 
 app.use("/api/blogs", blogRoutes);
-app.use("/api/news", newsRoutes);
+// app.use("/api/news", newsRoutes);
 app.use("/api/user", userRoutes);
 
 setupWebSocket(server);

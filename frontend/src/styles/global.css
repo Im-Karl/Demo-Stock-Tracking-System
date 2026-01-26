@@ -1,3 +1,22 @@
 @import "tailwindcss";
 
 @plugin "@tailwindcss/typography";
+
+@keyframes candle-drop {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(40px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
+.animate-candle-drop {
+  animation: candle-drop 3.5s ease-in-out infinite;
+}

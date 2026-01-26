@@ -1,0 +1,8 @@
+---
+import ErrorMarket from '../components/ui/ErrorMarket';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 - Không tìm thấy trang">
+  <ErrorMarket code={404} client:only="react" />
+</Layout>

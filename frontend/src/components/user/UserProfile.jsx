@@ -128,12 +128,10 @@ export default function UserProfile() {
         </div>
       </div>
 
-      {/* Cột 2: Bảo mật */}
       <div className="bg-white p-6 rounded-lg shadow h-fit flex-col">
-  {/* Header có mũi tên */}
   <button
     onClick={() => setShowChangePassword(!showChangePassword)}
-    className="w-full flex items-center justify-between text-xl font-bold mb-2"
+    className="cursor-pointer w-full flex items-center justify-between text-xl font-bold mb-2"
   >
     <span>Đổi mật khẩu</span>
     <span

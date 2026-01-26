@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-const { generateStockUpdate } = require("../stockService"); // Nhớ copy file stockService.js vào thư mục api
+const { generateStockUpdate } = require("../stockService");  
 
 const setupWebSocket = (server) => {
   const wss = new WebSocket.Server({ server });
@@ -9,6 +9,13 @@ const setupWebSocket = (server) => {
 
     if (url === '/ws/stocks') {
       console.log("Client connected to Stocks Socket");
+      if (ws.readyState === WebSocket.OPEN) {
+         ws.send(JSON.stringify({ 
+             type: "STOCK_UPDATE", 
+             data: generateStockUpdate() 
+         }));
+      }
+
       const interval = setInterval(() => {
         if (ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify({ 
@@ -16,7 +23,7 @@ const setupWebSocket = (server) => {
               data: generateStockUpdate() 
           }));
         }
-      }, 2000);
+      }, 60000);
       ws.on("close", () => clearInterval(interval));
     }
   });

@@ -91,7 +91,7 @@ function BlogEditorContent() {
         <button 
             onClick={handleSubmit} 
             disabled={isPending} 
-            className={`px-8 py-3 rounded-lg text-white font-bold text-lg shadow-md transition transform active:scale-95
+            className={`cursor-pointer px-8 py-3 rounded-lg text-white font-bold text-lg shadow-md transition transform active:scale-95
                 ${isPending ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"}
             `}
         >

@@ -1,4 +1,32 @@
-const bankingStocks = ['VCB', 'BID', 'CTG', 'TCB', 'VPB', 'MBB', 'ACB'];
+const bankingStocks = [
+  "NVB",
+  "BAB",
+  "SHB",
+  "STB",
+  "VPB",
+  "MBB",
+  "TCB",
+  "TPB",
+  "CTG",
+  "ACB",
+  "LPB",
+  "MSB",
+  "HDB",
+  "EIB",
+  "VIB",
+  "OCB",
+  "BID",
+  "VCB",
+  "SSB",
+  "NAB",
+  "VAB",
+  "ABB",
+  "BVB",
+  "KLB",
+  "PGB",
+  "SGB",
+  "VBB"
+];
 
 // Hàm sinh biến động giá giả tưởng
 function generateStockUpdate() {
