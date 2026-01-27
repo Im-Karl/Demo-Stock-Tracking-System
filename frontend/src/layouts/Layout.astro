@@ -31,7 +31,7 @@ const pathname = Astro.url.pathname;
        const token = localStorage.getItem('token');
        
        // Danh sách các trang được phép vào mà không cần login
-       const publicPages = ['/login', '/register'];
+       const publicPages = ['/login', '/register', "/forgot-password"];
 
        // Kiểm tra: Nếu trang hiện tại KHÔNG nằm trong publicPages
        // VÀ không có token

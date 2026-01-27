@@ -119,7 +119,7 @@ export default function UserProfile() {
            <button 
              onClick={handleUpdateInfo} 
              disabled={loading} 
-             className={`px-4 py-2 rounded text-white font-bold transition
+             className={`cursor-pointer px-4 py-2 rounded text-white font-bold transition
                 ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}
              `}
            >
@@ -184,7 +184,7 @@ export default function UserProfile() {
 
       <button 
         onClick={handleChangePassword} 
-        className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black w-full"
+        className="cursor-pointer bg-gray-800 text-white px-4 py-2 rounded hover:bg-black w-full"
       >
         Đổi mật khẩu
       </button>
@@ -193,8 +193,8 @@ export default function UserProfile() {
   <div className="mt-8 pt-4 border-t border-gray-200">
   <button
     onClick={handleLogout}
-    className="cursor-pointer ml-auto block text-red-600 text-sm font-semibold
-               hover:bg-red-50 px-4 py-2 rounded transition"
+    className="cursor-pointer ml-auto block bg-gray-100 text-red-600 text-sm font-semibold
+               hover:bg-red-100 px-4 py-2 rounded transition"
   >
      Thoát
   </button>

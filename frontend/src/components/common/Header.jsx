@@ -18,11 +18,7 @@ export default function Header() {
     }
   }, []);
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem('token');
-  //   localStorage.removeItem('user');
-  //   window.location.href = '/login';
-  // };
+  
 
   const getLinkClass = (path) => {
     const isActive = 
@@ -43,13 +39,13 @@ export default function Header() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <a href={user ? "/" : "/login"} className="text-2xl font-bold text-blue-700 flex items-center gap-2">
-          📊 StockBank
+           StockBank
         </a>
 
         {/* --- CHỈ HIỆN MENU NẾU ĐÃ ĐĂNG NHẬP --- */}
         {user && (
             <nav className="hidden md:flex items-center gap-2">
-                <a href="/" className={getLinkClass('/')}>
+                <a href="/stock" className={getLinkClass('/stock')}>
                     Thị trường
                 </a>
                 <a href="/news" className={getLinkClass('/news')}>

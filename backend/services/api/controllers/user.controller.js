@@ -13,10 +13,10 @@ exports.getProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("✅ Found User:", user.username);
+    console.log(" Found User:", user.username);
     res.json(user);
   } catch (err) {
-    console.error("❌ Controller Error:", err);
+    console.error(" Controller Error:", err);
     res.status(500).json({ error: err.message });
   }
 };

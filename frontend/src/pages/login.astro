@@ -2,6 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import AuthForm from '../components/auth/AuthForm.jsx';
 ---
-<Layout title="Đăng nhập">
-  <AuthForm type="login" client:load />
+<Layout title="Đăng nhập - StockBank">
+  <div class="min-h-[80vh] flex items-center justify-center bg-gray-50">
+     <div class="w-full">
+        <AuthForm type="login" client:load />
+     </div>
+  </div>
 </Layout>

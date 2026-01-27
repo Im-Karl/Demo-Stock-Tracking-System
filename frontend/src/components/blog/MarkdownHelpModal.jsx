@@ -70,7 +70,7 @@ Markdown sử dụng dấu # để tạo tiêu đề.
 
 ## Liên kết
 
-[Tên hiển thị](https://example.com)
+[Tên hiển thị](https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1)
 
 Ví dụ:  
 [Google](https://google.com)

@@ -91,10 +91,10 @@ export default function BlogDetail({ slug }) {
           <button 
             onClick={handleTogglePublic}
             disabled={isUpdating}
-            className={`px-4 py-2 rounded text-sm font-bold text-white transition
+            className={`cursor-pointer px-4 py-2 rounded text-sm font-bold text-white transition
               ${blog.isPublic 
-                ? 'bg-yellow-500 hover:bg-yellow-600' // Nút chuyển sang riêng tư
-                : 'bg-green-600 hover:bg-green-700'   // Nút chuyển sang công khai
+                ? 'bg-yellow-500 hover:bg-yellow-600'  
+                : 'bg-green-600 hover:bg-green-700'   
               } ${isUpdating ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isUpdating ? 'Đang xử lý...' : (blog.isPublic ? '🔒 Chuyển thành Riêng tư' : '🌍 Công khai ngay')}

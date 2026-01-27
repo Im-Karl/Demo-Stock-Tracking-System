@@ -340,9 +340,7 @@ export default function StockBoard() {
 
      
 
-      <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 text-sm text-gray-500 text-center flex justify-between">
-
-         <span>Sắp xếp: <b>Giá giảm dần</b></span>
+      <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 text-sm text-gray-500 flex items-center justify-center">
 
          <span>Đang theo dõi: <b>{wishlist.length}</b> mã</span>
 
