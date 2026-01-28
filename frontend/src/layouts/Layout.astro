@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import ToastProvider from '../components/ui/ToastProvider.jsx';
 import Header from '../components/common/Header.jsx';
 import Footer from '../components/common/Footer.astro';
 
@@ -18,7 +19,7 @@ const pathname = Astro.url.pathname;
     <title>{title} - StockBank</title>
   </head>
   <body class="bg-gray-50 min-h-screen flex flex-col font-sans text-gray-900">
-    
+    <ToastProvider client:idle />
     <Header client:load />
 
     <div class="flex-1">
@@ -27,19 +28,11 @@ const pathname = Astro.url.pathname;
 
     <Footer />
     <script define:vars={{ pathname }}>
-       // Script này chạy ở trình duyệt
        const token = localStorage.getItem('token');
        
-       // Danh sách các trang được phép vào mà không cần login
-       const publicPages = ['/login', '/register', "/forgot-password"];
+       const publicPages = ['/','/login', '/register', "/forgot-password"];
 
-       // Kiểm tra: Nếu trang hiện tại KHÔNG nằm trong publicPages
-       // VÀ không có token
        if (!publicPages.includes(pathname) && !token) {
-           // Lưu lại trang họ đang định vào để redirect lại sau (nếu muốn xịn xò)
-           // localStorage.setItem('redirectAfterLogin', pathname);
-           
-           // Đá về trang Login
            window.location.href = '/login';
        }
     </script>

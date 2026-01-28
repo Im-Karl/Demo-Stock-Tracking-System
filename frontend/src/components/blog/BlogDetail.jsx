@@ -9,7 +9,7 @@ export default function BlogDetail({ slug }) {
   const [isUpdating, setIsUpdating] = useState(false); // Loading khi bấm nút đổi
 
   useEffect(() => {
-    // 1. Lấy thông tin người dùng đang đăng nhập
+    
     const userStr = localStorage.getItem('user');
     if (userStr) {
       setCurrentUser(JSON.parse(userStr));
@@ -30,8 +30,7 @@ export default function BlogDetail({ slug }) {
         setLoading(false);
       });
   }, [slug]);
-
-  // Hàm xử lý đổi trạng thái Public/Private
+ 
   const handleTogglePublic = async () => {
     if (!currentUser) return;
     setIsUpdating(true);
@@ -41,22 +40,18 @@ export default function BlogDetail({ slug }) {
       const res = await fetch(`http://localhost:3000/api/blogs/${slug}/toggle-public`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`, // Gửi token để xác thực
+          'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json'
         }
       });
       
       const data = await res.json();
       
-      if (res.ok) {
-        // Cập nhật lại giao diện ngay lập tức
+      if (res.ok) { 
         setBlog(prev => ({ ...prev, isPublic: data.isPublic }));
-        alert(data.message);
       } else {
-        alert(data.message || "Lỗi khi cập nhật");
       }
     } catch (error) {
-      alert("Lỗi kết nối: " + error.message);
     } finally {
       setIsUpdating(false);
     }
@@ -70,52 +65,93 @@ export default function BlogDetail({ slug }) {
   );
   
   if (!blog) return <div className="text-center py-10">Bài viết không tồn tại.</div>;
-
-  // Kiểm tra xem người xem có phải là tác giả không
-  // Lưu ý: blog.author giờ là String (tên username)
+ 
   const isAuthor = currentUser && blog.author && (currentUser.username === blog.author.username);
 
   return (
-    <article className="max-w-3xl mx-auto py-10 px-4 bg-white shadow-sm mt-4 rounded-lg relative">
-      
-      {/* --- PHẦN ĐIỀU KHIỂN DÀNH CHO TÁC GIẢ --- */}
+    <article
+      className="relative max-w-3xl mx-auto mt-8 mb-20 px-6 py-10
+                rounded-2xl
+                bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl
+                border border-slate-200 dark:border-slate-700
+                shadow-xl
+                text-slate-800 dark:text-slate-100"
+    >
+
+      {/* ===== AUTHOR CONTROL ===== */}
       {isAuthor && (
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex justify-between items-center">
-          <div>
-            <span className="font-bold text-blue-800">🛠 Quản lý bài viết:</span>
-            <span className={`ml-2 text-sm font-medium px-2 py-1 rounded ${blog.isPublic ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800'}`}>
-              {blog.isPublic ? 'Đang Công Khai 🌍' : 'Đang Riêng Tư 🔒'}
+        <div
+          className="mb-8 p-4 rounded-xl
+                    bg-blue-50 dark:bg-blue-500/10
+                    border border-blue-200 dark:border-blue-500/30
+                    flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center"
+        >
+          <div className="text-sm">
+            <span className="font-bold text-blue-700 dark:text-blue-400">
+               Quản lý bài viết
+            </span>
+            <span
+              className={`ml-2 px-2 py-1 rounded text-xs font-semibold
+                ${
+                  blog.isPublic
+                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
+                    : "bg-slate-200 text-slate-700 dark:bg-slate-600/40 dark:text-slate-300"
+                }`}
+            >
+              {blog.isPublic ? "Đang Công Khai " : "Đang Riêng Tư "}
             </span>
           </div>
-          
-          <button 
+
+          <button
             onClick={handleTogglePublic}
             disabled={isUpdating}
-            className={`cursor-pointer px-4 py-2 rounded text-sm font-bold text-white transition
-              ${blog.isPublic 
-                ? 'bg-yellow-500 hover:bg-yellow-600'  
-                : 'bg-green-600 hover:bg-green-700'   
-              } ${isUpdating ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`px-4 py-2 rounded-lg text-sm font-bold text-white transition cursor-pointer
+              ${
+                blog.isPublic
+                  ? "bg-amber-500 hover:bg-amber-600"
+                  : "bg-emerald-600 hover:bg-emerald-700"
+              }
+              ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}
+            `}
           >
-            {isUpdating ? 'Đang xử lý...' : (blog.isPublic ? '🔒 Chuyển thành Riêng tư' : '🌍 Công khai ngay')}
+            {isUpdating
+              ? "Đang xử lý..."
+              : blog.isPublic
+                ? " Chuyển thành Riêng tư"
+                : " Công khai ngay"}
           </button>
         </div>
       )}
-      {/* ----------------------------------------- */}
 
-      <header className="mb-8 text-center border-b pb-4">
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">{blog.title}</h1>
-        <div className="text-gray-500 text-sm">
-          Đăng bởi:  
-<span className="font-semibold text-blue-600">
+      {/* ===== HEADER ===== */}
+      <header className="mb-10 text-center border-b border-slate-200 dark:border-slate-700 pb-6">
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+          {blog.title}
+        </h1>
+
+        <div className="text-sm text-slate-600 dark:text-slate-400">
+          Đăng bởi{" "}
+          <span className="font-semibold text-blue-600 dark:text-blue-400">
             {blog.author?.displayName || blog.author?.username || "Ẩn danh"}
-          </span>          
-          {' • '} 
-          {blog.publishedDate ? new Date(blog.publishedDate).toLocaleDateString('vi-VN') : 'Chưa xuất bản'}
+          </span>
+          {" • "}
+          <span className="text-slate-500 dark:text-slate-500">
+            {blog.publishedDate
+              ? new Date(blog.publishedDate).toLocaleDateString("vi-VN")
+              : "Chưa xuất bản"}
+          </span>
         </div>
       </header>
-      
-      <div className="prose prose-lg prose-blue mx-auto">
+
+      {/* ===== CONTENT ===== */}
+      <div
+        className="prose prose-lg max-w-none
+                  prose-slate
+                  dark:prose-invert
+                  prose-headings:text-slate-800 dark:prose-headings:text-slate-100
+                  prose-p:text-slate-700 dark:prose-p:text-slate-300
+                  prose-a:text-blue-600 dark:prose-a:text-blue-400"
+      >
         <ReactMarkdown>{blog.content}</ReactMarkdown>
       </div>
     </article>

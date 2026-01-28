@@ -2,12 +2,29 @@
 import Layout from '../layouts/Layout.astro';
 import UserProfileWrapper from '../components/user/UserProfileWrapper.jsx';
 ---
-
 <Layout title="Hồ sơ cá nhân">
-  <div class="container mx-auto px-4 py-8">
-     <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Quản lý hồ sơ</h1>
+  <section
+    class="relative min-h-screen bg-slate-50 dark:bg-[#0f172a]
+           text-slate-800 dark:text-slate-100 overflow-hidden"
+  >
+    <!-- Ambient light -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px]
+                  bg-blue-500/20 blur-[120px] rounded-full"></div>
+      <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px]
+                  bg-violet-500/20 blur-[120px] rounded-full"></div>
+    </div>
 
-     <UserProfileWrapper client:only="react" />
+    <div class="relative z-10 max-w-6xl mx-auto px-6 py-16">
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-10 text-center">
+        Quản lý hồ sơ
+        <span class="block mt-3 text-lg font-medium
+                     text-slate-600 dark:text-slate-400">
+          Thông tin cá nhân & bảo mật tài khoản
+        </span>
+      </h1>
 
-  </div>
+      <UserProfileWrapper client:only="react" />
+    </div>
+  </section>
 </Layout>

@@ -11,6 +11,8 @@ Markdown sử dụng dấu # để tạo tiêu đề.
 ### Tiêu đề cấp 3
 #### Tiêu đề cấp 4
 
+  
+
 
 
 
@@ -19,6 +21,8 @@ Markdown sử dụng dấu # để tạo tiêu đề.
 
 
 
+
+  
 
 ## Định dạng chữ
 
@@ -29,7 +33,11 @@ Markdown sử dụng dấu # để tạo tiêu đề.
 
 
 
+
+
 ---
+
+
 
 
 
@@ -41,7 +49,11 @@ Markdown sử dụng dấu # để tạo tiêu đề.
 
 
 
+
+
 ---
+
+
 
 
 
@@ -61,7 +73,10 @@ Markdown sử dụng dấu # để tạo tiêu đề.
 
 
 
+
+
 ---
+
 
 
 
@@ -78,7 +93,11 @@ Ví dụ:
 
 
 
+
+
 ---
+
+
 
 
 
@@ -87,7 +106,10 @@ Ví dụ:
 ![Mô tả ảnh](link_hình_ảnh)
 
 
+
+
 ---
+
 
 
 
@@ -98,8 +120,8 @@ Ví dụ:
 
 
 
----
 
+---
 
 
 
@@ -126,12 +148,17 @@ def hello():
 | An  | 20   | SV   |
 | Bình| 25   | Dev  |
 
+
+
 ---
+
+
 
 ## Checklist
 
 - [x] Việc đã hoàn thành
 - [ ] Việc chưa làm
+
 
 ---
 
@@ -139,57 +166,100 @@ def hello():
 
 ## Đường kẻ ngang
 
+
+
+
+
+
 ---
+
+
 `;
+
 export default function MarkdownHelpModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex items-center justify-center
+                 bg-black/40 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="bg-white w-full max-w-6xl h-[80vh] rounded-xl shadow-xl border-2 border-gray-300 relative flex flex-col"
         onClick={(e) => e.stopPropagation()}
+        className="
+          relative w-full max-w-6xl h-[80vh]
+          rounded-2xl
+          bg-white/70 dark:bg-slate-800/70
+          backdrop-blur-xl
+          border border-slate-200 dark:border-slate-700
+          shadow-2xl
+          flex flex-col
+        "
       >
-        {/* Close */}
+        {/* Close button */}
         <button
           onClick={onClose}
-          className="cursor-pointer absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl z-10"
+          className="
+            absolute top-4 right-4 z-10
+            text-slate-400 hover:text-slate-600
+            dark:text-slate-400 dark:hover:text-slate-200
+            text-2xl cursor-pointer
+          "
         >
           ✕
         </button>
 
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b">
-          <h2 className="text-2xl font-bold">
-            Hướng dẫn sử dụng Markdown 
+        <div className="px-6 pt-6 pb-4 border-b border-slate-200 dark:border-slate-700">
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">
+            Hướng dẫn sử dụng Markdown
           </h2>
         </div>
 
-        {/* Body (SCROLL Ở ĐÂY) */}
+        {/* Body */}
         <div className="flex-1 overflow-y-auto p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-            
-            {/* Markdown */}
+
+            {/* Markdown source */}
             <div className="flex flex-col h-full">
-              <label className="text-sm font-bold text-gray-500 mb-2 uppercase">
+              <label className="text-xs font-bold uppercase mb-2
+                                text-slate-500 dark:text-slate-400">
                 Markdown
               </label>
               <textarea
                 readOnly
                 value={markdownHelpContent}
-                className="flex-1 w-full p-4 border rounded-lg font-mono text-sm bg-gray-50 resize-none"
+                className="
+                  flex-1 w-full p-4 rounded-xl resize-none
+                  font-mono text-sm
+                  bg-slate-50 dark:bg-slate-900
+                  border border-slate-300 dark:border-slate-600
+                  text-slate-800 dark:text-slate-100
+                  overflow-hidden 
+                "
               />
             </div>
 
             {/* Preview */}
             <div className="flex flex-col h-full">
-              <label className="text-sm font-bold text-gray-500 mb-2 uppercase">
+              <label className="text-xs font-bold uppercase mb-2
+                                text-slate-500 dark:text-slate-400">
                 Preview
               </label>
-              <div className="flex-1 w-full border rounded-lg p-4 overflow-y-auto prose prose-blue max-w-none bg-white">
+
+              <div
+                className="
+                  flex-1 w-full p-5 rounded-xl overflow-y-auto
+                  bg-slate-50 dark:bg-slate-900
+                  border border-slate-300 dark:border-slate-600
+                  prose prose-lg max-w-none
+                  prose-slate dark:prose-invert
+                  prose-headings:text-slate-800 dark:prose-headings:text-slate-100
+                  prose-p:text-slate-700 dark:prose-p:text-slate-300
+                  prose-a:text-blue-600 dark:prose-a:text-blue-400
+                "
+              >
                 <ReactMarkdown>{markdownHelpContent}</ReactMarkdown>
               </div>
             </div>

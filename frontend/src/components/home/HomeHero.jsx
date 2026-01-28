@@ -1,8 +1,36 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, Newspaper, Users, ArrowRight, Activity } from "lucide-react";
+import { TrendingUp, Newspaper, Users, ArrowRight, Activity, Brain } from "lucide-react";
 
 export default function HomeHero() {
+
+  const features = [
+    {
+      title: "Dữ liệu Realtime",
+      desc: "Theo dõi biến động thị trường theo từng giây",
+      icon: Activity,
+      color: "from-blue-500 to-cyan-500"
+    },
+    {
+      title: "Tin tức chọn lọc",
+      desc: "Tổng hợp & phân tích từ nhiều nguồn đáng tin cậy",
+      icon: Newspaper,
+      color: "from-violet-500 to-purple-500"
+    },
+    {
+      title: "Cộng đồng đầu tư",
+      desc: "Chia sẻ quan điểm, học hỏi từ người cùng chí hướng",
+      icon: Users,
+      color: "from-emerald-500 to-teal-500"
+    },
+    {
+      title: "Gợi ý thông minh",
+      desc: "Hỗ trợ ra quyết định dựa trên dữ liệu & xu hướng",
+      icon: Brain,
+      color: "from-orange-500 to-amber-500"
+    }
+  ];
+
   return (
     <div className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-slate-100">
       
@@ -12,7 +40,7 @@ export default function HomeHero() {
         <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-6 py-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
@@ -92,6 +120,7 @@ export default function HomeHero() {
                   <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
                 </linearGradient>
               </defs>
+              
 
               {/* Grid Lines */}
               {[50, 100, 150, 200, 250].map(y => (
@@ -171,6 +200,81 @@ export default function HomeHero() {
         </motion.div>
 
       </div>
+
+      <section className="relative py-28 bg-white dark:bg-[#020617] overflow-hidden">
+  
+        {/* Ambient light */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-[-10%] w-[400px] h-[400px] bg-blue-500/20 blur-[120px] rounded-full" />
+          <div className="absolute bottom-0 right-[-10%] w-[400px] h-[400px] bg-violet-500/20 blur-[120px] rounded-full" />
+        </div>
+
+        <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          
+          {/* LEFT – CONTENT */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
+              Thị trường không thiếu cơ hội — <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
+                chỉ thiếu thông tin đúng lúc
+              </span>
+            </h2>
+
+            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-6 max-w-xl">
+              Chứng khoán Việt Nam biến động liên tục, tin tức tràn lan khiến nhiều nhà đầu tư
+              ra quyết định theo cảm xúc và bỏ lỡ xu hướng quan trọng.
+            </p>
+
+            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
+              StockBank được xây dựng như một trung tâm phân tích và trao đổi,
+              nơi dữ liệu realtime, tin tức chọn lọc và góc nhìn cộng đồng
+              giúp bạn hiểu rõ thị trường trước khi hành động.
+            </p>
+          </motion.div>
+
+          {/* RIGHT – HIGHLIGHT CARDS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {features.map((item, i) => {
+              const Icon = item.icon;
+
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.12, duration: 0.6 }}
+                  viewport={{ once: true }}
+                  className="group p-6 rounded-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl
+                            border border-slate-200 dark:border-slate-700
+                            hover:shadow-2xl hover:-translate-y-1 transition-all"
+                >
+                  {/* ICON */}
+                  <div
+                    className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.color}
+                                flex items-center justify-center mb-4 shadow-lg`}
+                  >
+                    <Icon className="text-white" size={26} />
+                  </div>
+
+                  <h4 className="text-lg font-bold mb-2">
+                    {item.title}
+                  </h4>
+
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
     </div>
   );
 }

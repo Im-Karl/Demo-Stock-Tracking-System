@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { authService } from '../../services/authService';
 
 export default function UserProfile() {
@@ -8,8 +9,7 @@ export default function UserProfile() {
   const [fetchError, setFetchError] = useState(null); // Thêm state lỗi
   const [showChangePassword, setShowChangePassword] = useState(false);
 
-  useEffect(() => {
-    // Gọi API lấy thông tin
+  useEffect(() => { 
     authService.getProfile()
       .then(res => {
         console.log("✅ Dữ liệu Profile:", res.data);
@@ -30,26 +30,31 @@ export default function UserProfile() {
         phone: user.phone === "" ? undefined : user.phone
     };
 
-    console.log("📦 Gửi đi:", dataToSend);
+    console.log("Gửi đi:", dataToSend);
 
     try {
       const res = await authService.updateProfile(dataToSend);
-      alert("Cập nhật thành công!");
+      toast.success("Cập nhật thông tin thành công!");
       localStorage.setItem('user', JSON.stringify(res.data.user));
     } catch (err) {
-      alert(err.response?.data?.message || "Lỗi cập nhật");
+      toast.error(err.response?.data?.message || "Lỗi cập nhật thông tin");
     } finally {
       setLoading(false);
     }
   };
 
   const handleChangePassword = async () => {
+    if (passData.newPassword !== passData.confirmPassword) {
+      toast.error("Mật khẩu xác nhận không khớp");
+      return;
+    }
+
     try {
       await authService.changePassword(passData);
-      alert("Đổi mật khẩu thành công!");
-      setPassData({ oldPassword: '', newPassword: '' });
+      toast.success("Đổi mật khẩu thành công!");
+      setPassData({ oldPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err) {
-      alert(err.response?.data?.message || "Lỗi đổi mật khẩu");
+      toast.error(err.response?.data?.message || "Lỗi đổi mật khẩu");
     }
   };
 
@@ -78,128 +83,179 @@ export default function UserProfile() {
   if (!user.username && !fetchError) return <div className="p-10 text-center text-blue-600">⏳ Đang tải thông tin từ Server...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Cột 1: Thông tin chung */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">Thông tin cá nhân</h2>
-        <div className="space-y-4">
-           {/* Username & Email (Read-only) */}
-           <div>
-             <label className="block text-sm font-medium text-gray-500">Tên đăng nhập</label>
-             <input disabled value={user.username || ''} className="w-full p-2 bg-gray-100 rounded border mt-1 cursor-not-allowed" />
-           </div>
-           <div>
-             <label className="block text-sm font-medium text-gray-500">Email</label>
-             <input disabled value={user.email || ''} className="w-full p-2 bg-gray-100 rounded border mt-1 cursor-not-allowed" />
-           </div>
-           
-           {/* Display Name */}
-           <div>
-             <label className="block text-sm font-medium">Tên hiển thị (Tác giả)</label>
-             <input 
-                value={user.displayName || ''} 
-                onChange={e => setUser({...user, displayName: e.target.value})}
-                placeholder="Nhập tên hiển thị..."
-                className="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-500 outline-none" 
-             />
-           </div>
+  <div className="relative min-h-screen bg-slate-50 dark:bg-[#0f172a] py-16 px-4
+                  text-slate-800 dark:text-slate-100">
 
-           {/* Phone */}
-           <div>
-             <label className="block text-sm font-medium">Số điện thoại</label>
-             <input 
-                value={user.phone || ''} 
-                onChange={e => setUser({...user, phone: e.target.value})}
-                placeholder="Nhập số điện thoại..."
-                className="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-500 outline-none" 
-             />
-           </div>
+    {/* Ambient */}
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-500/20 blur-[120px] rounded-full" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-violet-500/20 blur-[120px] rounded-full" />
+    </div>
 
-           {/* Nút bấm */}
-           <button 
-             onClick={handleUpdateInfo} 
-             disabled={loading} 
-             className={`cursor-pointer px-4 py-2 rounded text-white font-bold transition
-                ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}
-             `}
-           >
-             {loading ? "⏳ Đang lưu..." : "💾 Lưu thay đổi"}
-           </button>
+    <div className="relative z-10 max-w-5xl mx-auto">
+      <h1 className="text-4xl font-extrabold mb-10">
+        Hồ sơ người dùng
+        <span className="block text-lg font-medium text-slate-600 dark:text-slate-400 mt-2">
+          Quản lý thông tin & bảo mật tài khoản
+        </span>
+      </h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        {/* ===== PROFILE ===== */}
+        <div className="rounded-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl
+                        border border-slate-200 dark:border-slate-700 shadow-xl p-8">
+
+          <h2 className="text-xl font-bold mb-6">
+            Thông tin cá nhân
+          </h2>
+
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-slate-500 dark:text-slate-400">
+                Tên đăng nhập
+              </label>
+              <input
+                disabled
+                value={user.username || ''}
+                className="w-full mt-1 p-3 rounded-lg
+                           bg-slate-100 dark:bg-slate-700
+                           border border-slate-200 dark:border-slate-600
+                           text-slate-500 dark:text-slate-400
+                           cursor-not-allowed"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-slate-500 dark:text-slate-400">
+                Email
+              </label>
+              <input
+                disabled
+                value={user.email || ''}
+                className="w-full mt-1 p-3 rounded-lg
+                           bg-slate-100 dark:bg-slate-700
+                           border border-slate-200 dark:border-slate-600
+                           text-slate-500 dark:text-slate-400
+                           cursor-not-allowed"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                Tên hiển thị
+              </label>
+              <input
+                value={user.displayName || ''}
+                onChange={e => setUser({ ...user, displayName: e.target.value })}
+                className="w-full mt-1 p-3 rounded-lg
+                           bg-white dark:bg-slate-900
+                           border border-slate-300 dark:border-slate-600
+                           text-slate-900 dark:text-slate-100
+                           placeholder:text-slate-400
+                           focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                Số điện thoại
+              </label>
+              <input
+                value={user.phone || ''}
+                onChange={e => setUser({ ...user, phone: e.target.value })}
+                className="w-full mt-1 p-3 rounded-lg
+                           bg-white dark:bg-slate-900
+                           border border-slate-300 dark:border-slate-600
+                           text-slate-900 dark:text-slate-100
+                           placeholder:text-slate-400
+                           focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+
+            <button
+              onClick={handleUpdateInfo}
+              disabled={loading}
+              className={`w-full mt-4 py-3 rounded-xl font-bold text-white transition cursor-pointer
+                ${loading
+                  ? "bg-slate-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-blue-600 to-violet-600 hover:opacity-90"
+                }`}
+            >
+              {loading ? " Đang lưu..." : " Lưu thay đổi"}
+            </button>
+          </div>
         </div>
+
+        {/* ===== SECURITY ===== */}
+        <div className="rounded-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl
+                        border border-slate-200 dark:border-slate-700 shadow-xl p-8 h-fit">
+
+          <button
+            onClick={() => setShowChangePassword(!showChangePassword)}
+            className="w-full flex items-center justify-between text-xl font-bold
+                       text-slate-800 dark:text-slate-100 cursor-pointer"
+          >
+            <span>Đổi mật khẩu</span>
+            <span className={`transition-transform ${showChangePassword ? "rotate-90" : ""}`}>
+              ▶
+            </span>
+          </button>
+
+          {showChangePassword && (
+            <div className="space-y-4 mt-6">
+              {["oldPassword", "newPassword", "confirmPassword"].map((field, i) => (
+                <input
+                  key={i}
+                  type="password"
+                  placeholder={
+                    field === "oldPassword"
+                      ? "Mật khẩu cũ"
+                      : field === "newPassword"
+                      ? "Mật khẩu mới"
+                      : "Xác nhận mật khẩu mới"
+                  }
+                  value={passData[field] || ""}
+                  onChange={e => setPassData({ ...passData, [field]: e.target.value })}
+                  className="w-full p-3 rounded-lg
+                             bg-white dark:bg-slate-900
+                             border border-slate-300 dark:border-slate-600
+                             text-slate-900 dark:text-slate-100
+                             placeholder:text-slate-400"
+                />
+              ))}
+
+              {showPasswordHint && (
+                <p className="text-xs text-red-500 italic">
+                  Mật khẩu xác nhận chưa trùng
+                </p>
+              )}
+
+              <button
+                onClick={handleChangePassword}
+                className="w-full py-3 rounded-xl font-bold text-white
+                           bg-slate-900 hover:bg-black transition"
+              >
+                Đổi mật khẩu
+              </button>
+            </div>
+          )}
+
+          <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-700">
+            <button
+              onClick={handleLogout}
+              className="w-full py-2 rounded-lg text-sm font-semibold
+                         text-red-600 dark:text-red-400
+                         bg-red-50 dark:bg-red-500/10
+                         hover:bg-red-100 dark:hover:bg-red-500/20 transition cursor-pointer"
+            >
+               Đăng xuất
+            </button>
+          </div>
+        </div>
+
       </div>
-
-      <div className="bg-white p-6 rounded-lg shadow h-fit flex-col">
-  <button
-    onClick={() => setShowChangePassword(!showChangePassword)}
-    className="cursor-pointer w-full flex items-center justify-between text-xl font-bold mb-2"
-  >
-    <span>Đổi mật khẩu</span>
-    <span
-      className={`transform transition-transform duration-200 ${
-        showChangePassword ? "rotate-90" : ""
-      }`}
-    >
-      ▶
-    </span>
-  </button>
-
-  {/* Nội dung ẩn / hiện */}
-  {showChangePassword && (
-    <div className="space-y-4 mt-4">
-      <input 
-        type="password"
-        placeholder="Mật khẩu cũ"
-        className="w-full p-2 border rounded"
-        value={passData.oldPassword}
-        onChange={e =>
-          setPassData({ ...passData, oldPassword: e.target.value })
-        }
-      />
-
-      <input 
-        type="password"
-        placeholder="Mật khẩu mới"
-        className="w-full p-2 border rounded"
-        value={passData.newPassword}
-        onChange={e =>
-          setPassData({ ...passData, newPassword: e.target.value })
-        }
-      />
-
-      <input 
-        type="password"
-        placeholder="Xác nhận mật khẩu mới"
-        className="w-full p-2 border rounded"
-        value={passData.confirmPassword}
-        onChange={e =>
-          setPassData({ ...passData, confirmPassword: e.target.value })
-        }
-      />
-
-      {showPasswordHint && (
-        <p className="text-xs text-red-500 italic">
-          Mật khẩu xác nhận hiện chưa trùng
-        </p>
-      )}
-
-      <button 
-        onClick={handleChangePassword} 
-        className="cursor-pointer bg-gray-800 text-white px-4 py-2 rounded hover:bg-black w-full"
-      >
-        Đổi mật khẩu
-      </button>
     </div>
-  )}
-  <div className="mt-8 pt-4 border-t border-gray-200">
-  <button
-    onClick={handleLogout}
-    className="cursor-pointer ml-auto block bg-gray-100 text-red-600 text-sm font-semibold
-               hover:bg-red-100 px-4 py-2 rounded transition"
-  >
-     Thoát
-  </button>
-</div>
-</div>
-    </div>
-  );
+  </div>
+);
 }

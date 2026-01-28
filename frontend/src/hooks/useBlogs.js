@@ -41,9 +41,7 @@ export const useTogglePublic = () => {
   return useMutation({
     mutationFn: ({ slug }) => blogService.togglePublic(slug),
     onSuccess: (data, variables) => {
-      // Refresh lại data của bài viết đó
       queryClient.invalidateQueries(['blog', variables.slug]);
-      // Refresh lại danh sách ngoài trang chủ
       queryClient.invalidateQueries(['blogs']);
     }
   });
