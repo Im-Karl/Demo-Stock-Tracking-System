@@ -10,13 +10,13 @@ if (!fs.existsSync(dataDir)) {
 
 const dbPath = path.join(dataDir, "articles.db");
 
-console.log("📂 Crawler DB Path:", dbPath);
+
 
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
-    console.error("❌ Lỗi kết nối SQLite Crawler:", err.message);
+    console.error("Lỗi kết nối SQLite Crawler:", err.message);
   } else {
-    console.log("✅ Kết nối SQLite Crawler thành công.");
+    console.log("Kết nối SQLite Crawler thành công.");
   }
 });
 

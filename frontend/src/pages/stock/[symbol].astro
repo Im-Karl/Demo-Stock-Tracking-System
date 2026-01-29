@@ -1,0 +1,110 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import StockDetailClient from "../../components/stock/StockDetailClient.jsx";
+import { Phone} from 'lucide-react';
+
+
+const { symbol } = Astro.params as { symbol: string };
+
+let companyInfo = null;
+let error = null;
+
+try {
+  const res = await fetch(`http://localhost:5000/api/stock/${symbol}`);
+  if (res.ok) {
+    companyInfo = await res.json();
+  } else {
+    error = "Không tìm thấy mã cổ phiếu này";
+  }
+} catch (err) {
+  console.error("Fetch Error:", err);
+  error = "Lỗi kết nối đến Finance Service";
+}
+
+if (error || !companyInfo) {
+    return Astro.redirect('/404'); 
+}
+---
+
+<Layout title={`${symbol} - ${companyInfo.organ_name_vi}`}>
+  <div class="min-h-screen bg-gray-50 dark:bg-slate-900 pb-20">
+    {/* Header Background */}
+    <div class="h-64 bg-gradient-to-r from-blue-900 to-slate-900 w-full absolute top-0 left-0 z-0"></div>
+
+    <div class="container mx-auto px-4 pt-32 relative z-10">
+      
+      {/* INFO CARD */}
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 mb-8 flex flex-col md:flex-row gap-8 items-start border border-gray-100 dark:border-slate-700">
+        
+        {/* Logo */}
+        <div class="w-24 h-24 md:w-32 md:h-32 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-inner">
+          <span class="text-4xl font-extrabold text-blue-700 dark:text-blue-400">{symbol[0]}</span>
+        </div>
+
+        <div class="flex-1 w-full">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+            <div class="flex items-center gap-3">
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-white">{symbol}</h1>
+                <span class="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                    {companyInfo.exchange || 'OTC'}
+                </span>
+            </div>
+            
+            {companyInfo.url && (
+                <a 
+                    href={companyInfo.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-slate-700 dark:text-slate-200 rounded-lg transition-colors font-medium text-sm border border-slate-200 dark:border-slate-600"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+                    Website chính thức
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link opacity-50"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+            )}
+          </div>
+          
+          <h2 class="text-xl font-bold text-gray-700 dark:text-gray-200 mb-1">{companyInfo.organ_name_vi}</h2>
+          <p class="text-gray-400 text-sm mb-5 uppercase font-medium">{companyInfo.organ_name_en}</p>
+
+          <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6 bg-gray-50 dark:bg-slate-700/50 p-4 rounded-lg border border-gray-100 dark:border-slate-700 text-sm">
+            {companyInfo.introduce}
+          </p>
+
+          <div class="flex flex-wrap gap-4">
+             {companyInfo.hotline && companyInfo.hotline.length > 0 && (
+                 <div class="bg-orange-50 dark:bg-orange-900/10 px-4 py-2 rounded-lg border border-orange-100 dark:border-orange-900/30">
+                    <span class="block text-[10px] text-orange-400 uppercase font-bold mb-1">Hotline Hỗ Trợ</span>
+                    <div class="flex flex-wrap gap-3">
+                      {companyInfo.hotline.map((phone: string) => (
+                        <a href={`tel:${phone}`} class="text-orange-700 dark:text-orange-400 font-bold hover:underline flex items-center gap-1">
+                           <Phone/> {phone}
+                        </a>
+                      ))}
+                    </div>
+                 </div>
+             )}
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+           <StockDetailClient symbol={symbol} client:load />
+        </div>
+
+        <div class="space-y-4">
+           <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700">
+               <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+                   Tin tức {symbol}
+               </h3>
+               <div class="text-gray-400 text-sm text-center py-8">
+                   Tính năng đang phát triển...
+               </div>
+           </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Layout>
