@@ -11,6 +11,9 @@ const CompanySchema = new mongoose.Schema({
     type: String,
     enum: ["HOSE", "HNX", "UPCOM"],
   },
+
+  youtubeChannelId: { type: String }, 
+  latestVideoId: { type: String },
  
   status: {
     type: String,

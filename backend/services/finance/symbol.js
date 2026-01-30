@@ -6,7 +6,8 @@ module.exports = [
     url: "https://www.ncb-bank.vn",
     hotlines: ["1800 6166", "028 3821 6216"],
     exchange: "HNX",
-    introduce: "Ngân hàng TMCP Quốc Dân (NCB) là ngân hàng thương mại cổ phần tại Việt Nam, cung cấp các dịch vụ tài chính – ngân hàng cho khách hàng cá nhân và doanh nghiệp."
+    introduce: "Ngân hàng TMCP Quốc Dân (NCB) là ngân hàng thương mại cổ phần tại Việt Nam, cung cấp các dịch vụ tài chính – ngân hàng cho khách hàng cá nhân và doanh nghiệp.",
+    youtubeChannelId: "UCZueqDUHrLligdwBCZVmphQ"
   },
   {
     symbol: "BAB",
@@ -15,7 +16,8 @@ module.exports = [
     url: "https://www.baca-bank.vn",
     hotlines: ["1800 588 828"],
     exchange: "HNX",
-    introduce: "Ngân hàng TMCP Bắc Á (Bac A Bank) hoạt động trong lĩnh vực tài chính – ngân hàng, tập trung vào ngân hàng bán lẻ và các dự án phát triển bền vững."
+    introduce: "Ngân hàng TMCP Bắc Á (Bac A Bank) hoạt động trong lĩnh vực tài chính – ngân hàng, tập trung vào ngân hàng bán lẻ và các dự án phát triển bền vững.",
+    youtubeChannelId: ""
   },
   {
     symbol: "SHB",
@@ -24,7 +26,8 @@ module.exports = [
     url: "https://www.shb.com.vn",
     hotlines: ["1800 5888 56"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Sài Gòn – Hà Nội (SHB) là một trong những ngân hàng thương mại cổ phần lớn tại Việt Nam, cung cấp đa dạng sản phẩm tài chính."
+    introduce: "Ngân hàng TMCP Sài Gòn – Hà Nội (SHB) là một trong những ngân hàng thương mại cổ phần lớn tại Việt Nam, cung cấp đa dạng sản phẩm tài chính.",
+    youtubeChannelId: "UCxoEJ3yPHdckyiLvQNnysrA"
   },
   {
     symbol: "STB",
@@ -33,7 +36,8 @@ module.exports = [
     url: "https://www.sacombank.com.vn",
     hotlines: ["1900 5555 88"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank) là ngân hàng thương mại cổ phần hoạt động đa năng, phục vụ khách hàng trong và ngoài nước."
+    introduce: "Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank) là ngân hàng thương mại cổ phần hoạt động đa năng, phục vụ khách hàng trong và ngoài nước.",
+    youtubeChannelId: "UCIrRDvQSuiJKGHnLQAnE-Ng"
   },
   {
     symbol: "VPB",
@@ -42,7 +46,8 @@ module.exports = [
     url: "https://www.vpbank.com.vn",
     hotlines: ["1900 5454 15", "1800 5454 15"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank) là ngân hàng thương mại cổ phần tập trung vào bán lẻ, tài chính tiêu dùng và doanh nghiệp vừa và nhỏ."
+    introduce: "Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank) là ngân hàng thương mại cổ phần tập trung vào bán lẻ, tài chính tiêu dùng và doanh nghiệp vừa và nhỏ.",
+    youtubeChannelId: "UCyRH0SIaaQBPOxsqJfgwkoA"
   },
   {
     symbol: "MBB",
@@ -51,7 +56,8 @@ module.exports = [
     url: "https://www.mbbank.com.vn",
     hotlines: ["1900 5454 26"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Quân đội (MB Bank) là ngân hàng thương mại cổ phần đa năng, cung cấp dịch vụ tài chính cho cá nhân và doanh nghiệp."
+    introduce: "Ngân hàng TMCP Quân đội (MB Bank) là ngân hàng thương mại cổ phần đa năng, cung cấp dịch vụ tài chính cho cá nhân và doanh nghiệp.",
+    youtubeChannelId: "UCYVmBDUk-7_QsOpqTMjzrBg"
   },
   {
     symbol: "TCB",
@@ -60,7 +66,8 @@ module.exports = [
     url: "https://www.techcombank.com.vn",
     hotlines: ["1800 588 822"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Kỹ thương Việt Nam (Techcombank) là ngân hàng thương mại cổ phần định hướng khách hàng với các giải pháp tài chính hiện đại."
+    introduce: "Ngân hàng TMCP Kỹ thương Việt Nam (Techcombank) là ngân hàng thương mại cổ phần định hướng khách hàng với các giải pháp tài chính hiện đại.",
+    youtubeChannelId: "UCec5b6Cn5FpD3t3xkuGGesA"
   },
   {
     symbol: "TPB",
@@ -69,7 +76,8 @@ module.exports = [
     url: "https://www.tpb.vn",
     hotlines: ["1900 5858 85"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Tiên Phong (TPBank) là ngân hàng thương mại cổ phần ứng dụng công nghệ, tập trung vào ngân hàng số."
+    introduce: "Ngân hàng TMCP Tiên Phong (TPBank) là ngân hàng thương mại cổ phần ứng dụng công nghệ, tập trung vào ngân hàng số.",
+    youtubeChannelId: "UCAgN-TfQzXnVuaA6ZkS9vFA"
   },
   {
     symbol: "CTG",
@@ -78,7 +86,8 @@ module.exports = [
     url: "https://www.vietinbank.vn",
     hotlines: ["1900 5588 68"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Công Thương Việt Nam (VietinBank) là ngân hàng thương mại cổ phần có vốn nhà nước chi phối."
+    introduce: "Ngân hàng TMCP Công Thương Việt Nam (VietinBank) là ngân hàng thương mại cổ phần có vốn nhà nước chi phối.",
+    youtubeChannelId: "UCQUjskH3ypssYb4eJ01cCFA"
   },
   {
     symbol: "ACB",
@@ -87,7 +96,8 @@ module.exports = [
     url: "https://www.acb.com.vn",
     hotlines: ["1900 5454 86"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Á Châu (ACB) là ngân hàng thương mại cổ phần tập trung vào khách hàng cá nhân và doanh nghiệp vừa và nhỏ."
+    introduce: "Ngân hàng TMCP Á Châu (ACB) là ngân hàng thương mại cổ phần tập trung vào khách hàng cá nhân và doanh nghiệp vừa và nhỏ.",
+    youtubeChannelId: "UCmHyuC-eNeCGn7bf64Nt66Q"
   },
   {
     symbol: "LPB",
@@ -96,7 +106,8 @@ module.exports = [
     url: "https://www.lpbank.com.vn",
     hotlines: ["1800 5777 58"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Lộc Phát Việt Nam (LPBank) là ngân hàng thương mại cổ phần với mạng lưới rộng khắp."
+    introduce: "Ngân hàng TMCP Lộc Phát Việt Nam (LPBank) là ngân hàng thương mại cổ phần với mạng lưới rộng khắp.",
+    youtubeChannelId: "UC-SKUuE0MZoeITWbCCJP8fQ"
   },
   {
     symbol: "MSB",
@@ -105,7 +116,8 @@ module.exports = [
     url: "https://www.msb.com.vn",
     hotlines: ["1900 6083", "1800 6260"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Hàng Hải Việt Nam (MSB) là ngân hàng thương mại cổ phần cung cấp các sản phẩm tài chính đa dạng."
+    introduce: "Ngân hàng TMCP Hàng Hải Việt Nam (MSB) là ngân hàng thương mại cổ phần cung cấp các sản phẩm tài chính đa dạng.",
+    youtubeChannelId: "UC7TC4bXThsJjzsEecpKnHBg"
   },
   {
     symbol: "HDB",
@@ -114,7 +126,8 @@ module.exports = [
     url: "https://www.hdbank.com.vn",
     hotlines: ["1900 6060"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Phát triển TP. Hồ Chí Minh (HDBank) là ngân hàng thương mại cổ phần định hướng bán lẻ."
+    introduce: "Ngân hàng TMCP Phát triển TP. Hồ Chí Minh (HDBank) là ngân hàng thương mại cổ phần định hướng bán lẻ.",
+    youtubeChannelId: "UCwsU9o-RzY1VL6OXit9Gzxg"
   },
   {
     symbol: "EIB",
@@ -123,7 +136,8 @@ module.exports = [
     url: "https://www.eximbank.com.vn",
     hotlines: ["1800 1199"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Xuất Nhập Khẩu Việt Nam (Eximbank) hoạt động mạnh trong lĩnh vực tài trợ thương mại."
+    introduce: "Ngân hàng TMCP Xuất Nhập Khẩu Việt Nam (Eximbank) hoạt động mạnh trong lĩnh vực tài trợ thương mại.",
+    youtubeChannelId: "UCGDhS2vz68Bl72n82W_rNjA"
   },
   {
     symbol: "VIB",
@@ -132,7 +146,8 @@ module.exports = [
     url: "https://www.vib.com.vn",
     hotlines: ["1800 8180", "1900 2200"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Quốc tế Việt Nam (VIB) là ngân hàng thương mại cổ phần định hướng bán lẻ."
+    introduce: "Ngân hàng TMCP Quốc tế Việt Nam (VIB) là ngân hàng thương mại cổ phần định hướng bán lẻ.",
+    youtubeChannelId: "UCGs80MaxY_sKvgiWLOmjEbQ"
   },
   {
     symbol: "OCB",
@@ -141,7 +156,8 @@ module.exports = [
     url: "https://www.ocb.com.vn",
     hotlines: ["1900 6678"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Phương Đông (OCB) là ngân hàng thương mại cổ phần phục vụ khách hàng cá nhân và doanh nghiệp."
+    introduce: "Ngân hàng TMCP Phương Đông (OCB) là ngân hàng thương mại cổ phần phục vụ khách hàng cá nhân và doanh nghiệp.",
+    youtubeChannelId: "UCUWi0zTAFa7WTIAQlf65M2w"
   },
   {
     symbol: "BID",
@@ -150,7 +166,8 @@ module.exports = [
     url: "https://www.bidv.com.vn",
     hotlines: ["1900 9247"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV) là ngân hàng thương mại cổ phần có quy mô lớn."
+    introduce: "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV) là ngân hàng thương mại cổ phần có quy mô lớn.",
+    youtubeChannelId: "UC42tGYv5Mbwuyz5u7v9-uBg"
   },
   {
     symbol: "VCB",
@@ -159,7 +176,8 @@ module.exports = [
     url: "https://www.vietcombank.com.vn",
     hotlines: ["1900 5454 13"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank) là ngân hàng hàng đầu trong lĩnh vực tài chính."
+    introduce: "Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank) là ngân hàng hàng đầu trong lĩnh vực tài chính.",
+    youtubeChannelId: "UCinEvBpZOHWfjvfb7DcEFPg"
   },
   {
     symbol: "SSB",
@@ -168,7 +186,8 @@ module.exports = [
     url: "https://www.seabank.com.vn",
     hotlines: ["1900 555 587"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Đông Nam Á (SeABank) là ngân hàng thương mại cổ phần định hướng bán lẻ."
+    introduce: "Ngân hàng TMCP Đông Nam Á (SeABank) là ngân hàng thương mại cổ phần định hướng bán lẻ.",
+    youtubeChannelId: "UCdTnT-MhGid4UW71PQbOW8A"
   },
   {
     symbol: "NAB",
@@ -177,7 +196,8 @@ module.exports = [
     url: "https://www.namabank.com.vn",
     hotlines: ["1900 6679"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Nam Á (Nam A Bank) là ngân hàng thương mại cổ phần tại Việt Nam."
+    introduce: "Ngân hàng TMCP Nam Á (Nam A Bank) là ngân hàng thương mại cổ phần tại Việt Nam.",
+    youtubeChannelId: "UCtDkDS3pI2RuSlVx258nFUg"
   },
   {
     symbol: "VAB",
@@ -186,7 +206,8 @@ module.exports = [
     url: "https://www.vietabank.com.vn",
     hotlines: ["1900 555 590"],
     exchange: "HOSE",
-    introduce: "Ngân hàng TMCP Việt Á (Viet A Bank) là ngân hàng thương mại cổ phần phục vụ khách hàng cá nhân và doanh nghiệp."
+    introduce: "Ngân hàng TMCP Việt Á (Viet A Bank) là ngân hàng thương mại cổ phần phục vụ khách hàng cá nhân và doanh nghiệp.",
+    youtubeChannelId: "UCqLcLw80jcXHUubTvxk1T3A"
   },
   {
     symbol: "ABB",
@@ -195,7 +216,8 @@ module.exports = [
     url: "https://www.abbank.vn",
     hotlines: ["1800 1159"],
     exchange: "UPCOM",
-    introduce: "Ngân hàng TMCP An Bình (ABBank) là ngân hàng thương mại cổ phần hoạt động trong lĩnh vực bán lẻ."
+    introduce: "Ngân hàng TMCP An Bình (ABBank) là ngân hàng thương mại cổ phần hoạt động trong lĩnh vực bán lẻ.",
+    youtubeChannelId: "UCtX2Eist-v3Furdbcp6_mrQ"
   },
   {
     symbol: "BVB",
@@ -204,7 +226,8 @@ module.exports = [
     url: "https://www.vietcapitalbank.com.vn",
     hotlines: ["1900 555 596"],
     exchange: "UPCOM",
-    introduce: "Ngân hàng TMCP Bản Việt (Viet Capital Bank) cung cấp các dịch vụ tài chính cho cá nhân và doanh nghiệp."
+    introduce: "Ngân hàng TMCP Bản Việt (Viet Capital Bank) cung cấp các dịch vụ tài chính cho cá nhân và doanh nghiệp.",
+    youtubeChannelId: "UCb-T7-ADq-JvN7ELCDhZ_Ag"
   },
   {
     symbol: "KLB",
@@ -213,7 +236,8 @@ module.exports = [
     url: "https://www.kienlongbank.com",
     hotlines: ["1900 6929"],
     exchange: "UPCOM",
-    introduce: "Ngân hàng TMCP Kiên Long (KienlongBank) hoạt động chủ yếu tại khu vực nông thôn và đô thị."
+    introduce: "Ngân hàng TMCP Kiên Long (KienlongBank) hoạt động chủ yếu tại khu vực nông thôn và đô thị.",
+    youtubeChannelId: "UCgGTWNEzPqKaMSU8smHKr0g"
   },
   {
     symbol: "PGB",
@@ -222,7 +246,8 @@ module.exports = [
     url: "https://www.pgbank.com.vn",
     hotlines: ["1900 555 574"],
     exchange: "UPCOM",
-    introduce: "Ngân hàng TMCP Thịnh vượng và Phát triển (PG Bank) là ngân hàng thương mại cổ phần tại Việt Nam."
+    introduce: "Ngân hàng TMCP Thịnh vượng và Phát triển (PG Bank) là ngân hàng thương mại cổ phần tại Việt Nam.",
+    youtubeChannelId: ""
   },
   {
     symbol: "SGB",
@@ -231,7 +256,8 @@ module.exports = [
     url: "https://www.saigonbank.com.vn",
     hotlines: ["1900 5555 11"],
     exchange: "UPCOM",
-    introduce: "Ngân hàng TMCP Sài Gòn Công Thương (Saigonbank) cung cấp các dịch vụ ngân hàng cơ bản."
+    introduce: "Ngân hàng TMCP Sài Gòn Công Thương (Saigonbank) cung cấp các dịch vụ ngân hàng cơ bản.",
+    youtubeChannelId: ""
   },
   {
     symbol: "VBB",
@@ -240,6 +266,7 @@ module.exports = [
     url: "https://www.vietbank.com.vn",
     hotlines: ["1800 1122"],
     exchange: "UPCOM",
-    introduce: "Ngân hàng TMCP Việt Nam Thương Tín (VietBank) là ngân hàng thương mại cổ phần phục vụ khách hàng cá nhân và doanh nghiệp."
+    introduce: "Ngân hàng TMCP Việt Nam Thương Tín (VietBank) là ngân hàng thương mại cổ phần phục vụ khách hàng cá nhân và doanh nghiệp.",
+    youtubeChannelId: "UCAMkVbaN6-0qE9PauSXWJrQ"
   }
 ];

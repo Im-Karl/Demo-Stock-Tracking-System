@@ -18,6 +18,7 @@ const seedData = async () => {
       hotline: bank.hotlines,  
       url: bank.url,
       exchange: bank.exchange,
+      youtubeChannelId: bank.youtubeChannelId,
       status: "listed"
     }));
 

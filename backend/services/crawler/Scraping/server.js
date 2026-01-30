@@ -16,8 +16,8 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 console.log("🕷️ Crawler Service is starting...");
-fetchVn().then(() => console.log("✅ Vietnam RSS initial fetch done."));
-fetchWorld().then(() => console.log("✅ World RSS initial fetch done."));
+fetchVn().then(() => console.log("Vietnam RSS initial fetch done."));
+fetchWorld().then(() => console.log("World RSS initial fetch done."));
 
 setInterval(fetchVn, 30 * 60 * 1000);
 setInterval(fetchWorld, 30 * 60 * 1000);

@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const http = require("http");
 const WebSocket = require("ws");
+const { fetchLatestVideos } = require("./youtubeUpdater");
 const connectDB = require("./db");
 const Company = require("./models/Company");  
 const symbolSources = require("./symbol");
@@ -13,6 +14,12 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
  
 connectDB();
+fetchLatestVideos();
+
+
+setInterval(() => {
+  fetchLatestVideos();
+}, 5000 * 1000);
  
 let currentStocks = symbolSources.map(s => ({
   symbol: s.symbol,
