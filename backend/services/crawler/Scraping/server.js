@@ -54,22 +54,62 @@ const symbolMap = symbolSources.reduce((acc, item) => {
     return acc;
 }, {});
 
+function findSymbolByKeyword(keyword) {
+  const kw = keyword.toUpperCase();
+
+  return symbolSources.find(s =>
+    s.symbol.toUpperCase() === kw ||
+    s.aliases_vi.some(a => a.toUpperCase() === kw)
+  );
+}
+
+function buildExpandedKeywords(symbolObj) {
+  const keywords = [];
+
+  keywords.push(symbolObj.symbol);
+  keywords.push(symbolObj.organ_name_vi);
+  keywords.push(symbolObj.organ_name_en);
+
+  if (Array.isArray(symbolObj.aliases_vi)) {
+    keywords.push(...symbolObj.aliases_vi);
+  }
+
+  return [...new Set(keywords.filter(Boolean))];
+}
+
 function searchArticles(table, mode, req, res) {
   const { keyword, from, to, page = 1, limit = 15 } = req.query;
   const params = [];
   const whereClauses = [];
-  
-  // 1. Xử lý cột Author: 
-  // - Nếu là bảng VN (articles) -> Lấy cột author.
-  // - Nếu là bảng World (articles_world) -> Trả về NULL (để tránh lỗi SQLITE_ERROR).
+   
   const isVnTable = table === 'articles';
   const authorSelect = isVnTable ? "author" : "NULL AS author"; 
 
   // 2. Filter theo Keyword
   if (keyword) {
-    const kw = `%${keyword}%`;
-    whereClauses.push(`(title LIKE ? OR content LIKE ?)`);
-    params.push(kw, kw);
+
+    const foundSymbol = findSymbolByKeyword(keyword);
+
+    if (foundSymbol) {
+    const expandedKeywords = buildExpandedKeywords(foundSymbol);
+
+    const likeCond = expandedKeywords
+      .map(() => `(title LIKE ? OR content LIKE ?)`)
+      .join(" OR ");
+
+    whereClauses.push(`(${likeCond})`);
+
+    expandedKeywords.forEach(kw => {
+      const likeKw = `%${kw}%`;
+      params.push(likeKw, likeKw);
+    });
+
+    } else {
+
+      const kw = `%${keyword}%`;
+      whereClauses.push(`(title LIKE ? OR content LIKE ?)`);
+      params.push(kw, kw);
+    }
   }
 
   // Filter theo ngày
@@ -139,5 +179,5 @@ app.get("/searchVN_noSymbols", (req, res) => searchArticles("articles", "exclude
 
 const PORT = 4000;
 server.listen(PORT, () => {
-  console.log(`🚀 Crawler Microservice running on port ${PORT}`);
+  console.log(` Crawler Microservice running on port ${PORT}`);
 });
