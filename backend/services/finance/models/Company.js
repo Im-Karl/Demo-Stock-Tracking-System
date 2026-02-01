@@ -6,6 +6,7 @@ const CompanySchema = new mongoose.Schema({
   organ_name_en: { type: String },
   introduce: { type: String },
   url: { type: String }, 
+  facebookUrl: { type: String },
   hotline: [{ type: String }],  
   exchange: {
     type: String,

@@ -232,7 +232,7 @@ export default function StockBoard() {
       </div>
 
       <div className="bg-slate-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-500 flex justify-center">
-        Đang theo dõi: <b className="ml-1">{wishlist.length}</b> mã
+        Đang theo dõi: <b className="ml-1">{wishlist.length}</b>  &nbsp;mã
       </div>
     </div>
   );

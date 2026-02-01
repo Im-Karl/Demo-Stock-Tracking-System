@@ -19,6 +19,7 @@ const seedData = async () => {
       url: bank.url,
       exchange: bank.exchange,
       youtubeChannelId: bank.youtubeChannelId,
+      facebookUrl: bank.facebookUrl,
       status: "listed"
     }));
 

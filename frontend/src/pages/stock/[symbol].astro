@@ -53,21 +53,48 @@ if (error || !companyInfo) {
               </span>
             </div>
 
-            {companyInfo.url && (
-              <a
-                href={companyInfo.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-slate-700 dark:text-slate-200 rounded-lg transition-colors font-medium text-sm border border-slate-200 dark:border-slate-600"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  <path d="M2 12h20" />
-                </svg>
-                Website chính thức
-              </a>
-            )}
+            <div class="flex flex-wrap items-center gap-3">
+              {companyInfo.url && (
+                <a
+                  href={companyInfo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2
+                        px-4 py-2 rounded-xl
+                        text-sm font-semibold
+                        bg-slate-100 text-slate-700
+                        hover:bg-slate-200
+                        dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600
+                        transition"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M2 12h20" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                  Website
+                </a>
+              )}
+
+              {companyInfo.facebookUrl && (
+                <a
+                  href={companyInfo.facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2
+                        px-4 py-2 rounded-xl
+                        text-sm font-semibold
+                        bg-blue-600 text-white
+                        hover:bg-blue-700
+                        transition"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036c-2.148 0-2.797 1.603-2.797 2.898v1.072h4.442l-.542 3.667h-3.9v7.98H9.101Z" />
+                  </svg>
+                  Facebook
+                </a>
+              )}
+            </div>
           </div>
 
           <h2 class="text-xl font-bold text-gray-700 dark:text-gray-200 mb-1">
