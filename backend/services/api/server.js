@@ -25,8 +25,8 @@ app.use(express.json());
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/stock_app_db")
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Error:", err));
+  .then(() => console.log(" MongoDB Connected"))
+  .catch((err) => console.error("MongoDB Error:", err));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
@@ -37,5 +37,5 @@ setupWebSocket(server);
 
 const PORT = 3000;
 server.listen(PORT, () =>
-  console.log(`🚀 API Service running on port ${PORT}`),
+  console.log(`API Service running on port ${PORT}`),
 );

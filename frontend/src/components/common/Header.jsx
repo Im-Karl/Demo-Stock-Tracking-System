@@ -33,7 +33,10 @@ export default function Header() {
     const inactive =
       "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10";
 
-    return `${base} ${isActive ? active : inactive}`;
+    const loginHint =!user && path === "/login" && !isActive
+      ? " text-blue-600 dark:text-blue-400 font-bold animate-pulse"
+      : "";
+    return `${base} ${isActive ? active : inactive} ${loginHint}`;
   };
 
   if (!isMounted)
