@@ -1,0 +1,10 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import EditBlogForm from '../../../components/blog/EditBlogForm.jsx';
+
+const { id } = Astro.params;
+---
+
+<Layout title="Chỉnh sửa bài viết">
+  <EditBlogForm blogId={id} client:only="react" />
+</Layout>

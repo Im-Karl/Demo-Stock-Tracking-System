@@ -24,8 +24,7 @@ exports.createBlog = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
   try {
-    // Logic: Lấy bài public HOẶC bài của chính mình (nếu đang login, đoạn này có thể mở rộng sau)
-    const blogs = await Blog.find({ isPublic: true })
+    const blogs = await Blog.find({ isPublic: true, isDeleted: false})
       .populate("author", "username displayName")
       .sort({ publishedDate: -1 });
     res.json(blogs);
@@ -47,17 +46,16 @@ exports.getBlogBySlug = async (req, res) => {
   }
 };
 
-exports.getAllBlogs = async (req, res) => {
+exports.getBlogById = async (req, res) => {
   try {
-    const blogs = await Blog.find({ isPublic: true })
-      .populate("author", "username displayName")
-      .sort({ publishedDate: -1 });
-
-    res.json(blogs);
+    const blog = await Blog.findOne({ _id: req.params.id, author: req.userId });
+    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết" });
+    res.json(blog);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+ 
 
 exports.togglePublic = async (req, res) => {
   try {
@@ -84,6 +82,86 @@ exports.togglePublic = async (req, res) => {
       message: "Đã cập nhật trạng thái",
       isPublic: blog.isPublic,
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+exports.getMyBlogs = async (req, res) => {
+  try {
+    const userId = req.userId;  
+    const blogs = await Blog.find({ author: userId }).sort({ createdAt: -1 });
+
+    const published = blogs.filter(b => b.isPublic && !b.isDeleted);
+    const drafts = blogs.filter(b => !b.isPublic && !b.isDeleted);
+    const trashed = blogs.filter(b => b.isDeleted);
+
+    res.json({ success: true, published, drafts, trashed });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.updateBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, content } = req.body;
+    
+    const blog = await Blog.findOne({ _id: id, author: req.userId, isDeleted: false });
+    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết" });
+
+    // 👇 LOGIC CHẶN Ở ĐÂY
+    if (blog.isPublic) {
+      return res.status(400).json({ message: "Bài viết đang Xuất bản. Vui lòng hạ về Bản nháp trước khi sửa!" });
+    }
+
+    blog.title = title || blog.title;
+    blog.content = content || blog.content;
+    
+    await blog.save();
+    res.json({ success: true, message: "Đã cập nhật bài viết", blog });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.moveToTrash = async (req, res) => {
+  try {
+    const blog = await Blog.findOne({ _id: req.params.id, author: req.userId });
+    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết" });
+
+    blog.isDeleted = true;
+    blog.deletedAt = new Date();
+    await blog.save();
+
+    res.json({ success: true, message: "Đã chuyển vào thùng rác" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.restoreBlog = async (req, res) => {
+  try {
+    const blog = await Blog.findOne({ _id: req.params.id, author: req.userId, isDeleted: true });
+    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết trong thùng rác" });
+
+    blog.isDeleted = false;
+    blog.deletedAt = null;
+    await blog.save();
+
+    res.json({ success: true, message: "Đã khôi phục bài viết" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.hardDeleteBlog = async (req, res) => {
+  try {
+    const blog = await Blog.findOneAndDelete({ _id: req.params.id, author: req.userId, isDeleted: true });
+    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết để xóa" });
+
+    res.json({ success: true, message: "Đã xóa vĩnh viễn bài viết" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

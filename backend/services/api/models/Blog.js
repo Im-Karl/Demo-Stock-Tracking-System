@@ -14,6 +14,8 @@ const BlogSchema = new mongoose.Schema({
 
   thumbnail: String,
   isPublic: { type: Boolean, default: false },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date, default: null },
   publishedDate: { type: Date },
   createdAt: { type: Date, default: Date.now }
 });

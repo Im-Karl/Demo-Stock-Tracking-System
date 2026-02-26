@@ -2,14 +2,14 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
 exports.getProfile = async (req, res) => {
-  console.log("👤 Controller: Getting Profile for ID:", req.userId); // <--- LOG 3
+  console.log("Controller: Getting Profile for ID:", req.userId);  
   try {
     const user = await User.findById(req.userId).select(
       "-password -resetPasswordToken -resetPasswordExpires",
     );
 
     if (!user) {
-      console.log("❌ User not found in DB");
+      console.log("User not found in DB");
       return res.status(404).json({ message: "User not found" });
     }
 

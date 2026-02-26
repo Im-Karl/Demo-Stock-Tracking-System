@@ -8,6 +8,7 @@ export default function StockBoard() {
   const stocks = useStockSocket();
 
   const [exchangeFilter, setExchangeFilter] = useState('ALL');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const exchanges = useMemo(() => {
     const unique = new Set(stocks.map(s => s.exchange).filter(Boolean));
@@ -32,13 +33,19 @@ export default function StockBoard() {
   };
 
   const filteredStocks = useMemo(() => {
-    const data =
+    let data =
       exchangeFilter === 'ALL'
         ? stocks
         : stocks.filter(s => s.exchange === exchangeFilter);
 
+    if (searchTerm.trim() !== '') {
+      data = data.filter(s =>
+        s.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
     return [...data].sort((a, b) => b.price - a.price);
-  }, [stocks, exchangeFilter]);
+  }, [stocks, exchangeFilter, searchTerm]);
 
   const getRankStyle = (index) => {
     switch (index) {
@@ -85,23 +92,38 @@ export default function StockBoard() {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
 
-      <div className="flex flex-wrap gap-2 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
-        {exchanges.map(ex => {
-          const active = exchangeFilter === ex;
-          return (
-            <button
-              key={ex}
-              onClick={() => setExchangeFilter(ex)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold border transition cursor-pointer
-                ${active
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700'
-                }`}
-            >
-              {ex === 'ALL' ? 'Tất cả' : ex}
-            </button>
-          );
-        })}
+      {/* <div className="flex flex-wrap gap-2 px-6 py-4 border-b border-slate-200 dark:border-slate-700"> */}
+      <div className="flex items-center justify-between flex-wrap gap-4 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <div className="flex flex-wrap gap-2">
+          {exchanges.map(ex => {
+            const active = exchangeFilter === ex;
+            return (
+              <button
+                key={ex}
+                onClick={() => setExchangeFilter(ex)}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold border transition cursor-pointer
+                  ${active
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700'
+                  }`}
+              >
+                {ex === 'ALL' ? 'Tất cả' : ex}
+              </button>
+            );
+          })}
+        </div>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Tìm mã cổ phiếu..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-64 px-4 py-2 text-sm border rounded-lg 
+                      bg-white dark:bg-slate-800 
+                      border-slate-300 dark:border-slate-600
+                      focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
       </div>
 
       <div className="overflow-x-auto">

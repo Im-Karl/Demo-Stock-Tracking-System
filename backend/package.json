@@ -9,6 +9,7 @@
     "html-entities": "^2.6.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.5",
+    "node-cron": "^4.2.1",
     "nodemailer": "^7.0.12",
     "rss-parser": "^3.13.0",
     "sqlite3": "^5.1.7",

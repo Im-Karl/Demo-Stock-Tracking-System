@@ -20,9 +20,23 @@ export default function Header() {
   }, []);
 
   const getLinkClass = (path, exact = false) => {
-    const isActive = exact
-      ? currentPath === path
-      : currentPath.startsWith(path);
+    let isActive = false;
+
+    if (exact) {
+      isActive = currentPath === path;
+    } else {
+      if (path === "/blog") {
+        // Chỉ sáng khi là trang blog public
+        isActive =
+          currentPath === "/blog" ||
+          (currentPath.startsWith("/blog/") &&
+            !currentPath.startsWith("/blog/manage") &&
+            !currentPath.startsWith("/blog/create") &&
+            !currentPath.startsWith("/blog/edit"));
+      } else {
+        isActive = currentPath.startsWith(path);
+      }
+    }
 
     const base =
       "px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200";
@@ -33,9 +47,11 @@ export default function Header() {
     const inactive =
       "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10";
 
-    const loginHint =!user && path === "/login" && !isActive
-      ? " text-blue-600 dark:text-blue-400 font-bold animate-pulse"
-      : "";
+    const loginHint =
+      !user && path === "/login" && !isActive
+        ? " text-blue-600 dark:text-blue-400 font-bold animate-pulse"
+        : "";
+
     return `${base} ${isActive ? active : inactive} ${loginHint}`;
   };
 
@@ -43,6 +59,12 @@ export default function Header() {
     return (
       <header className="h-16 bg-slate-50 dark:bg-[#020617] border-b border-slate-200 dark:border-white/5"></header>
     );
+
+    const manageClass =
+  "px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 " +
+  (currentPath.startsWith("/blog/manage")
+    ? "text-white bg-gradient-to-r from-indigo-600 to-blue-600 shadow-md"
+    : "text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100/60 dark:hover:bg-indigo-500/10");
 
   return (
     <header className="sticky top-0 z-50">
@@ -100,7 +122,9 @@ export default function Header() {
               >
                 Hi, <b>{user.displayName || user.username}</b>
               </a>
-
+              <a href="/blog/manage" className={manageClass}>
+                Quản lý bài viết
+              </a>
               <a
                 href="/blog/create"
                 className="px-4 py-2 rounded-lg text-sm font-bold

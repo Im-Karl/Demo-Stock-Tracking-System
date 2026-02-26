@@ -1,0 +1,10 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BlogManager from '../../components/blog/BlogManager.jsx';
+
+// Có thể thêm logic check cookie đăng nhập ở đây (Server side check) nếu muốn
+---
+
+<Layout title="Quản lý bài viết">
+  <BlogManager client:only="react" />
+</Layout>
