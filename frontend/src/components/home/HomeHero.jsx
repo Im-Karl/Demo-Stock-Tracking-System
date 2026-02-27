@@ -54,7 +54,7 @@ export default function HomeHero() {
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-sm font-bold mb-6 border border-blue-200 dark:border-blue-700"
           >
             <Activity size={16} className="animate-pulse" />
-            StockBank Platform 
+            FinSavvy Platform 
           </motion.div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
@@ -231,7 +231,7 @@ export default function HomeHero() {
             </p>
 
             <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
-              StockBank được xây dựng như một trung tâm phân tích và trao đổi,
+              FinSavvy được xây dựng như một trung tâm phân tích và trao đổi,
               nơi dữ liệu realtime, tin tức chọn lọc và góc nhìn cộng đồng
               giúp bạn hiểu rõ thị trường trước khi hành động.
             </p>

@@ -40,7 +40,7 @@ export default function AuthForm({ type }) {
     placeholder-slate-400 dark:placeholder-slate-500
     caret-slate-600 dark:caret-slate-200
     border border-slate-300 dark:border-slate-700
-    focus:outline-none focus:ring-2 focus:ring-blue-500
+    focus:outline-none focus:ring-2 focus:ring-[#D5457D]
     transition
   `;
 
@@ -50,8 +50,8 @@ export default function AuthForm({ type }) {
 
       {/* Ambient light */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-blue-500/30 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-violet-500/30 blur-[120px] rounded-full" />
+        <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-[#D5457D]/30 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-[#C93A70]/30 blur-[120px] rounded-full" />
       </div>
 
       <motion.div
@@ -64,19 +64,19 @@ export default function AuthForm({ type }) {
                    shadow-2xl"
       >
         <div className="text-center mb-8">
-          <h2 className="text-3xl text-orange-600 dark:text-orange-500 font-extrabold mb-2">
+          <h2 className="text-3xl text-[#D5457D] dark:text-[#C93A70] font-extrabold mb-2">
             {isLogin ? 'Chào mừng trở lại' : 'Tạo tài khoản mới'}
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm">
             {isLogin
               ? 'Đăng nhập để tiếp tục theo dõi thị trường'
-              : 'Tham gia cộng đồng đầu tư StockBank'}
+              : 'Tham gia cộng đồng đầu tư FinSavvy'}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="text-sm text-orange-600 dark:text-orange-500 font-medium mb-1 block">
+            <label className="text-sm text-[#D5457D] dark:text-[#C93A70] font-medium mb-1 block">
               Tên đăng nhập
             </label>
             <div className="relative">
@@ -92,7 +92,7 @@ export default function AuthForm({ type }) {
 
           {!isLogin && (
             <div>
-              <label className="text-sm text-orange-600 dark:text-orange-500 font-medium mb-1 block">
+              <label className="text-sm text-[#D5457D] dark:text-[#C93A70] font-medium mb-1 block">
                 Email
               </label>
               <div className="relative">
@@ -108,7 +108,7 @@ export default function AuthForm({ type }) {
           )}
 
           <div>
-            <label className="text-sm text-orange-600 dark:text-orange-500 font-medium mb-1 block">
+            <label className="text-sm text-[#D5457D] dark:text-[#C93A70] font-medium mb-1 block">
               Mật khẩu
             </label>
             <div className="relative">
@@ -126,7 +126,7 @@ export default function AuthForm({ type }) {
             <div className="text-right">
               <a
                 href="/forgot-password"
-                className="text-sm text-orange-600 dark:text-orange-400 hover:underline"
+                className="text-sm text-[#D5457D] dark:text-[#C93A70] hover:underline"
               >
                 Quên mật khẩu?
               </a>
@@ -136,8 +136,8 @@ export default function AuthForm({ type }) {
           <button
             type="submit"
             className="w-full py-3 rounded-xl font-bold text-white text-lg
-                       bg-gradient-to-r from-blue-600 to-violet-600
-                       hover:from-blue-500 hover:to-violet-500
+                       bg-gradient-to-r from-[#D5457D] to-[#C93A70]
+                       hover:from-[#C93A70] hover:to-[#D5457D]
                        transition-all hover:scale-[1.02] cursor-pointer"
           >
             {isLogin ? 'Đăng Nhập' : 'Đăng Ký'}

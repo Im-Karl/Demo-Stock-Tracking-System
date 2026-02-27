@@ -135,9 +135,9 @@ export default function EditBlogForm({ blogId }) {
                            border-slate-300 dark:border-slate-600
                            text-blue-600 focus:ring-blue-500"
               />
-              <span className="font-medium text-slate-700 dark:text-slate-300">
+              {/* <span className="font-medium text-slate-700 dark:text-slate-300">
                 {formData.isPublic ? "Công khai" : "Riêng tư"}
-              </span>
+              </span> */}
             </label>
           </div>
 
@@ -220,11 +220,10 @@ export default function EditBlogForm({ blogId }) {
           </div>
         </form>
 
-        {/* ===== MARKDOWN HELP MODAL ===== */}
         <MarkdownHelpModal
           isOpen={showHelp}
           onClose={() => setShowHelp(false)}
-        />
+        /> 
       </div>
     </div>
   );

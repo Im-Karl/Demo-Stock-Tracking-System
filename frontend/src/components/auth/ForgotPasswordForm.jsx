@@ -42,7 +42,7 @@ export default function ForgotPasswordForm() {
     placeholder-slate-400 dark:placeholder-slate-500
     caret-slate-600 dark:caret-slate-200
     border border-slate-300 dark:border-slate-700
-    focus:outline-none focus:ring-2 focus:ring-blue-500
+    focus:outline-none focus:ring-2 focus:ring-[#D5457D]
     transition
   `;
 
@@ -56,16 +56,16 @@ export default function ForgotPasswordForm() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-md w-full p-8 rounded-3xl
                      bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl
-                     border border-green-300 dark:border-green-500/30
+                     border border-[#D5457D]/40
                      shadow-2xl text-center"
         >
-          <div className="w-16 h-16 bg-green-100 dark:bg-green-500/20
-                          text-green-600 dark:text-green-400
+          <div className="w-16 h-16 bg-[#D5457D]/10
+                          text-[#D5457D]
                           rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
             🔑
           </div>
 
-          <h2 className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">
+          <h2 className="text-2xl font-bold text-[#D5457D] mb-2">
             Đã cấp lại mật khẩu
           </h2>
 
@@ -76,8 +76,8 @@ export default function ForgotPasswordForm() {
           <a
             href="/login"
             className="inline-block w-full py-3 rounded-xl font-bold text-white
-                       bg-gradient-to-r from-blue-600 to-violet-600
-                       hover:from-blue-500 hover:to-violet-500
+                       bg-gradient-to-r from-[#D5457D] to-[#C93A70]
+                       hover:from-[#C93A70] hover:to-[#D5457D]
                        transition"
           >
             Quay lại Đăng nhập
@@ -94,9 +94,9 @@ export default function ForgotPasswordForm() {
       {/* Ambient light */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px]
-                        bg-blue-500/30 blur-[120px] rounded-full" />
+                        bg-[#D5457D]/30 blur-[120px] rounded-full" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px]
-                        bg-violet-500/30 blur-[120px] rounded-full" />
+                        bg-[#C93A70]/30 blur-[120px] rounded-full" />
       </div>
 
       <motion.div
@@ -109,7 +109,7 @@ export default function ForgotPasswordForm() {
                    shadow-2xl"
       >
         <div className="text-center mb-8">
-          <h2 className="text-3xl text-orange-600 dark:text-orange-500 font-extrabold mb-2">
+          <h2 className="text-3xl text-[#D5457D] font-extrabold mb-2">
             Quên mật khẩu
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm">
@@ -123,7 +123,7 @@ export default function ForgotPasswordForm() {
               ${
                 status === "error"
                   ? "bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-300 dark:border-red-500/30"
-                  : "bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-300 dark:border-green-500/30"
+                  : "bg-[#D5457D]/10 text-[#D5457D] border-[#D5457D]/40"
               }`}
           >
             {message}
@@ -132,7 +132,7 @@ export default function ForgotPasswordForm() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="text-sm text-orange-600 dark:text-orange-500 font-medium mb-1 block">
+            <label className="text-sm text-[#D5457D] font-medium mb-1 block">
               Email đăng ký
             </label>
             <div className="relative">
@@ -154,9 +154,9 @@ export default function ForgotPasswordForm() {
           <button
             disabled={loading}
             className="w-full py-3 rounded-xl font-bold text-white text-lg
-                       bg-gradient-to-r from-blue-600 to-violet-600
-                       hover:from-blue-500 hover:to-violet-500
-                       shadow-lg shadow-blue-500/30
+                       bg-gradient-to-r from-[#D5457D] to-[#C93A70]
+                       hover:from-[#C93A70] hover:to-[#D5457D]
+                       shadow-lg shadow-[#D5457D]/30
                        transition-all hover:scale-[1.02]
                        disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >

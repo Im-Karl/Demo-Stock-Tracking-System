@@ -170,16 +170,12 @@ export default function StockBoard() {
                         href={`/stock/${stock.symbol}`}
                         className="flex items-center group/link"
                       >
-                        <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 flex items-center justify-center font-bold mr-3 shadow-sm group-hover/link:ring-2 ring-blue-400 transition-all">
-                          {stock.symbol[0]}
-                        </div>
-
                         <div>
                           <div className="font-bold text-slate-900 dark:text-slate-100 group-hover/link:text-blue-600 transition">
                             {stock.symbol}
                           </div>
                           <div className="text-[10px] text-slate-400 uppercase tracking-wide">
-                            Stock
+                            {stock.organ_name_en}
                           </div>
                         </div>
                       </a>

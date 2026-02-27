@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { authService } from '../../services/authService';
+import ThemeToggle from '..//ui/ThemeToggle';
 
 export default function UserProfile() {
   const [user, setUser] = useState({ username: '', email: '', displayName: '', phone: '' });
   const [passData, setPassData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
   const [loading, setLoading] = useState(false);
-  const [fetchError, setFetchError] = useState(null); // Thêm state lỗi
+  const [fetchError, setFetchError] = useState(null);  
   const [showChangePassword, setShowChangePassword] = useState(false);
 
   useEffect(() => { 
     authService.getProfile()
-      .then(res => {
-        console.log("✅ Dữ liệu Profile:", res.data);
+      .then(res => { 
         setUser(res.data);
       })
-      .catch(err => {
-        console.error("❌ Lỗi lấy Profile:", err);
-        // Hiển thị lỗi ra màn hình thay vì treo loading
+      .catch(err => { 
         setFetchError(err.response?.data?.message || err.message || "Không thể tải thông tin cá nhân");
       });
   }, []);
@@ -67,8 +65,7 @@ export default function UserProfile() {
   const showPasswordHint =
   passData.confirmPassword &&
   passData.newPassword !== passData.confirmPassword;
-
-  // 🔴 NẾU CÓ LỖI -> HIỆN LỖI (Thay vì treo Loading)
+ 
   if (fetchError) {
       return (
           <div className="p-10 text-center text-red-600 bg-red-50 border border-red-200 rounded">
@@ -93,12 +90,20 @@ export default function UserProfile() {
     </div>
 
     <div className="relative z-10 max-w-5xl mx-auto">
-      <h1 className="text-4xl font-extrabold mb-10">
-        Hồ sơ người dùng
-        <span className="block text-lg font-medium text-slate-600 dark:text-slate-400 mt-2">
-          Quản lý thông tin & bảo mật tài khoản
-        </span>
-      </h1>
+      <div className="flex items-start justify-between mb-10">
+        <div>
+          <h1 className="text-4xl font-extrabold">
+            Hồ sơ người dùng
+          </h1>
+          <span className="block text-lg font-medium text-slate-600 dark:text-slate-400 mt-2">
+            Quản lý thông tin & bảo mật tài khoản
+          </span>
+        </div>
+
+        <div className="ml-4">
+          <ThemeToggle client:load />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 

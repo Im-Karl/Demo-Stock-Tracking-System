@@ -84,15 +84,33 @@ export default function Header() {
 
       <div className="relative container mx-auto px-6 h-16 flex items-center justify-between">
         {/* LOGO */}
-        <a
+        {/* <a
           href="/"
           className="text-2xl font-extrabold tracking-tight
                      text-transparent bg-clip-text
                      bg-gradient-to-r from-blue-600 to-violet-600
                      dark:from-blue-400 dark:to-violet-400"
         >
-          StockBank
-        </a>
+          FinSavvy
+        </a> */}
+
+<a href="/" className="flex items-center gap-2 transition-transform hover:scale-105 active:scale-95">
+        
+        {/* 1. Mobile */}
+        <img 
+          src="/images/fin_savvy.svg" 
+          alt="Fin Savvy Icon" 
+          className="h-8 w-auto md:hidden"  
+        />
+
+        {/* 2. Desktop/Tablet */}
+        <img 
+          src="/images/fin_savvy_full.svg" 
+          alt="Fin Savvy Logo" 
+          className="h-8 w-auto hidden md:block"  
+        />
+        
+      </a>
 
         {/* MENU – chỉ khi login */}
         {user && (

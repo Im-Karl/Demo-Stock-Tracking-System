@@ -15,8 +15,27 @@ const pathname = Astro.url.pathname;
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title} - StockBank</title>
+    <link rel="icon" type="image/svg+xml" href="/images/fin_savvy.svg" />
+    <title>{title} - FinSavvy</title>
+
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+    
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      window.localStorage.setItem('theme', theme);
+    </script>
   </head>
   <body class="bg-slate-50 dark:bg-[#020617] min-h-screen flex flex-col font-sans text-slate-800 dark:text-slate-100">
     <ToastProvider client:idle />
