@@ -1,8 +1,35 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .select('-password -resetPasswordToken -resetPasswordExpires');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    let isFollowing = false;
+
+    if (req.userId) {
+      isFollowing = user.followers.some(
+        (id) => id.toString() === req.userId.toString()
+      );
+    }
+
+    res.json({
+      user,
+      isFollowing
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 exports.getProfile = async (req, res) => {
-  console.log("Controller: Getting Profile for ID:", req.userId);  
+  console.log("Controller: Getting Profile for ID:", req.userId);
   try {
     const user = await User.findById(req.userId).select(
       "-password -resetPasswordToken -resetPasswordExpires",
@@ -72,6 +99,41 @@ exports.changePassword = async (req, res) => {
     await user.save();
 
     res.json({ success: true, message: "Đổi mật khẩu thành công" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.toggleFollow = async (req, res) => {
+  try {
+    const targetUserId = req.params.id;
+    const currentUserId = req.userId;
+
+    if (targetUserId === currentUserId) {
+      return res
+        .status(400)
+        .json({ message: "Bạn không thể tự theo dõi chính mình" });
+    }
+
+    const targetUser = await User.findById(targetUserId);
+    const currentUser = await User.findById(currentUserId);
+
+    const isFollowing = targetUser.followers.some(
+      (id) => id.toString() === currentUserId.toString(),
+    );
+
+    if (isFollowing) {
+      targetUser.followers.pull(currentUserId);
+      currentUser.following.pull(targetUserId);
+    } else {
+      targetUser.followers.push(currentUserId);
+      currentUser.following.push(targetUserId);
+    }
+
+    await targetUser.save();
+    await currentUser.save();
+
+    res.json({ success: true, isFollowing: !isFollowing });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

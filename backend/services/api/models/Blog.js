@@ -16,6 +16,7 @@ const BlogSchema = new mongoose.Schema({
   isPublic: { type: Boolean, default: false },
   isDeleted: { type: Boolean, default: false },
   deletedAt: { type: Date, default: null },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   publishedDate: { type: Date },
   createdAt: { type: Date, default: Date.now }
 });

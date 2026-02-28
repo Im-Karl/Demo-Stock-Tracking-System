@@ -1,4 +1,5 @@
 const Blog = require("../models/Blog");
+const User = require("../models/User");
 
 exports.createBlog = async (req, res) => {
   try {
@@ -24,7 +25,7 @@ exports.createBlog = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({ isPublic: true, isDeleted: false})
+    const blogs = await Blog.find({ isPublic: true, isDeleted: false })
       .populate("author", "username displayName")
       .sort({ publishedDate: -1 });
     res.json(blogs);
@@ -49,13 +50,13 @@ exports.getBlogBySlug = async (req, res) => {
 exports.getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findOne({ _id: req.params.id, author: req.userId });
-    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết" });
+    if (!blog)
+      return res.status(404).json({ message: "Không tìm thấy bài viết" });
     res.json(blog);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
- 
 
 exports.togglePublic = async (req, res) => {
   try {
@@ -87,15 +88,14 @@ exports.togglePublic = async (req, res) => {
   }
 };
 
-
 exports.getMyBlogs = async (req, res) => {
   try {
-    const userId = req.userId;  
+    const userId = req.userId;
     const blogs = await Blog.find({ author: userId }).sort({ createdAt: -1 });
 
-    const published = blogs.filter(b => b.isPublic && !b.isDeleted);
-    const drafts = blogs.filter(b => !b.isPublic && !b.isDeleted);
-    const trashed = blogs.filter(b => b.isDeleted);
+    const published = blogs.filter((b) => b.isPublic && !b.isDeleted);
+    const drafts = blogs.filter((b) => !b.isPublic && !b.isDeleted);
+    const trashed = blogs.filter((b) => b.isDeleted);
 
     res.json({ success: true, published, drafts, trashed });
   } catch (err) {
@@ -107,18 +107,28 @@ exports.updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, content } = req.body;
-    
-    const blog = await Blog.findOne({ _id: id, author: req.userId, isDeleted: false });
-    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết" });
+
+    const blog = await Blog.findOne({
+      _id: id,
+      author: req.userId,
+      isDeleted: false,
+    });
+    if (!blog)
+      return res.status(404).json({ message: "Không tìm thấy bài viết" });
 
     // 👇 LOGIC CHẶN Ở ĐÂY
     if (blog.isPublic) {
-      return res.status(400).json({ message: "Bài viết đang Xuất bản. Vui lòng hạ về Bản nháp trước khi sửa!" });
+      return res
+        .status(400)
+        .json({
+          message:
+            "Bài viết đang Xuất bản. Vui lòng hạ về Bản nháp trước khi sửa!",
+        });
     }
 
     blog.title = title || blog.title;
     blog.content = content || blog.content;
-    
+
     await blog.save();
     res.json({ success: true, message: "Đã cập nhật bài viết", blog });
   } catch (err) {
@@ -129,7 +139,8 @@ exports.updateBlog = async (req, res) => {
 exports.moveToTrash = async (req, res) => {
   try {
     const blog = await Blog.findOne({ _id: req.params.id, author: req.userId });
-    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết" });
+    if (!blog)
+      return res.status(404).json({ message: "Không tìm thấy bài viết" });
 
     blog.isDeleted = true;
     blog.deletedAt = new Date();
@@ -143,8 +154,15 @@ exports.moveToTrash = async (req, res) => {
 
 exports.restoreBlog = async (req, res) => {
   try {
-    const blog = await Blog.findOne({ _id: req.params.id, author: req.userId, isDeleted: true });
-    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết trong thùng rác" });
+    const blog = await Blog.findOne({
+      _id: req.params.id,
+      author: req.userId,
+      isDeleted: true,
+    });
+    if (!blog)
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy bài viết trong thùng rác" });
 
     blog.isDeleted = false;
     blog.deletedAt = null;
@@ -158,11 +176,43 @@ exports.restoreBlog = async (req, res) => {
 
 exports.hardDeleteBlog = async (req, res) => {
   try {
-    const blog = await Blog.findOneAndDelete({ _id: req.params.id, author: req.userId, isDeleted: true });
-    if (!blog) return res.status(404).json({ message: "Không tìm thấy bài viết để xóa" });
+    const blog = await Blog.findOneAndDelete({
+      _id: req.params.id,
+      author: req.userId,
+      isDeleted: true,
+    });
+    if (!blog)
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy bài viết để xóa" });
 
     res.json({ success: true, message: "Đã xóa vĩnh viễn bài viết" });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getBlogsByAuthor = async (req, res) => {
+  try {
+    const { authorId } = req.params;
+
+    const author = await User.findById(authorId).select("username displayName tagline followers");
+    if (!author)
+      return res.status(404).json({ message: "Không tìm thấy tác giả" });
+
+    const blogs = await Blog.find({
+      author: authorId,
+      isPublic: true,
+      isDeleted: false,
+    })
+      .populate("author", "username displayName")
+      .sort({ publishedDate: -1 });
+
+    const totalLikes = blogs.reduce((sum, blog) => sum + (blog.likes?.length || 0), 0);
+
+
+    res.json({ success: true, author, blogs ,stats: { totalLikes }});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

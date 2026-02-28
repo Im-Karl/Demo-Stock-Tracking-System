@@ -69,7 +69,7 @@ export default function UserProfile() {
   if (fetchError) {
       return (
           <div className="p-10 text-center text-red-600 bg-red-50 border border-red-200 rounded">
-              <h3 className="font-bold text-xl mb-2">⚠️ Có lỗi xảy ra</h3>
+              <h3 className="font-bold text-xl mb-2">Có lỗi xảy ra</h3>
               <p>{fetchError}</p>
               <p className="text-sm text-gray-500 mt-2">Hãy kiểm tra lại Server API hoặc đăng nhập lại.</p>
           </div>

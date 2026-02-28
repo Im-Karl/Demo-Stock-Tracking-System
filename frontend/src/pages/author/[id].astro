@@ -1,0 +1,33 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { blogService } from "../../services/blogService";
+import AuthorPage from "../../components/author/AuthorPage.jsx";
+
+const { id } = Astro.params;
+
+let authorData = null;
+let blogs = [];
+let errorMessage = null;
+let stats = null;
+
+try {
+  const { data } = await blogService.getBlogsByAuthor(id);
+  authorData = data.author;
+  blogs = data.blogs;
+  stats = data.stats;
+} catch (err) {
+  console.error("Lỗi lấy author:", err);
+  errorMessage = "Không thể tải dữ liệu tác giả.";
+}
+---
+
+<Layout
+  title={`Bài viết của ${authorData?.displayName || authorData?.username || "Tác giả"}`}
+>
+  <AuthorPage
+    author={authorData}
+    blogs={blogs}
+    stats={stats}
+    client:load
+  />
+</Layout>

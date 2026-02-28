@@ -26,13 +26,14 @@ export default function Header() {
       isActive = currentPath === path;
     } else {
       if (path === "/blog") {
-        // Chỉ sáng khi là trang blog public
         isActive =
           currentPath === "/blog" ||
           (currentPath.startsWith("/blog/") &&
             !currentPath.startsWith("/blog/manage") &&
             !currentPath.startsWith("/blog/create") &&
-            !currentPath.startsWith("/blog/edit"));
+            !currentPath.startsWith("/blog/edit"))
+            ||
+          currentPath.startsWith("/author/");
       } else {
         isActive = currentPath.startsWith(path);
       }

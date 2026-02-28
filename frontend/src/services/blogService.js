@@ -9,6 +9,7 @@ export const blogService = {
   getMyBlogs: () => axiosClient.get('/blogs/me/manage'),
   
   getBlogById: (id) => axiosClient.get(`/blogs/edit/${id}`),
+  getBlogsByAuthor: (authorId) => axiosClient.get(`/blogs/author/${authorId}`),
   
   updateBlog: (id, data) => axiosClient.put(`/blogs/${id}`, data),
   

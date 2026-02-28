@@ -132,7 +132,14 @@ export default function BlogDetail({ slug }) {
         <div className="text-sm text-slate-600 dark:text-slate-400">
           Đăng bởi{" "}
           <span className="font-semibold text-blue-600 dark:text-blue-400">
-            {blog.author?.displayName || blog.author?.username || "Ẩn danh"}
+            {/* {blog.author?.displayName || blog.author?.username || "Ẩn danh"}
+             */}
+             <a 
+  href={`/author/${blog.author._id}`} 
+  className="text-blue-600 hover:underline font-medium cursor-pointer"
+>
+  {blog.author.displayName || blog.author.username}
+</a>
           </span>
           {" • "}
           <span className="text-slate-500 dark:text-slate-500">
