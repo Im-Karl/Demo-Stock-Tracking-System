@@ -51,7 +51,7 @@ exports.getProfile = async (req, res) => {
 // Cập nhật thông tin (DisplayName, Phone)
 exports.updateProfile = async (req, res) => {
   try {
-    const { displayName, phone } = req.body;
+    const { displayName, phone ,tagline} = req.body;
     const userId = req.userId;
 
     // Kiểm tra trùng lặp (nếu có nhập)
@@ -75,7 +75,7 @@ exports.updateProfile = async (req, res) => {
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { displayName, phone },
+      { displayName, phone, tagline },
       { new: true }, // Trả về data mới
     ).select("-password");
 
@@ -134,6 +134,35 @@ exports.toggleFollow = async (req, res) => {
     await currentUser.save();
 
     res.json({ success: true, isFollowing: !isFollowing });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+exports.getFollowers = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const user = await User.findById(id).populate("followers", "username displayName");
+    
+    if (!user) return res.status(404).json({ message: "Không tìm thấy người dùng" });
+
+    res.json({ success: true, followers: user.followers });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getFollowing = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const user = await User.findById(id).populate("following", "username displayName");
+    
+    if (!user) return res.status(404).json({ message: "Không tìm thấy người dùng" });
+
+    res.json({ success: true, following: user.following });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

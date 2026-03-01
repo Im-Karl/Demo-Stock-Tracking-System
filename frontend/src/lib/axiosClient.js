@@ -31,13 +31,39 @@ axiosClient.interceptors.response.use(
     // Nếu có lỗi, log ra chi tiết để biết tại sao
     if (error.response) {
       // Server trả về lỗi (4xx, 5xx)
-      console.error('❌ API Error Response:', error.response.status, error.response.data);
+      console.error('API Error Response:', error.response.status, error.response.data);
     } else if (error.request) {
       // Không nhận được phản hồi (Backend chưa bật hoặc sai Port)
-      console.error('❌ API No Response (Backend off?):', error.request);
+      console.error('API No Response (Backend off?):', error.request);
     } else {
-      console.error('❌ API Setup Error:', error.message);
+      console.error(' API Setup Error:', error.message);
     }
+    return Promise.reject(error);
+  }
+);
+
+
+axiosClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      if (typeof window !== "undefined") {
+        console.warn("Token đã hết hạn hoặc không hợp lệ. Đang đăng xuất...");
+        
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        
+        if (!window.location.pathname.includes('/login')) {
+            toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+            setTimeout(() => {
+                window.location.href = "/login";
+            }, 1500);
+        }
+      }
+    }
+    
     return Promise.reject(error);
   }
 );

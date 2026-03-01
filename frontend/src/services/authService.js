@@ -13,4 +13,6 @@ export const authService = {
   changePassword: (data) => axiosClient.put("/user/change-password", data),
   toggleFollow: (userId) => axiosClient.post(`/user/${userId}/follow`),
   getAuthorProfile: (authorId) => axiosClient.get(`/user/${authorId}`),
+  getFollowers: (authorId) => axiosClient.get(`/user/${authorId}/followers`),
+  getFollowing: (authorId) => axiosClient.get(`/user/${authorId}/following`),
 };

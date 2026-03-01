@@ -15,4 +15,5 @@ router.put("/:id", verifyToken, controller.updateBlog);
 router.delete("/:id/trash", verifyToken, controller.moveToTrash);
 router.put("/:id/restore", verifyToken, controller.restoreBlog);
 router.delete("/:id/permanent", verifyToken, controller.hardDeleteBlog);
+router.post("/:id/like", verifyToken, controller.toggleLike);
 module.exports = router;

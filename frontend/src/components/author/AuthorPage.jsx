@@ -1,36 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { Users, Heart, FileText } from "lucide-react";
+import { Users, Heart, FileText, UserPlus } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { authService } from "../../services/authService";
+import FollowModal from "./FollowModal";
 
 export default function AuthorPage({ author, blogs = [], stats }) {
+  const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null });
+  const [followingCount, setFollowingCount] = useState(author?.following?.length || 0);
 
+  const openModal = (type) => {
+      setModalConfig({ isOpen: true, type: type });
+  }
+  
   const currentUser =
     typeof window !== "undefined"
       ? JSON.parse(localStorage.getItem("user"))
       : null;
 
-  const isOwnProfile =
+  const isOwnProfile = Boolean(
     currentUser &&
     author &&
-    String(currentUser._id) === String(author._id);
+    (String(currentUser._id) === String(author._id) || String(currentUser.id) === String(author._id))
+  );
 
   const [isFollowing, setIsFollowing] = useState(false);
 
-useEffect(() => {
-  if (!currentUser || !author?._id) return;
+  useEffect(() => {
+    if (!currentUser || !author?._id) return;
 
-  const checkFollow = async () => {
-    try {
-      const res = await authService.getAuthorProfile(author._id);
-      setIsFollowing(res.data.isFollowing);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    const checkFollow = async () => {
+      try {
+        const res = await authService.getAuthorProfile(author._id);
+        setIsFollowing(res.data.isFollowing);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  checkFollow();
-}, []);
+    checkFollow();
+  }, [author, currentUser]);  
 
   const [followerCount, setFollowerCount] = useState(
     author?.followers?.length || 0
@@ -101,10 +109,24 @@ useEffect(() => {
                 <div className="text-xs text-slate-400">Bài viết</div>
               </div>
 
-              <div className="text-center">
+              {/* 👇 GẮN SỰ KIỆN MỞ MODAL FOLLOWERS */}
+              <div 
+                  className="text-center cursor-pointer hover:scale-105 transition transform"
+                  onClick={() => openModal("followers")}
+              >
                 <Users size={18} className="mx-auto mb-1 text-slate-400"/>
                 <div className="text-xl font-bold">{followerCount}</div>
-                <div className="text-xs text-slate-400">Người theo dõi</div>
+                <div className="text-xs text-slate-400 hover:text-blue-500">Người theo dõi</div>
+              </div>
+
+              {/* 👇 THÊM CỘT FOLLOWING VÀ GẮN SỰ KIỆN */}
+              <div 
+                  className="text-center cursor-pointer hover:scale-105 transition transform"
+                  onClick={() => openModal("following")}
+              >
+                <UserPlus size={18} className="mx-auto mb-1 text-slate-400"/>
+                <div className="text-xl font-bold">{followingCount}</div>
+                <div className="text-xs text-slate-400 hover:text-blue-500">Đang theo dõi</div>
               </div>
 
               <div className="text-center">
@@ -154,6 +176,13 @@ useEffect(() => {
         </div>
 
       </main>
+
+      <FollowModal 
+        isOpen={modalConfig.isOpen} 
+        type={modalConfig.type}
+        onClose={() => setModalConfig({ isOpen: false, type: null })} 
+        authorId={author?._id}
+      />
     </section>
   );
 }

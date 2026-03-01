@@ -196,7 +196,7 @@ exports.getBlogsByAuthor = async (req, res) => {
   try {
     const { authorId } = req.params;
 
-    const author = await User.findById(authorId).select("username displayName tagline followers");
+    const author = await User.findById(authorId).select("username displayName tagline followers following");
     if (!author)
       return res.status(404).json({ message: "Không tìm thấy tác giả" });
 
@@ -216,3 +216,32 @@ exports.getBlogsByAuthor = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.toggleLike = async (req,res) => {
+  try {
+    const blogId = req.params.id;
+    const userId = req.userId;
+
+    const  blog = await Blog.findById(blogId);
+    if(!blog) return res.stats(404).json({message: "Không tìm thấy bài viết"});
+
+    const isLiked = blog.likes.some(id => id.toString() === userId.toString());
+
+    if(isLiked){
+      blog.likes.pull(userId);
+    }else{
+      blog.likes.push(userId);
+    }
+
+    await blog.save();
+
+    res.json({ 
+      success: true,
+      isLiked: !isLiked,
+      likesCount: blog.likes.length
+    });
+  } catch (error) {
+    res.status(500).json({ error: err.message });
+  }
+}

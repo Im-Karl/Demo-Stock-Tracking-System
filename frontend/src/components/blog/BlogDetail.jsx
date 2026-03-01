@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Skeleton } from '../ui/Skeleton';
+import { Heart } from 'lucide-react';  
+import { toast } from 'react-hot-toast';
+import { blogService } from '../../services/blogService'; 
 
 export default function BlogDetail({ slug }) {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null); // Lưu user đang đăng nhập
-  const [isUpdating, setIsUpdating] = useState(false); // Loading khi bấm nút đổi
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
 
   useEffect(() => {
-    
     const userStr = localStorage.getItem('user');
+    let userObj = null;
     if (userStr) {
-      setCurrentUser(JSON.parse(userStr));
+      userObj = JSON.parse(userStr);
+      setCurrentUser(userObj);
     }
 
-    // 2. Fetch bài viết
     fetch(`http://localhost:3000/api/blogs/${slug}`)
       .then(res => {
         if (!res.ok) throw new Error("Not found");
@@ -23,6 +29,10 @@ export default function BlogDetail({ slug }) {
       })
       .then(data => {
         setBlog(data);
+        setLikesCount(data.likes?.length || 0);
+        if (userObj && data.likes) {
+          setIsLiked(data.likes.includes(userObj._id));
+        }
         setLoading(false);
       })
       .catch(err => {
@@ -30,7 +40,22 @@ export default function BlogDetail({ slug }) {
         setLoading(false);
       });
   }, [slug]);
- 
+
+  const handleLike = async () => {
+    if (!currentUser) {
+      toast.error("Vui lòng đăng nhập để thích bài viết!");
+      return;
+    }
+
+    try {
+      const res = await blogService.toggleLike(blog._id); 
+      setIsLiked(res.data.isLiked);
+      setLikesCount(res.data.likesCount);
+    } catch (err) {
+      toast.error("Lỗi khi tương tác");
+    }
+  };
+
   const handleTogglePublic = async () => {
     if (!currentUser) return;
     setIsUpdating(true);
@@ -57,6 +82,7 @@ export default function BlogDetail({ slug }) {
     }
   };
 
+
   if (loading) return (
     <div className="p-10 max-w-3xl mx-auto">
         <Skeleton className="h-10 w-3/4 mb-4" />
@@ -69,16 +95,8 @@ export default function BlogDetail({ slug }) {
   const isAuthor = currentUser && blog.author && (currentUser.username === blog.author.username);
 
   return (
-    <article
-      className="relative max-w-3xl mx-auto mt-8 mb-20 px-6 py-10
-                rounded-2xl
-                bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl
-                border border-slate-200 dark:border-slate-700
-                shadow-xl
-                text-slate-800 dark:text-slate-100"
-    >
+    <article className="relative max-w-3xl mx-auto mt-8 mb-20 px-6 py-10 rounded-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border border-slate-200 dark:border-slate-700 shadow-xl text-slate-800 dark:text-slate-100">
 
-      {/* ===== AUTHOR CONTROL ===== */}
       {isAuthor && (
         <div
           className="mb-8 p-4 rounded-xl
@@ -123,44 +141,45 @@ export default function BlogDetail({ slug }) {
         </div>
       )}
 
-      {/* ===== HEADER ===== */}
       <header className="mb-10 text-center border-b border-slate-200 dark:border-slate-700 pb-6">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
           {blog.title}
         </h1>
 
-        <div className="text-sm text-slate-600 dark:text-slate-400">
-          Đăng bởi{" "}
-          <span className="font-semibold text-blue-600 dark:text-blue-400">
-            {/* {blog.author?.displayName || blog.author?.username || "Ẩn danh"}
-             */}
-             <a 
-  href={`/author/${blog.author._id}`} 
-  className="text-blue-600 hover:underline font-medium cursor-pointer"
->
-  {blog.author.displayName || blog.author.username}
-</a>
-          </span>
-          {" • "}
-          <span className="text-slate-500 dark:text-slate-500">
-            {blog.publishedDate
-              ? new Date(blog.publishedDate).toLocaleDateString("vi-VN")
-              : "Chưa xuất bản"}
-          </span>
+        <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+          <div>
+            Đăng bởi{" "}
+            <span className="font-semibold text-blue-600 dark:text-blue-400">
+              <a href={`/author/${blog.author._id}`} className="hover:underline cursor-pointer">
+                {blog.author.displayName || blog.author.username}
+              </a>
+            </span>
+            {" • "}
+            <span>
+              {blog.publishedDate ? new Date(blog.publishedDate).toLocaleDateString("vi-VN") : "Chưa xuất bản"}
+            </span>
+          </div>
+
+          <button 
+            onClick={handleLike}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold transition-all transform hover:scale-105 active:scale-95 border cursor-pointer
+              ${isLiked 
+                ? "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30 text-red-500" 
+                : "bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600 text-slate-500 hover:text-red-500 hover:border-red-200 dark:hover:border-red-500/50"
+              }`}
+          >
+            <Heart size={16} fill={isLiked ? "currentColor" : "none"} className={isLiked ? "text-red-500" : ""} />
+            {likesCount} Hữu ích
+          </button>
+
         </div>
       </header>
 
       {/* ===== CONTENT ===== */}
-      <div
-        className="prose prose-lg max-w-none
-                  prose-slate
-                  dark:prose-invert
-                  prose-headings:text-slate-800 dark:prose-headings:text-slate-100
-                  prose-p:text-slate-700 dark:prose-p:text-slate-300
-                  prose-a:text-blue-600 dark:prose-a:text-blue-400"
-      >
+      <div className="prose prose-lg max-w-none prose-slate dark:prose-invert prose-headings:text-slate-800 dark:prose-headings:text-slate-100 prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400">
         <ReactMarkdown>{blog.content}</ReactMarkdown>
       </div>
+
     </article>
   );
 }

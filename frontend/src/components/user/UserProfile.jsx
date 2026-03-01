@@ -25,7 +25,8 @@ export default function UserProfile() {
     // Xử lý chuỗi rỗng trước khi gửi
     const dataToSend = {
         displayName: user.displayName === "" ? undefined : user.displayName,
-        phone: user.phone === "" ? undefined : user.phone
+        phone: user.phone === "" ? undefined : user.phone,
+        tagline: user.tagline === "" ? undefined : user.tagline
     };
 
     console.log("Gửi đi:", dataToSend);
@@ -159,6 +160,22 @@ export default function UserProfile() {
                            text-slate-900 dark:text-slate-100
                            placeholder:text-slate-400
                            focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                Tiểu sử ngắn (Tagline)
+              </label>
+              <input
+                value={user.tagline || ''}
+                onChange={e => setUser({ ...user, tagline: e.target.value })}
+                placeholder="Ví dụ: Người đam mê viết lách "
+                className="w-full mt-1 p-3 rounded-lg
+                          bg-white dark:bg-slate-900
+                          border border-slate-300 dark:border-slate-600
+                          text-slate-900 dark:text-slate-100
+                          placeholder:text-slate-400
+                          focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
 
