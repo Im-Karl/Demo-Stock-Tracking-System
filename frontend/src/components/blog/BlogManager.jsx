@@ -7,10 +7,11 @@ import {
   XCircle,
   Eye,
   FileText,
-  Lock,   // Bổ sung icon Lock (Hạ về nháp)
-  Globe   // Bổ sung icon Globe (Xuất bản)
+  Lock,
+  Globe,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import Button from "../base-ui/Button";
 
 export default function BlogManager() {
   const [activeTab, setActiveTab] = useState("published");
@@ -63,7 +64,12 @@ export default function BlogManager() {
   };
 
   const handleHardDelete = async (id) => {
-    if (!confirm("CẢNH BÁO: Bài viết sẽ bị xóa vĩnh viễn và không thể khôi phục. Tiếp tục?")) return;
+    if (
+      !confirm(
+        "CẢNH BÁO: Bài viết sẽ bị xóa vĩnh viễn và không thể khôi phục. Tiếp tục?",
+      )
+    )
+      return;
     try {
       await blogService.hardDelete(id);
       toast.success("Đã xóa vĩnh viễn");
@@ -85,8 +91,8 @@ export default function BlogManager() {
 
   // Hàm điều hướng sửa bài dùng cho sự kiện onClick thay vì thẻ <a>
   const handleEditClick = (e, id) => {
-      e.stopPropagation();
-      window.location.href = `/blog/edit/${id}`;
+    e.stopPropagation();
+    window.location.href = `/blog/edit/${id}`;
   };
 
   const renderList = (list, type) => {
@@ -101,14 +107,14 @@ export default function BlogManager() {
     return (
       <div className="space-y-5">
         {list.map((blog) => (
-            <div
-                key={blog._id}
-                onClick={() => {
-                  if (type !== "trashed") {
-                      window.location.href = `/blog/${blog.slug}`;
-                  }
-                }}
-                className="bg-white dark:bg-slate-900
+          <div
+            key={blog._id}
+            onClick={() => {
+              if (type !== "trashed") {
+                window.location.href = `/blog/${blog.slug}`;
+              }
+            }}
+            className="bg-white dark:bg-neutral-900
                         border border-slate-200 dark:border-white/10
                         rounded-xl p-5
                         hover:shadow-xl
@@ -116,123 +122,129 @@ export default function BlogManager() {
                         transition-all duration-300 ease-out
                         flex flex-col md:flex-row justify-between items-start md:items-center gap-4
                         cursor-pointer"
-            >
-                <div>
-                  <h3 className="font-bold text-slate-800 dark:text-white text-lg line-clamp-1">
-                      {blog.title}
-                  </h3>
+          >
+            <div>
+              <h3 className="font-bold text-slate-800 dark:text-white text-lg line-clamp-1">
+                {blog.title}
+              </h3>
 
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                      {new Date(blog.createdAt).toLocaleDateString("vi-VN")}
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                {new Date(blog.createdAt).toLocaleDateString("vi-VN")}
 
-                      {type === "trashed" && blog.deletedAt && (
-                      <span className="text-red-400 ml-2 italic">
-                          (Tự hủy sau:{" "}
-                          {30 -
-                          Math.floor(
-                              (new Date() - new Date(blog.deletedAt)) /
-                              (1000 * 60 * 60 * 24)
-                          )}{" "}
-                          ngày)
-                      </span>
-                      )}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                
-                {/* === CÁC NÚT CHO TAB ĐÃ XUẤT BẢN === */}
-                {type === "published" && (
-                    <>
-                    {/* Nút Hạ về Nháp */}
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleToggleStatus(blog.slug);
-                        }}
-                        className="flex items-center gap-1 px-3 py-1.5 text-orange-600 bg-orange-50 hover:bg-orange-100 rounded text-sm font-medium transition cursor-pointer"
-                        title="Hạ về nháp để sửa"
-                    >
-                        <Lock size={16} /> Hạ về nháp
-                    </button>
-
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleSoftDelete(blog._id);
-                        }}
-                        className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition cursor-pointer"
-                        title="Chuyển vào thùng rác"
-                    >
-                        <Trash2 size={18} />
-                    </button>
-                    </>
+                {type === "trashed" && blog.deletedAt && (
+                  <span className="text-red-400 ml-2 italic">
+                    (Tự hủy sau:{" "}
+                    {30 -
+                      Math.floor(
+                        (new Date() - new Date(blog.deletedAt)) /
+                          (1000 * 60 * 60 * 24),
+                      )}{" "}
+                    ngày)
+                  </span>
                 )}
-
-                {/* === CÁC NÚT CHO TAB BẢN NHÁP === */}
-                {type === "drafts" && (
-                    <>
-                    {/* Nút Xuất Bản */}
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleToggleStatus(blog.slug);
-                        }}
-                        className="flex items-center gap-1 px-3 py-1.5 text-green-600 bg-green-50 hover:bg-green-100 rounded text-sm font-medium transition cursor-pointer"
-                        title="Xuất bản bài viết"
-                    >
-                        <Globe size={16} /> Xuất bản
-                    </button>
-
-                    {/* Nút Sửa (Chỉ hiện ở tab Draft) */}
-                    <button
-                        onClick={(e) => handleEditClick(e, blog._id)}
-                        className="p-2 text-slate-500 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-500/10 rounded-lg transition cursor-pointer"
-                        title="Chỉnh sửa bài viết"
-                    >
-                        <Edit size={18} />
-                    </button>
-
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleSoftDelete(blog._id);
-                        }}
-                        className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition cursor-pointer"
-                        title="Chuyển vào thùng rác"
-                    >
-                        <Trash2 size={18} />
-                    </button>
-                    </>
-                )}
-
-                {/* === CÁC NÚT CHO TAB THÙNG RÁC === */}
-                {type === "trashed" && (
-                    <>
-                    <button
-                        onClick={(e) => {
-                        e.stopPropagation();
-                        handleRestore(blog._id);
-                        }}
-                        className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 rounded-lg text-sm font-semibold transition cursor-pointer"
-                    >
-                        <RotateCcw size={16} /> Khôi phục
-                    </button>
-
-                    <button
-                        onClick={(e) => {
-                        e.stopPropagation();
-                        handleHardDelete(blog._id);
-                        }}
-                        className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-600 hover:bg-red-500/20 rounded-lg text-sm font-semibold transition cursor-pointer"
-                    >
-                        <XCircle size={16} /> Xóa vĩnh viễn
-                    </button>
-                    </>
-                )}
-                </div>
+              </p>
             </div>
-            ))}
+
+            <div className="flex items-center gap-2">
+              {/* === CÁC NÚT CHO TAB ĐÃ XUẤT BẢN === */}
+              {type === "published" && (
+                <>
+                  {/* Nút Hạ về Nháp */}
+                  <Button
+                    size="sm"
+                    intent="warningSoft"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleStatus(blog.slug);
+                    }}
+                    title="Hạ về nháp để sửa"
+                  >
+                    <Lock size={16} /> Hạ về nháp
+                  </Button>
+                  <Button
+                    size="icon"
+                    intent="dangerSoft"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSoftDelete(blog._id);
+                    }}
+                    title="Chuyển vào thùng rác"
+                  >
+                    <Trash2 size={18} />
+                  </Button>
+                </>
+              )}
+
+              {/* === CÁC NÚT CHO TAB BẢN NHÁP === */}
+              {type === "drafts" && (
+                <>
+                  {/* Nút Xuất Bản */}
+                  <Button
+                    size="sm"
+                    intent="successSoft"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleStatus(blog.slug);
+                    }}
+                    title="Xuất bản bài viết"
+                  >
+                    <Globe size={16} /> Xuất bản
+                  </Button>
+                  <Button
+                    size="icon"
+                    intent="primarySoft"
+                    render={
+                      <a
+                        href={`/blog/edit/${blog._id}`}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    }
+                    title="Chỉnh sửa bài viết"
+                  >
+                    <Edit size={18} />
+                  </Button>
+                  <Button
+                    size="icon"
+                    intent="dangerSoft"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSoftDelete(blog._id);
+                    }}
+                    title="Chuyển vào thùng rác"
+                  >
+                    <Trash2 size={18} />
+                  </Button>
+                </>
+              )}
+
+              {/* === CÁC NÚT CHO TAB THÙNG RÁC === */}
+              {type === "trashed" && (
+                <>
+                  <Button
+                    size="sm"
+                    intent="successSoft"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRestore(blog._id);
+                    }}
+                  >
+                    <RotateCcw size={16} /> Khôi phục
+                  </Button>
+                  <Button
+                    size="sm"
+                    intent="dangerSoft"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleHardDelete(blog._id);
+                    }}
+                  >
+                    <XCircle size={16} /> Xóa vĩnh viễn
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     );
   };
@@ -253,7 +265,11 @@ export default function BlogManager() {
 
       <div className="flex gap-3 mb-8 flex-wrap">
         {[
-          { key: "published", label: "Đã xuất bản", count: blogs.published.length },
+          {
+            key: "published",
+            label: "Đã xuất bản",
+            count: blogs.published.length,
+          },
           { key: "drafts", label: "Bản nháp", count: blogs.drafts.length },
           { key: "trashed", label: "Thùng rác", count: blogs.trashed.length },
         ].map((tab) => {
@@ -276,7 +292,7 @@ export default function BlogManager() {
         })}
       </div>
 
-      <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-6 min-h-[400px] ">
+      <div className="bg-white/70 dark:bg-neutral-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-6 min-h-[400px] ">
         {activeTab === "published" && renderList(blogs.published, "published")}
         {activeTab === "drafts" && renderList(blogs.drafts, "drafts")}
         {activeTab === "trashed" && renderList(blogs.trashed, "trashed")}

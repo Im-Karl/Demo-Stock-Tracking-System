@@ -69,8 +69,9 @@ export default function StockNewsClient({ symbol }) {
           target="_blank"
           className="group block"
         >
-          <div className="flex gap-3">
-            <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-slate-700">
+          <div className="flex gap-3 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-colors">
+            {/*  Sửa màu nền ảnh lỗi sang neutral */}
+            <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-800">
               <img
                 src={
                   item.image ||
@@ -82,12 +83,13 @@ export default function StockNewsClient({ symbol }) {
             </div>
 
             <div className="flex-1">
-              <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+              {/*  Sửa text-gray sang text-neutral */}
+              <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                 {item.title}
               </h4>
 
-              <div className="mt-2 flex items-center justify-between text-[10px] text-gray-400">
-                <span className="bg-gray-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">
+              <div className="mt-2 flex items-center justify-between text-[10px] text-neutral-500">
+                <span className="bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 px-1.5 py-0.5 rounded">
                   {item.source || "Tổng hợp"}
                 </span>
                 <span>{formatDate(item.published)}</span>
@@ -97,7 +99,7 @@ export default function StockNewsClient({ symbol }) {
         </a>
       ))}
 
-      <div ref={loadMoreRef} className="py-4 text-center text-xs text-gray-400">
+      <div ref={loadMoreRef} className="py-4 text-center text-xs text-neutral-500">
         {loading
           ? "Đang tải thêm..."
           : hasMore

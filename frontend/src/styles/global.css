@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
-
 @variant dark (&:where(.dark, .dark *));
 
 @plugin "@tailwindcss/typography";
+
+@theme {
+  --radius: 0.25rem;
+  --color-primary: oklch(0.63 0.2 1.35);
+  --color-secondary: oklch(0.62 0.15 282.07);
+}
 
 @keyframes candle-drop {
   0% {

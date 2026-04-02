@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import toast from "react-hot-toast";
 import { FileEdit } from "lucide-react";
 import MarkdownHelpModal from "./MarkdownHelpModal";
+import Button from "../base-ui/Button";
 
 export default function EditBlogForm({ blogId }) {
   const [formData, setFormData] = useState({
@@ -81,18 +82,17 @@ export default function EditBlogForm({ blogId }) {
                    text-slate-800 dark:text-slate-100"
       >
         {/* ===== HELP BUTTON ===== */}
-        <button
-          onClick={() => setShowHelp(true)}
-          title="Hướng dẫn Markdown"
-          className="absolute top-6 right-6 z-20
-                     w-11 h-11 rounded-full
-                     bg-gradient-to-br from-blue-600 to-violet-600
-                     text-white font-bold
-                     flex items-center justify-center
-                     shadow-lg hover:scale-105 transition cursor-pointer"
-        >
-          ?
-        </button>
+        <div className="absolute top-6 right-6 z-20">
+          <Button
+            intent="primary"
+            size="icon"
+            className="!rounded-full shadow-lg"
+            onClick={() => setShowHelp(true)}
+            title="Hướng dẫn Markdown"
+          >
+            <HelpCircle size={20} />
+          </Button>
+        </div>
 
         {/* ===== HEADER ===== */}
         <h2
@@ -145,14 +145,16 @@ export default function EditBlogForm({ blogId }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
             {/* Editor */}
             <div className="flex flex-col">
-              <label className="mb-3 text-xs font-bold uppercase
-                                text-slate-500 dark:text-slate-400">
+              <label
+                className="mb-3 text-xs font-bold uppercase
+                                text-slate-500 dark:text-slate-400"
+              >
                 Soạn thảo Markdown
               </label>
 
               <textarea
                 className="w-full min-h-[520px] p-5 rounded-xl
-                           bg-white dark:bg-slate-900
+                           bg-white dark:bg-neutral-900
                            border border-slate-300 dark:border-slate-600
                            font-mono text-sm leading-relaxed
                            focus:ring-2 focus:ring-blue-500 outline-none"
@@ -166,14 +168,16 @@ export default function EditBlogForm({ blogId }) {
 
             {/* Preview */}
             <div className="flex flex-col">
-              <label className="mb-3 text-xs font-bold uppercase
-                                text-slate-500 dark:text-slate-400">
+              <label
+                className="mb-3 text-xs font-bold uppercase
+                                text-slate-500 dark:text-slate-400"
+              >
                 Xem trước
               </label>
 
               <div
                 className="w-full min-h-[520px] p-6 rounded-xl
-                           bg-slate-50 dark:bg-slate-900
+                           bg-neutral-50 dark:bg-neutral-900
                            border border-slate-300 dark:border-slate-600
                            overflow-y-auto
                            prose prose-lg max-w-none
@@ -192,38 +196,24 @@ export default function EditBlogForm({ blogId }) {
 
           {/* ===== FOOTER ===== */}
           <div className="flex justify-between items-center pt-8 border-t border-slate-200 dark:border-slate-700">
-            <button
+            <Button
               type="button"
+              intent="neutral"
               onClick={() => navigate("/blog/manage")}
-              className="px-6 py-2.5 rounded-xl text-sm font-semibold
-                         bg-slate-200 dark:bg-white/10
-                         text-slate-700 dark:text-slate-300
-                         hover:bg-slate-300 dark:hover:bg-white/20
-                         transition cursor-pointer"
             >
               Hủy bỏ
-            </button>
+            </Button>
 
-            <button
-              type="submit"
-              disabled={saving}
-              className={`px-8 py-3 rounded-xl font-bold text-white transition
-                          shadow-lg active:scale-95 cursor-pointer
-                          ${
-                            saving
-                              ? "bg-slate-400 cursor-not-allowed"
-                              : "bg-gradient-to-r from-blue-600 to-violet-600 hover:opacity-90"
-                          }`}
-            >
+            <Button type="submit" intent="primary" disabled={saving}>
               {saving ? "Đang lưu..." : "Lưu thay đổi"}
-            </button>
+            </Button>
           </div>
         </form>
 
         <MarkdownHelpModal
           isOpen={showHelp}
           onClose={() => setShowHelp(false)}
-        /> 
+        />
       </div>
     </div>
   );

@@ -116,7 +116,7 @@ exports.updateBlog = async (req, res) => {
     if (!blog)
       return res.status(404).json({ message: "Không tìm thấy bài viết" });
 
-    // 👇 LOGIC CHẶN Ở ĐÂY
+    //  LOGIC CHẶN Ở ĐÂY
     if (blog.isPublic) {
       return res
         .status(400)

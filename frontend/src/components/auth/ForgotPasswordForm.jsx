@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail } from "lucide-react";
+import { Mail, KeyRound } from "lucide-react";
 import { authService } from "../../services/authService";
+import Button from '../base-ui/Button'; 
+import PageLayout from "../base-ui/PageLayout";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -18,152 +20,79 @@ export default function ForgotPasswordForm() {
     try {
       await authService.forgotPassword(email);
       setStatus("success");
-      setMessage(
-        "Thành công! Hệ thống đã gửi MẬT KHẨU MỚI vào email của bạn. Hãy dùng nó để đăng nhập."
-      );
+      setMessage("Thành công! Hệ thống đã gửi MẬT KHẨU MỚI vào email của bạn. Hãy dùng nó để đăng nhập.");
     } catch (err) {
       setStatus("error");
-
-      const errorMsg =
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        "Không tìm thấy email này hoặc lỗi hệ thống.";
-
-      setMessage(errorMsg);
+      setMessage(err.response?.data?.message || err.response?.data?.error || "Không tìm thấy email này hoặc lỗi hệ thống.");
     } finally {
       setLoading(false);
     }
   };
 
   const inputClass = `
-    w-full pl-10 pr-4 py-3 rounded-xl
-    bg-white dark:bg-slate-900
-    text-slate-900 dark:text-slate-100
-    placeholder-slate-400 dark:placeholder-slate-500
-    caret-slate-600 dark:caret-slate-200
-    border border-slate-300 dark:border-slate-700
-    focus:outline-none focus:ring-2 focus:ring-[#D5457D]
+    w-full pl-10 pr-4 py-3 rounded-xl 
+    bg-white dark:bg-neutral-900 
+    text-neutral-900 dark:text-neutral-100 
+    placeholder-neutral-400 dark:placeholder-neutral-500 
+    caret-blue-600 dark:caret-blue-400 
+    border border-neutral-300 dark:border-neutral-700 
+    focus:outline-none focus:ring-2 focus:ring-blue-500 
     transition
   `;
 
-  /* ===== SUCCESS STATE ===== */
   if (status === "success") {
     return (
-      <div className="min-h-screen flex items-center justify-center
-                      bg-slate-50 dark:bg-[#0f172a]">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-900">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full p-8 rounded-3xl
-                     bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl
-                     border border-[#D5457D]/40
-                     shadow-2xl text-center"
+          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+          className="max-w-md w-full p-8 rounded-3xl bg-white/60 dark:bg-neutral-800/60 backdrop-blur-xl border border-emerald-500/40 shadow-2xl text-center"
         >
-          <div className="w-16 h-16 bg-[#D5457D]/10
-                          text-[#D5457D]
-                          rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
-            🔑
+          <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            <KeyRound size={32} />
           </div>
-
-          <h2 className="text-2xl font-bold text-[#D5457D] mb-2">
-            Đã cấp lại mật khẩu
-          </h2>
-
-          <p className="text-slate-600 dark:text-slate-300 mb-6">
-            {message}
-          </p>
-
-          <a
-            href="/login"
-            className="inline-block w-full py-3 rounded-xl font-bold text-white
-                       bg-gradient-to-r from-[#D5457D] to-[#C93A70]
-                       hover:from-[#C93A70] hover:to-[#D5457D]
-                       transition"
-          >
+          <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">Đã cấp lại mật khẩu</h2>
+          <p className="text-neutral-600 dark:text-neutral-300 mb-6">{message}</p>
+          
+          <Button render={<a href="/login" />} intent="success" className="w-full">
             Quay lại Đăng nhập
-          </a>
+          </Button>
         </motion.div>
       </div>
     );
   }
 
-  /* ===== FORM STATE ===== */
   return (
-    <div className="relative min-h-screen flex items-center justify-center
-                    bg-slate-50 dark:bg-[#0f172a] overflow-hidden">
-      {/* Ambient light */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px]
-                        bg-[#D5457D]/30 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px]
-                        bg-[#C93A70]/30 blur-[120px] rounded-full" />
-      </div>
-
+ <PageLayout  className="flex items-center justify-center p-4">
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-md p-8 rounded-3xl
-                   bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl
-                   border border-slate-200 dark:border-slate-700/50
-                   shadow-2xl"
+        initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-md p-8 rounded-3xl bg-white/60 dark:bg-neutral-800/60 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700/50 shadow-2xl"
       >
         <div className="text-center mb-8">
-          <h2 className="text-3xl text-[#D5457D] font-extrabold mb-2">
-            Quên mật khẩu
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">
-            Nhập email để hệ thống cấp lại mật khẩu mới
-          </p>
+          <h2 className="text-3xl text-blue-600 dark:text-blue-400 font-extrabold mb-2">Quên mật khẩu</h2>
+          <p className="text-neutral-600 dark:text-neutral-400 text-sm">Nhập email để hệ thống cấp lại mật khẩu mới</p>
         </div>
 
         {message && (
-          <div
-            className={`text-sm text-center mb-4 p-3 rounded-xl border
-              ${
-                status === "error"
-                  ? "bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-300 dark:border-red-500/30"
-                  : "bg-[#D5457D]/10 text-[#D5457D] border-[#D5457D]/40"
-              }`}
-          >
+          <div className={`text-sm text-center mb-4 p-3 rounded-xl border ${status === "error" ? "bg-red-100 dark:bg-red-500/10 text-red-600 border-red-300 dark:border-red-500/30" : "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/30"}`}>
             {message}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="text-sm text-[#D5457D] font-medium mb-1 block">
-              Email đăng ký
-            </label>
+            <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">Email đăng ký</label>
             <div className="relative">
-              <Mail
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={18}
-              />
-              <input
-                type="email"
-                required
-                placeholder="example@email.com"
-                className={inputClass}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+              <input type="email" required placeholder="example@email.com" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
           </div>
 
-          <button
-            disabled={loading}
-            className="w-full py-3 rounded-xl font-bold text-white text-lg
-                       bg-gradient-to-r from-[#D5457D] to-[#C93A70]
-                       hover:from-[#C93A70] hover:to-[#D5457D]
-                       shadow-lg shadow-[#D5457D]/30
-                       transition-all hover:scale-[1.02]
-                       disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-          >
+          <Button type="submit" intent="primary" disabled={loading} className="w-full">
             {loading ? "Đang xử lý..." : "Lấy mật khẩu mới"}
-          </button>
+          </Button>
         </form>
       </motion.div>
-    </div>
+ </PageLayout>
+
   );
 }

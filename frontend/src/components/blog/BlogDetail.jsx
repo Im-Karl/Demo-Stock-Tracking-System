@@ -4,6 +4,7 @@ import { Skeleton } from '../ui/Skeleton';
 import { Heart } from 'lucide-react';  
 import { toast } from 'react-hot-toast';
 import { blogService } from '../../services/blogService'; 
+import Button from '../base-ui/Button';
 
 export default function BlogDetail({ slug }) {
   const [blog, setBlog] = useState(null);
@@ -120,24 +121,14 @@ export default function BlogDetail({ slug }) {
             </span>
           </div>
 
-          <button
+          <Button
             onClick={handleTogglePublic}
             disabled={isUpdating}
-            className={`px-4 py-2 rounded-lg text-sm font-bold text-white transition cursor-pointer
-              ${
-                blog.isPublic
-                  ? "bg-amber-500 hover:bg-amber-600"
-                  : "bg-emerald-600 hover:bg-emerald-700"
-              }
-              ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}
-            `}
+            intent={blog.isPublic ? "warning" : "success"}
+            size="sm"
           >
-            {isUpdating
-              ? "Đang xử lý..."
-              : blog.isPublic
-                ? " Chuyển thành Riêng tư"
-                : " Công khai ngay"}
-          </button>
+            {isUpdating ? "Đang xử lý..." : blog.isPublic ? "Chuyển thành Riêng tư" : "Công khai ngay"}
+          </Button>
         </div>
       )}
 
@@ -160,17 +151,15 @@ export default function BlogDetail({ slug }) {
             </span>
           </div>
 
-          <button 
+          <Button 
             onClick={handleLike}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold transition-all transform hover:scale-105 active:scale-95 border cursor-pointer
-              ${isLiked 
-                ? "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30 text-red-500" 
-                : "bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600 text-slate-500 hover:text-red-500 hover:border-red-200 dark:hover:border-red-500/50"
-              }`}
+            intent={isLiked ? "dangerSoft" : "neutral"}
+            size="sm"
+            className="!rounded-full" // Override border-radius
           >
             <Heart size={16} fill={isLiked ? "currentColor" : "none"} className={isLiked ? "text-red-500" : ""} />
             {likesCount} Hữu ích
-          </button>
+          </Button>
 
         </div>
       </header>

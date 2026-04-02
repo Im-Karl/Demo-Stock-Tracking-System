@@ -6,12 +6,14 @@ import FollowModal from "./FollowModal";
 
 export default function AuthorPage({ author, blogs = [], stats }) {
   const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null });
-  const [followingCount, setFollowingCount] = useState(author?.following?.length || 0);
+  const [followingCount, setFollowingCount] = useState(
+    author?.following?.length || 0,
+  );
 
   const openModal = (type) => {
-      setModalConfig({ isOpen: true, type: type });
-  }
-  
+    setModalConfig({ isOpen: true, type: type });
+  };
+
   const currentUser =
     typeof window !== "undefined"
       ? JSON.parse(localStorage.getItem("user"))
@@ -20,7 +22,8 @@ export default function AuthorPage({ author, blogs = [], stats }) {
   const isOwnProfile = Boolean(
     currentUser &&
     author &&
-    (String(currentUser._id) === String(author._id) || String(currentUser.id) === String(author._id))
+    (String(currentUser._id) === String(author._id) ||
+      String(currentUser.id) === String(author._id)),
   );
 
   const [isFollowing, setIsFollowing] = useState(false);
@@ -38,10 +41,10 @@ export default function AuthorPage({ author, blogs = [], stats }) {
     };
 
     checkFollow();
-  }, [author, currentUser]);  
+  }, [author, currentUser]);
 
   const [followerCount, setFollowerCount] = useState(
-    author?.followers?.length || 0
+    author?.followers?.length || 0,
   );
 
   const [loadingFollow, setLoadingFollow] = useState(false);
@@ -61,14 +64,9 @@ export default function AuthorPage({ author, blogs = [], stats }) {
       const newStatus = res.data.isFollowing;
 
       setIsFollowing(newStatus);
-      setFollowerCount((prev) =>
-        newStatus ? prev + 1 : prev - 1
-      );
+      setFollowerCount((prev) => (newStatus ? prev + 1 : prev - 1));
 
-      toast.success(
-        newStatus ? "Đã theo dõi!" : "Đã hủy theo dõi"
-      );
-
+      toast.success(newStatus ? "Đã theo dõi!" : "Đã hủy theo dõi");
     } catch (err) {
       toast.error("Lỗi khi theo dõi");
     } finally {
@@ -77,18 +75,13 @@ export default function AuthorPage({ author, blogs = [], stats }) {
   };
 
   return (
-    <section className="relative min-h-screen bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-100">
-
+    <section className="relative min-h-screen bg-neutral-50 dark:bg-neutral-900 text-slate-800 dark:text-slate-100">
       <main className="relative z-10 max-w-7xl mx-auto px-6 py-16">
-
         {author && (
           <div className="text-center mb-14 bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-3xl p-10 shadow-lg">
-
             {/* Avatar */}
             <div className="mx-auto mb-4 w-28 h-28 rounded-full bg-gradient-to-tr from-blue-500 to-violet-500 flex items-center justify-center text-white text-4xl font-extrabold shadow-xl">
-              {(author.displayName || author.username)
-                ?.charAt(0)
-                .toUpperCase()}
+              {(author.displayName || author.username)?.charAt(0).toUpperCase()}
             </div>
 
             {/* Name */}
@@ -104,33 +97,35 @@ export default function AuthorPage({ author, blogs = [], stats }) {
             {/* Stats */}
             <div className="flex flex-wrap justify-center gap-8 mb-8">
               <div className="text-center">
-                <FileText size={18} className="mx-auto mb-1 text-slate-400"/>
+                <FileText size={18} className="mx-auto mb-1 text-slate-400" />
                 <div className="text-xl font-bold">{blogs.length}</div>
                 <div className="text-xs text-slate-400">Bài viết</div>
               </div>
 
-              {/* 👇 GẮN SỰ KIỆN MỞ MODAL FOLLOWERS */}
-              <div 
-                  className="text-center cursor-pointer hover:scale-105 transition transform"
-                  onClick={() => openModal("followers")}
+              <div
+                className="text-center cursor-pointer hover:scale-105 transition transform"
+                onClick={() => openModal("followers")}
               >
-                <Users size={18} className="mx-auto mb-1 text-slate-400"/>
+                <Users size={18} className="mx-auto mb-1 text-slate-400" />
                 <div className="text-xl font-bold">{followerCount}</div>
-                <div className="text-xs text-slate-400 hover:text-blue-500">Người theo dõi</div>
+                <div className="text-xs text-slate-400 hover:text-blue-500">
+                  Người theo dõi
+                </div>
               </div>
 
-              {/* 👇 THÊM CỘT FOLLOWING VÀ GẮN SỰ KIỆN */}
-              <div 
-                  className="text-center cursor-pointer hover:scale-105 transition transform"
-                  onClick={() => openModal("following")}
+              <div
+                className="text-center cursor-pointer hover:scale-105 transition transform"
+                onClick={() => openModal("following")}
               >
-                <UserPlus size={18} className="mx-auto mb-1 text-slate-400"/>
+                <UserPlus size={18} className="mx-auto mb-1 text-slate-400" />
                 <div className="text-xl font-bold">{followingCount}</div>
-                <div className="text-xs text-slate-400 hover:text-blue-500">Đang theo dõi</div>
+                <div className="text-xs text-slate-400 hover:text-blue-500">
+                  Đang theo dõi
+                </div>
               </div>
 
               <div className="text-center">
-                <Heart size={18} className="mx-auto mb-1 text-slate-400"/>
+                <Heart size={18} className="mx-auto mb-1 text-slate-400" />
                 <div className="text-xl font-bold">
                   {stats?.totalLikes || 0}
                 </div>
@@ -153,7 +148,6 @@ export default function AuthorPage({ author, blogs = [], stats }) {
                 {isFollowing ? "Đang theo dõi" : "Theo dõi"}
               </button>
             )}
-
           </div>
         )}
 
@@ -174,13 +168,12 @@ export default function AuthorPage({ author, blogs = [], stats }) {
             </a>
           ))}
         </div>
-
       </main>
 
-      <FollowModal 
-        isOpen={modalConfig.isOpen} 
+      <FollowModal
+        isOpen={modalConfig.isOpen}
         type={modalConfig.type}
-        onClose={() => setModalConfig({ isOpen: false, type: null })} 
+        onClose={() => setModalConfig({ isOpen: false, type: null })}
         authorId={author?._id}
       />
     </section>

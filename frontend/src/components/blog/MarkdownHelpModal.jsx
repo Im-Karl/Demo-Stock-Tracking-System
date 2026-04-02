@@ -1,5 +1,6 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import Button from "../base-ui/Button";
 
 const markdownHelpContent = `
 ## Tiêu đề (Heading)
@@ -181,85 +182,45 @@ export default function MarkdownHelpModal({ isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center
-                 bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/60 backdrop-blur-sm transition-opacity"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="
-          relative w-full max-w-6xl h-[80vh]
-          rounded-2xl
-          bg-white/70 dark:bg-slate-800/70
-          backdrop-blur-xl
-          border border-slate-200 dark:border-slate-700
-          shadow-2xl
-          flex flex-col
-        "
+        className="relative w-full max-w-6xl h-[80vh] rounded-2xl bg-white/80 dark:bg-neutral-900/90 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700 shadow-2xl flex flex-col animate-in fade-in zoom-in duration-200"
       >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="
-            absolute top-4 right-4 z-10
-            text-slate-400 hover:text-slate-600
-            dark:text-slate-400 dark:hover:text-slate-200
-            text-2xl cursor-pointer
-          "
-        >
-          ✕
-        </button>
+        {/*  Nút Close bằng Base UI */}
+        <div className="absolute top-4 right-4 z-10">
+          <Button intent="neutral" size="icon" className="!rounded-full" onClick={onClose}>
+            <X size={20} />
+          </Button>
+        </div>
 
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-slate-200 dark:border-slate-700">
-          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">
+        <div className="px-6 pt-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
+          <h2 className="text-2xl font-extrabold text-neutral-800 dark:text-neutral-100">
             Hướng dẫn sử dụng Markdown
           </h2>
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
 
             {/* Markdown source */}
             <div className="flex flex-col h-full">
-              <label className="text-xs font-bold uppercase mb-2
-                                text-slate-500 dark:text-slate-400">
-                Markdown
-              </label>
+              <label className="text-xs font-bold uppercase mb-2 text-neutral-500 dark:text-neutral-400">Markdown</label>
               <textarea
                 readOnly
                 value={markdownHelpContent}
-                className="
-                  flex-1 w-full p-4 rounded-xl resize-none
-                  font-mono text-sm
-                  bg-slate-50 dark:bg-slate-900
-                  border border-slate-300 dark:border-slate-600
-                  text-slate-800 dark:text-slate-100
-                  overflow-hidden 
-                "
+                className="flex-1 w-full p-4 rounded-xl resize-none font-mono text-sm bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 custom-scrollbar"
               />
             </div>
 
             {/* Preview */}
             <div className="flex flex-col h-full">
-              <label className="text-xs font-bold uppercase mb-2
-                                text-slate-500 dark:text-slate-400">
-                Preview
-              </label>
-
-              <div
-                className="
-                  flex-1 w-full p-5 rounded-xl overflow-y-auto
-                  bg-slate-50 dark:bg-slate-900
-                  border border-slate-300 dark:border-slate-600
-                  prose prose-lg max-w-none
-                  prose-slate dark:prose-invert
-                  prose-headings:text-slate-800 dark:prose-headings:text-slate-100
-                  prose-p:text-slate-700 dark:prose-p:text-slate-300
-                  prose-a:text-blue-600 dark:prose-a:text-blue-400
-                "
-              >
+              <label className="text-xs font-bold uppercase mb-2 text-neutral-500 dark:text-neutral-400">Preview</label>
+              <div className="flex-1 w-full p-5 rounded-xl overflow-y-auto bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 prose prose-lg max-w-none prose-neutral dark:prose-invert custom-scrollbar">
                 <ReactMarkdown>{markdownHelpContent}</ReactMarkdown>
               </div>
             </div>

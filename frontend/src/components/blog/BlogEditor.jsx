@@ -1,16 +1,17 @@
 // src/components/blog/BlogEditor.jsx
-import React, { useState } from 'react';
-import { useCreateBlog } from '../../hooks/useBlogs';
-import ReactMarkdown from 'react-markdown';
-import { toast } from 'react-hot-toast';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { useState } from "react";
+import { useCreateBlog } from "../../hooks/useBlogs";
+import ReactMarkdown from "react-markdown";
+import { toast } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MarkdownHelpModal from "./MarkdownHelpModal";
+import Button from "../base-ui/Button";
 
 const queryClient = new QueryClient();
 
 function BlogEditorContent() {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -18,7 +19,7 @@ function BlogEditorContent() {
 
   const handleSubmit = () => {
     if (!title.trim() || !content.trim()) {
-        toast.error("Vui lòng nhập tiêu đề và nội dung!");
+      toast.error("Vui lòng nhập tiêu đề và nội dung!");
       return;
     }
 
@@ -28,15 +29,15 @@ function BlogEditorContent() {
         onSuccess: () => {
           toast.success("Đăng bài thành công!");
           setTimeout(() => {
-            window.location.href = '/blog';
+            window.location.href = "/blog";
           }, 1200);
         },
         onError: (err) => {
           toast.error(
-            err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại."
+            err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại.",
           );
-        }
-      }
+        },
+      },
     );
   };
 
@@ -48,19 +49,15 @@ function BlogEditorContent() {
                  shadow-xl
                  text-slate-800 dark:text-slate-100"
     >
- 
-      <button
+      <Button
+        intent="primary"
+        size="icon"
+        className="!rounded-full shadow-lg"
         onClick={() => setShowHelp(true)}
         title="Hướng dẫn Markdown"
-        className="absolute top-6 right-6 z-20
-                   w-11 h-11 rounded-full
-                   bg-gradient-to-br from-blue-600 to-violet-600
-                   text-white font-bold
-                   flex items-center justify-center
-                   shadow-lg hover:scale-105 transition cursor-pointer"
       >
-        ?
-      </button>
+        <HelpCircle size={20} />
+      </Button>
 
       {/* ===== HEADER ===== */}
       <div className="mb-10 space-y-5">
@@ -73,14 +70,14 @@ function BlogEditorContent() {
                      focus:border-blue-500 transition"
           placeholder="Tiêu đề bài viết..."
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
         <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
           <input
             type="checkbox"
             checked={isPublic}
-            onChange={e => setIsPublic(e.target.checked)}
+            onChange={(e) => setIsPublic(e.target.checked)}
             className="w-5 h-5 rounded
                        border-slate-300 dark:border-slate-600
                        text-blue-600 focus:ring-blue-500"
@@ -93,17 +90,18 @@ function BlogEditorContent() {
 
       {/* ===== EDITOR / PREVIEW ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
-
         {/* Markdown editor */}
         <div className="flex flex-col">
-          <label className="mb-3 text-xs font-bold uppercase
-                            text-slate-500 dark:text-slate-400">
+          <label
+            className="mb-3 text-xs font-bold uppercase
+                            text-slate-500 dark:text-slate-400"
+          >
             Soạn thảo Markdown
           </label>
 
           <textarea
             className="w-full min-h-[520px] p-5 rounded-xl
-                       bg-white dark:bg-slate-900
+                       bg-white dark:bg-neutral-900
                        border border-slate-300 dark:border-slate-600
                        text-slate-900 dark:text-slate-100
                        placeholder:text-slate-400
@@ -111,20 +109,22 @@ function BlogEditorContent() {
                        focus:ring-2 focus:ring-blue-500 outline-none"
             placeholder="# Viết nội dung của bạn tại đây..."
             value={content}
-            onChange={e => setContent(e.target.value)}
+            onChange={(e) => setContent(e.target.value)}
           />
         </div>
 
         {/* Preview */}
         <div className="flex flex-col">
-          <label className="mb-3 text-xs font-bold uppercase
-                            text-slate-500 dark:text-slate-400">
+          <label
+            className="mb-3 text-xs font-bold uppercase
+                            text-slate-500 dark:text-slate-400"
+          >
             Xem trước
           </label>
 
           <div
             className="w-full min-h-[520px] p-6 rounded-xl
-                       bg-slate-50 dark:bg-slate-900
+                       bg-neutral-50 dark:bg-neutral-900
                        border border-slate-300 dark:border-slate-600
                        overflow-y-auto
                        prose prose-lg max-w-none
@@ -146,26 +146,13 @@ function BlogEditorContent() {
 
       {/* ===== FOOTER ===== */}
       <div className="flex justify-end pt-8 border-t border-slate-200 dark:border-slate-700">
-        <button
-          onClick={handleSubmit}
-          disabled={isPending}
-          className={`px-8 py-3 rounded-xl font-bold text-lg text-white transition
-                      shadow-lg active:scale-95 cursor-pointer
-                      ${
-                        isPending
-                          ? "bg-slate-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-blue-600 to-violet-600 hover:opacity-90"
-                      }`}
-        >
+        <Button onClick={handleSubmit} disabled={isPending} intent="primary">
           {isPending ? "Đang xuất bản..." : "Đăng bài ngay"}
-        </button>
+        </Button>
       </div>
 
       {/* ===== MARKDOWN HELP MODAL ===== */}
-      <MarkdownHelpModal
-        isOpen={showHelp}
-        onClose={() => setShowHelp(false)}
-      />
+      <MarkdownHelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 }

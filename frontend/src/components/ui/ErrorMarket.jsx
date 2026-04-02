@@ -6,18 +6,17 @@ export default function ErrorMarket({ code = 404 }) {
   const titleMap = {
     404: "Mất tín hiệu thị trường",
     500: "Data feed bị gián đoạn",
-    403: "Khu vực hạn chế"
+    403: "Khu vực hạn chế",
   };
 
   const descMap = {
     404: "Không tìm thấy dữ liệu biểu đồ bạn yêu cầu. Có thể mã chứng khoán không tồn tại.",
     500: "Máy chủ đang gặp sự cố khi xử lý dữ liệu tick. Đội ngũ kỹ thuật đang khắc phục.",
-    403: "Bạn không có quyền truy cập vào dữ liệu này. Vui lòng nâng cấp gói hoặc đăng nhập."
+    403: "Bạn không có quyền truy cập vào dữ liệu này. Vui lòng nâng cấp gói hoặc đăng nhập.",
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 px-4 overflow-hidden relative">
-      
+    <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50 dark:bg-neutral-900 text-slate-900 dark:text-slate-100 px-4 overflow-hidden relative">
       {/* Background decoration (optional) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 dark:opacity-10">
         <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-500 rounded-full blur-[100px]" />
@@ -81,48 +80,54 @@ export default function ErrorMarket({ code = 404 }) {
           <g transform="translate(180, 50)">
             {/* Wick */}
             <motion.line
-              x1="10" y1="0" x2="10" y2="80"
+              x1="10"
+              y1="0"
+              x2="10"
+              y2="80"
               stroke="#ef4444"
               strokeWidth="2"
               initial={{ opacity: 0, y: -20 }}
-              animate={{ 
-                opacity: 1, 
+              animate={{
+                opacity: 1,
                 y: 0,
                 rotate: [0, 5, -5, 10, 90], // Shake then tip over
-                y: [0, 0, 0, 0, 200],       // Fall down eventually
-                opacity: [1, 1, 1, 1, 0]    // Fade out
+                y: [0, 0, 0, 0, 200], // Fall down eventually
+                opacity: [1, 1, 1, 1, 0], // Fade out
               }}
-              transition={{ 
-                duration: 2.5, 
+              transition={{
+                duration: 2.5,
                 times: [0, 0.2, 0.4, 0.6, 1],
                 repeat: Infinity,
-                repeatDelay: 1
+                repeatDelay: 1,
               }}
             />
             {/* Body */}
             <motion.rect
-              x="4" y="20" width="12" height="40"
+              x="4"
+              y="20"
+              width="12"
+              height="40"
               fill="#ef4444"
               rx="2"
               initial={{ opacity: 0, y: -20 }}
-              animate={{ 
-                opacity: 1, 
+              animate={{
+                opacity: 1,
                 y: 0,
                 rotate: [0, 5, -5, 10, 90],
                 y: [0, 0, 0, 0, 200],
-                opacity: [1, 1, 1, 1, 0]
+                opacity: [1, 1, 1, 1, 0],
               }}
-              transition={{ 
-                duration: 2.5, 
+              transition={{
+                duration: 2.5,
                 times: [0, 0.2, 0.4, 0.6, 1],
                 repeat: Infinity,
-                repeatDelay: 1
+                repeatDelay: 1,
               }}
             />
-            
+
             {/* Question marks floating up */}
             {[1, 2].map((i) => (
-               <motion.text
+              <motion.text
                 key={i}
                 x="20"
                 y="10"
@@ -130,26 +135,26 @@ export default function ErrorMarket({ code = 404 }) {
                 fontSize="16"
                 fontWeight="bold"
                 initial={{ opacity: 0, y: 0, x: 0 }}
-                animate={{ 
-                  opacity: [0, 1, 0], 
-                  y: -40, 
-                  x: i % 2 === 0 ? 20 : -20 
+                animate={{
+                  opacity: [0, 1, 0],
+                  y: -40,
+                  x: i % 2 === 0 ? 20 : -20,
                 }}
                 transition={{
                   duration: 2,
-                  delay: 1.5 + (i * 0.5),
+                  delay: 1.5 + i * 0.5,
                   repeat: Infinity,
-                  repeatDelay: 0.5
+                  repeatDelay: 0.5,
                 }}
-               >
-                 ?
-               </motion.text>
+              >
+                ?
+              </motion.text>
             ))}
           </g>
         </svg>
 
         {/* Error Badge */}
-        <motion.div 
+        <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           className="absolute -top-4 -right-4 bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-800 flex items-center gap-1"

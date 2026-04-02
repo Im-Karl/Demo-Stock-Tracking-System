@@ -1,23 +1,29 @@
-import React, { useState, useMemo } from 'react';
-import { ArrowUp, ArrowDown, Heart, Trophy, Activity, AlertCircle } from 'lucide-react';
-import { useStockSocket } from '../../hooks/useStockSocket';
-import { motion, AnimatePresence } from 'framer-motion';
-
+import React, { useState, useMemo } from "react";
+import {
+  ArrowUp,
+  ArrowDown,
+  Heart,
+  Trophy,
+  Activity,
+  AlertCircle,
+} from "lucide-react";
+import { useStockSocket } from "../../hooks/useStockSocket";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function StockBoard() {
   const stocks = useStockSocket();
 
-  const [exchangeFilter, setExchangeFilter] = useState('ALL');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [exchangeFilter, setExchangeFilter] = useState("ALL");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const exchanges = useMemo(() => {
-    const unique = new Set(stocks.map(s => s.exchange).filter(Boolean));
-    return ['ALL', ...Array.from(unique)];
+    const unique = new Set(stocks.map((s) => s.exchange).filter(Boolean));
+    return ["ALL", ...Array.from(unique)];
   }, [stocks]);
 
   const [wishlist, setWishlist] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('stock_wishlist');
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("stock_wishlist");
       return saved ? JSON.parse(saved) : [];
     }
     return [];
@@ -25,22 +31,22 @@ export default function StockBoard() {
 
   const toggleWishlist = (symbol) => {
     const newWishlist = wishlist.includes(symbol)
-      ? wishlist.filter(item => item !== symbol)
+      ? wishlist.filter((item) => item !== symbol)
       : [...wishlist, symbol];
 
     setWishlist(newWishlist);
-    localStorage.setItem('stock_wishlist', JSON.stringify(newWishlist));
+    localStorage.setItem("stock_wishlist", JSON.stringify(newWishlist));
   };
 
   const filteredStocks = useMemo(() => {
     let data =
-      exchangeFilter === 'ALL'
+      exchangeFilter === "ALL"
         ? stocks
-        : stocks.filter(s => s.exchange === exchangeFilter);
+        : stocks.filter((s) => s.exchange === exchangeFilter);
 
-    if (searchTerm.trim() !== '') {
-      data = data.filter(s =>
-        s.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+    if (searchTerm.trim() !== "") {
+      data = data.filter((s) =>
+        s.symbol.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -49,40 +55,52 @@ export default function StockBoard() {
 
   const getRankStyle = (index) => {
     switch (index) {
-      case 0: return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-300";
-      case 1: return "bg-gray-100 text-gray-700 border-gray-200 dark:bg-slate-500/20 dark:text-slate-300";
-      case 2: return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-500/20 dark:text-orange-300";
-      default: return "text-slate-600 dark:text-slate-400 font-medium";
+      case 0:
+        return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-300";
+      case 1:
+        return "bg-gray-100 text-gray-700 border-gray-200 dark:bg-slate-500/20 dark:text-slate-300";
+      case 2:
+        return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-500/20 dark:text-orange-300";
+      default:
+        return "text-slate-600 dark:text-slate-400 font-medium";
     }
   };
 
   const getExchangeBadge = (exchange) => {
     switch (exchange) {
-      case 'HOSE': return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400';
-      case 'HNX': return 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400';
-      case 'UPCOM': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400';
-      default: return 'bg-gray-100 text-gray-600';
+      case "HOSE":
+        return "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400";
+      case "HNX":
+        return "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400";
+      case "UPCOM":
+        return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400";
+      default:
+        return "bg-gray-100 text-gray-600";
     }
   };
 
   const getStatus = (lastUpdated) => {
-    if (!lastUpdated) return { text: 'Đang GD', color: 'text-green-600', icon: Activity };
+    if (!lastUpdated)
+      return { text: "Đang GD", color: "text-green-600", icon: Activity };
 
     const diffTime = Math.abs(Date.now() - new Date(lastUpdated));
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays > 30) {
-      return { text: 'Tạm ngừng', color: 'text-red-500', icon: AlertCircle };
+      return { text: "Tạm ngừng", color: "text-red-500", icon: AlertCircle };
     }
-    return { text: 'Đang GD', color: 'text-green-600', icon: Activity };
+    return { text: "Đang GD", color: "text-green-600", icon: Activity };
   };
 
   if (stocks.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
         <div className="animate-pulse space-y-4 p-6">
-          {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="h-10 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div
+              key={i}
+              className="h-10 bg-slate-100 dark:bg-slate-800 rounded w-full"
+            />
           ))}
         </div>
       </div>
@@ -90,24 +108,24 @@ export default function StockBoard() {
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
-
+    <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
       {/* <div className="flex flex-wrap gap-2 px-6 py-4 border-b border-slate-200 dark:border-slate-700"> */}
       <div className="flex items-center justify-between flex-wrap gap-4 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
         <div className="flex flex-wrap gap-2">
-          {exchanges.map(ex => {
+          {exchanges.map((ex) => {
             const active = exchangeFilter === ex;
             return (
               <button
                 key={ex}
                 onClick={() => setExchangeFilter(ex)}
                 className={`px-3 py-1.5 rounded-full text-xs font-bold border transition cursor-pointer
-                  ${active
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700'
+                  ${
+                    active
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700"
                   }`}
               >
-                {ex === 'ALL' ? 'Tất cả' : ex}
+                {ex === "ALL" ? "Tất cả" : ex}
               </button>
             );
           })}
@@ -129,7 +147,7 @@ export default function StockBoard() {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">
+            <tr className="bg-neutral-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">
               <th className="px-4 py-4 text-center w-16">#</th>
               <th className="px-6 py-4">Mã CP</th>
               <th className="px-6 py-4 text-center">Sàn</th>
@@ -160,7 +178,9 @@ export default function StockBoard() {
                     className="group hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors"
                   >
                     <td className="px-4 py-4 text-center">
-                      <div className={`w-8 h-8 mx-auto flex items-center justify-center rounded-full border ${getRankStyle(index)}`}>
+                      <div
+                        className={`w-8 h-8 mx-auto flex items-center justify-center rounded-full border ${getRankStyle(index)}`}
+                      >
                         {index < 3 ? <Trophy size={14} /> : index + 1}
                       </div>
                     </td>
@@ -182,13 +202,15 @@ export default function StockBoard() {
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      <span className={`px-2 py-1 rounded text-[10px] font-bold border ${getExchangeBadge(stock.exchange)}`}>
-                        {stock.exchange || 'OTC'}
+                      <span
+                        className={`px-2 py-1 rounded text-[10px] font-bold border ${getExchangeBadge(stock.exchange)}`}
+                      >
+                        {stock.exchange || "OTC"}
                       </span>
                     </td>
 
                     <td className="px-6 py-4 text-right font-bold">
-                      {stock.price.toLocaleString('vi-VN')}
+                      {stock.price.toLocaleString("vi-VN")}
                     </td>
 
                     <td className="px-6 py-4 text-right">
@@ -207,16 +229,17 @@ export default function StockBoard() {
                           }
                         `}
                       >
-                        {isUp ? '+' : ''}
+                        {isUp ? "+" : ""}
                         {stock.percentChange}%
                       </span>
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      {isUp
-                        ? <ArrowUp className="w-5 h-5 text-green-500 inline" />
-                        : <ArrowDown className="w-5 h-5 text-red-500 inline" />
-                      }
+                      {isUp ? (
+                        <ArrowUp className="w-5 h-5 text-green-500 inline" />
+                      ) : (
+                        <ArrowDown className="w-5 h-5 text-red-500 inline" />
+                      )}
                     </td>
 
                     <td className="px-6 py-4 text-right text-sm font-mono">
@@ -224,7 +247,9 @@ export default function StockBoard() {
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      <div className={`flex items-center justify-center gap-1 text-xs ${statusInfo.color}`}>
+                      <div
+                        className={`flex items-center justify-center gap-1 text-xs ${statusInfo.color}`}
+                      >
                         <statusInfo.icon size={14} />
                         {statusInfo.text}
                       </div>
@@ -235,10 +260,13 @@ export default function StockBoard() {
                         whileTap={{ scale: 0.8 }}
                         onClick={() => toggleWishlist(stock.symbol)}
                         className={`p-2 rounded-full
-                          ${isWishlisted ? 'text-pink-500' : 'text-slate-400 hover:text-pink-400'}
+                          ${isWishlisted ? "text-pink-500" : "text-slate-400 hover:text-pink-400"}
                         `}
                       >
-                        <Heart size={18} fill={isWishlisted ? 'currentColor' : 'none'} />
+                        <Heart
+                          size={18}
+                          fill={isWishlisted ? "currentColor" : "none"}
+                        />
                       </motion.button>
                     </td>
                   </motion.tr>
@@ -249,8 +277,8 @@ export default function StockBoard() {
         </table>
       </div>
 
-      <div className="bg-slate-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-500 flex justify-center">
-        Đang theo dõi: <b className="ml-1">{wishlist.length}</b>  &nbsp;mã
+      <div className="bg-neutral-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-500 flex justify-center">
+        Đang theo dõi: <b className="ml-1">{wishlist.length}</b> &nbsp;mã
       </div>
     </div>
   );
