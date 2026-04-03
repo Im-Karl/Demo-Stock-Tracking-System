@@ -1,6 +1,7 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import Button from "../base-ui/Button";
+import { X } from "lucide-react";
 
 const markdownHelpContent = `
 ## Tiêu đề (Heading)

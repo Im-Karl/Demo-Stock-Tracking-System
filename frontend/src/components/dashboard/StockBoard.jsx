@@ -1,14 +1,9 @@
 import React, { useState, useMemo } from "react";
-import {
-  ArrowUp,
-  ArrowDown,
-  Heart,
-  Trophy,
-  Activity,
-  AlertCircle,
-} from "lucide-react";
+import { ArrowUp, ArrowDown, Heart, Trophy, Activity, AlertCircle, Search } from "lucide-react";
 import { useStockSocket } from "../../hooks/useStockSocket";
 import { motion, AnimatePresence } from "framer-motion";
+import GlassCard from "../base-ui/GlassCard"; 
+import Input from "../base-ui/Input";      
 
 export default function StockBoard() {
   const stocks = useStockSocket();
@@ -39,78 +34,54 @@ export default function StockBoard() {
   };
 
   const filteredStocks = useMemo(() => {
-    let data =
-      exchangeFilter === "ALL"
-        ? stocks
-        : stocks.filter((s) => s.exchange === exchangeFilter);
-
+    let data = exchangeFilter === "ALL" ? stocks : stocks.filter((s) => s.exchange === exchangeFilter);
     if (searchTerm.trim() !== "") {
-      data = data.filter((s) =>
-        s.symbol.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
+      data = data.filter((s) => s.symbol.toLowerCase().includes(searchTerm.toLowerCase()));
     }
-
     return [...data].sort((a, b) => b.price - a.price);
   }, [stocks, exchangeFilter, searchTerm]);
 
   const getRankStyle = (index) => {
     switch (index) {
-      case 0:
-        return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-300";
-      case 1:
-        return "bg-gray-100 text-gray-700 border-gray-200 dark:bg-slate-500/20 dark:text-slate-300";
-      case 2:
-        return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-500/20 dark:text-orange-300";
-      default:
-        return "text-slate-600 dark:text-slate-400 font-medium";
+      case 0: return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-300 dark:border-yellow-500/30";
+      case 1: return "bg-neutral-100 text-neutral-700 border-neutral-200 dark:bg-neutral-500/20 dark:text-neutral-300 dark:border-neutral-500/30";
+      case 2: return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-500/20 dark:text-orange-300 dark:border-orange-500/30";
+      default: return "text-neutral-600 dark:text-neutral-400 font-medium border-transparent";
     }
   };
 
   const getExchangeBadge = (exchange) => {
     switch (exchange) {
-      case "HOSE":
-        return "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400";
-      case "HNX":
-        return "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400";
-      case "UPCOM":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400";
-      default:
-        return "bg-gray-100 text-gray-600";
+      case "HOSE": return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30";
+      case "HNX": return "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/30";
+      case "UPCOM": return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/30";
+      default: return "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400";
     }
   };
 
   const getStatus = (lastUpdated) => {
-    if (!lastUpdated)
-      return { text: "Đang GD", color: "text-green-600", icon: Activity };
-
+    if (!lastUpdated) return { text: "Đang GD", color: "text-emerald-600 dark:text-emerald-400", icon: Activity };
     const diffTime = Math.abs(Date.now() - new Date(lastUpdated));
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays > 30) {
-      return { text: "Tạm ngừng", color: "text-red-500", icon: AlertCircle };
-    }
-    return { text: "Đang GD", color: "text-green-600", icon: Activity };
+    if (diffDays > 30) return { text: "Tạm ngừng", color: "text-red-500 dark:text-red-400", icon: AlertCircle };
+    return { text: "Đang GD", color: "text-emerald-600 dark:text-emerald-400", icon: Activity };
   };
 
   if (stocks.length === 0) {
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <GlassCard padding="none">
         <div className="animate-pulse space-y-4 p-6">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="h-10 bg-slate-100 dark:bg-slate-800 rounded w-full"
-            />
+            <div key={i} className="h-12 bg-neutral-100 dark:bg-neutral-800/50 rounded-lg w-full" />
           ))}
         </div>
-      </div>
+      </GlassCard>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
-      {/* <div className="flex flex-wrap gap-2 px-6 py-4 border-b border-slate-200 dark:border-slate-700"> */}
-      <div className="flex items-center justify-between flex-wrap gap-4 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+    <GlassCard padding="none">
+      <div className="flex items-center justify-between flex-wrap gap-4 px-6 py-5 border-b border-neutral-200 dark:border-neutral-800/50">
         <div className="flex flex-wrap gap-2">
           {exchanges.map((ex) => {
             const active = exchangeFilter === ex;
@@ -118,11 +89,10 @@ export default function StockBoard() {
               <button
                 key={ex}
                 onClick={() => setExchangeFilter(ex)}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold border transition cursor-pointer
-                  ${
-                    active
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-700"
+                className={`px-4 py-2 rounded-full text-xs font-bold border transition cursor-pointer
+                  ${active
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-neutral-100 text-neutral-600 border-neutral-200 hover:bg-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-400 dark:border-neutral-700 dark:hover:bg-neutral-800"
                   }`}
               >
                 {ex === "ALL" ? "Tất cả" : ex}
@@ -130,37 +100,36 @@ export default function StockBoard() {
             );
           })}
         </div>
-        <div className="relative">
-          <input
+         
+        <div className="w-full sm:w-64">
+          <Input 
+            icon={Search}
             type="text"
             placeholder="Tìm mã cổ phiếu..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-64 px-4 py-2 text-sm border rounded-lg 
-                      bg-white dark:bg-slate-800 
-                      border-slate-300 dark:border-slate-600
-                      focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="!py-2 !text-sm" 
           />
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+      <div className="overflow-x-auto custom-scrollbar">
+        <table className="w-full text-left border-collapse min-w-[800px]">
           <thead>
-            <tr className="bg-neutral-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">
-              <th className="px-4 py-4 text-center w-16">#</th>
-              <th className="px-6 py-4">Mã CP</th>
-              <th className="px-6 py-4 text-center">Sàn</th>
-              <th className="px-6 py-4 text-right">Giá (VND)</th>
-              <th className="px-6 py-4 text-right">+/-</th>
-              <th className="px-6 py-4 text-center">Xu hướng</th>
-              <th className="px-6 py-4 text-right">KLGD</th>
-              <th className="px-6 py-4 text-center">Trạng thái</th>
-              <th className="px-6 py-4 text-center">Yêu thích</th>
+            <tr className="bg-neutral-50/50 dark:bg-neutral-800/30 border-b border-neutral-200 dark:border-neutral-800 text-xs uppercase text-neutral-500 dark:text-neutral-400 font-bold tracking-wider">
+              <th className="px-4 py-5 text-center w-16">#</th>
+              <th className="px-6 py-5">Mã CP</th>
+              <th className="px-6 py-5 text-center">Sàn</th>
+              <th className="px-6 py-5 text-right">Giá (VND)</th>
+              <th className="px-6 py-5 text-right">+/-</th>
+              <th className="px-6 py-5 text-center">Xu hướng</th>
+              <th className="px-6 py-5 text-right">KLGD</th>
+              <th className="px-6 py-5 text-center">Trạng thái</th>
+              <th className="px-6 py-5 text-center">Yêu thích</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+          <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/50">
             <AnimatePresence>
               {filteredStocks.map((stock, index) => {
                 const isUp = stock.percentChange >= 0;
@@ -175,26 +144,21 @@ export default function StockBoard() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    className="group hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors"
+                    className="group hover:bg-blue-50/50 dark:hover:bg-neutral-800/50 transition-colors"
                   >
                     <td className="px-4 py-4 text-center">
-                      <div
-                        className={`w-8 h-8 mx-auto flex items-center justify-center rounded-full border ${getRankStyle(index)}`}
-                      >
+                      <div className={`w-8 h-8 mx-auto flex items-center justify-center rounded-full border ${getRankStyle(index)}`}>
                         {index < 3 ? <Trophy size={14} /> : index + 1}
                       </div>
                     </td>
 
                     <td className="px-6 py-4">
-                      <a
-                        href={`/stock/${stock.symbol}`}
-                        className="flex items-center group/link"
-                      >
+                      <a href={`/stock/${stock.symbol}`} className="flex items-center group/link">
                         <div>
-                          <div className="font-bold text-slate-900 dark:text-slate-100 group-hover/link:text-blue-600 transition">
+                          <div className="font-bold text-neutral-900 dark:text-neutral-100 group-hover/link:text-blue-600 dark:group-hover/link:text-blue-400 transition-colors">
                             {stock.symbol}
                           </div>
-                          <div className="text-[10px] text-slate-400 uppercase tracking-wide">
+                          <div className="text-[10px] text-neutral-500 uppercase tracking-wide">
                             {stock.organ_name_en}
                           </div>
                         </div>
@@ -202,54 +166,36 @@ export default function StockBoard() {
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      <span
-                        className={`px-2 py-1 rounded text-[10px] font-bold border ${getExchangeBadge(stock.exchange)}`}
-                      >
+                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold border ${getExchangeBadge(stock.exchange)}`}>
                         {stock.exchange || "OTC"}
                       </span>
                     </td>
 
-                    <td className="px-6 py-4 text-right font-bold">
+                    <td className="px-6 py-4 text-right font-bold text-neutral-900 dark:text-white">
                       {stock.price.toLocaleString("vi-VN")}
                     </td>
 
                     <td className="px-6 py-4 text-right">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border
-                          ${
-                            isUp
-                              ? `
-                                bg-green-100 text-green-700 border-green-200
-                                dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/30
-                              `
-                              : `
-                                bg-red-100 text-red-700 border-red-200
-                                dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30
-                              `
-                          }
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border
+                          ${isUp 
+                            ? "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30" 
+                            : "bg-red-100 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30"}
                         `}
                       >
-                        {isUp ? "+" : ""}
-                        {stock.percentChange}%
+                        {isUp ? "+" : ""}{stock.percentChange}%
                       </span>
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      {isUp ? (
-                        <ArrowUp className="w-5 h-5 text-green-500 inline" />
-                      ) : (
-                        <ArrowDown className="w-5 h-5 text-red-500 inline" />
-                      )}
+                      {isUp ? <ArrowUp className="w-5 h-5 text-emerald-500 inline" /> : <ArrowDown className="w-5 h-5 text-red-500 inline" />}
                     </td>
 
-                    <td className="px-6 py-4 text-right text-sm font-mono">
+                    <td className="px-6 py-4 text-right text-sm font-mono font-medium text-neutral-700 dark:text-neutral-300">
                       {stock.volume?.toLocaleString()}
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      <div
-                        className={`flex items-center justify-center gap-1 text-xs ${statusInfo.color}`}
-                      >
+                      <div className={`flex items-center justify-center gap-1.5 text-xs font-medium ${statusInfo.color}`}>
                         <statusInfo.icon size={14} />
                         {statusInfo.text}
                       </div>
@@ -259,14 +205,9 @@ export default function StockBoard() {
                       <motion.button
                         whileTap={{ scale: 0.8 }}
                         onClick={() => toggleWishlist(stock.symbol)}
-                        className={`p-2 rounded-full
-                          ${isWishlisted ? "text-pink-500" : "text-slate-400 hover:text-pink-400"}
-                        `}
+                        className={`p-2 rounded-full cursor-pointer transition-colors ${isWishlisted ? "text-pink-500 hover:bg-pink-500/10" : "text-neutral-400 hover:text-pink-400 hover:bg-neutral-800"}`}
                       >
-                        <Heart
-                          size={18}
-                          fill={isWishlisted ? "currentColor" : "none"}
-                        />
+                        <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
                       </motion.button>
                     </td>
                   </motion.tr>
@@ -277,9 +218,9 @@ export default function StockBoard() {
         </table>
       </div>
 
-      <div className="bg-neutral-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-500 flex justify-center">
-        Đang theo dõi: <b className="ml-1">{wishlist.length}</b> &nbsp;mã
+      <div className="bg-neutral-50/50 dark:bg-neutral-800/30 px-6 py-4 border-t border-neutral-200 dark:border-neutral-800/50 text-sm text-neutral-500 flex justify-center">
+        Đang theo dõi: <b className="ml-1 text-neutral-900 dark:text-neutral-200">{wishlist.length}</b> &nbsp;mã
       </div>
-    </div>
+    </GlassCard>
   );
 }

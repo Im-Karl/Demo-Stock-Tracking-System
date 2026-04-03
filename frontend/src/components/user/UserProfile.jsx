@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { authService } from "../../services/authService";
-import ThemeToggle from "..//ui/ThemeToggle";
+import ThemeToggle from "../ui/ThemeToggle";
+import { ExternalLink, KeyRound, LogOut, User as UserIcon } from "lucide-react";
+import PageLayout from "../base-ui/PageLayout";
+import GlassCard from "../base-ui/GlassCard";
+import Button from "../base-ui/Button";
+import Input from "../base-ui/Input";
 
 export default function UserProfile() {
   const [user, setUser] = useState({
+    _id: "", 
     username: "",
     email: "",
     displayName: "",
     phone: "",
+    tagline: "",
   });
   const [passData, setPassData] = useState({
     oldPassword: "",
@@ -36,14 +43,11 @@ export default function UserProfile() {
 
   const handleUpdateInfo = async () => {
     setLoading(true);
-    // Xử lý chuỗi rỗng trước khi gửi
     const dataToSend = {
       displayName: user.displayName === "" ? undefined : user.displayName,
       phone: user.phone === "" ? undefined : user.phone,
       tagline: user.tagline === "" ? undefined : user.tagline,
     };
-
-    console.log("Gửi đi:", dataToSend);
 
     try {
       const res = await authService.updateProfile(dataToSend);
@@ -66,6 +70,7 @@ export default function UserProfile() {
       await authService.changePassword(passData);
       toast.success("Đổi mật khẩu thành công!");
       setPassData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+      setShowChangePassword(false);
     } catch (err) {
       toast.error(err.response?.data?.message || "Lỗi đổi mật khẩu");
     }
@@ -83,40 +88,32 @@ export default function UserProfile() {
 
   if (fetchError) {
     return (
-      <div className="p-10 text-center text-red-600 bg-red-50 border border-red-200 rounded">
-        <h3 className="font-bold text-xl mb-2">Có lỗi xảy ra</h3>
-        <p>{fetchError}</p>
-        <p className="text-sm text-gray-500 mt-2">
-          Hãy kiểm tra lại Server API hoặc đăng nhập lại.
-        </p>
-      </div>
+      <PageLayout showAmbient={false} className="flex items-center justify-center p-4">
+        <GlassCard intent="success" className="!border-red-500/40 !bg-red-50 dark:!bg-red-900/20 text-center max-w-md p-8">
+          <h3 className="font-bold text-xl mb-2 text-red-600 dark:text-red-400">Có lỗi xảy ra</h3>
+          <p className="text-red-700 dark:text-red-300">{fetchError}</p>
+          <p className="text-sm text-red-500/80 mt-4">Hãy kiểm tra lại Server API hoặc đăng nhập lại.</p>
+        </GlassCard>
+      </PageLayout>
     );
   }
 
-  // Nếu đang tải lần đầu
   if (!user.username && !fetchError)
     return (
-      <div className="p-10 text-center text-blue-600">
-        ⏳ Đang tải thông tin từ Server...
-      </div>
+      <PageLayout showAmbient={false} className="flex items-center justify-center">
+        <div className="text-neutral-500 animate-pulse font-medium">⏳ Đang tải thông tin từ Server...</div>
+      </PageLayout>
     );
 
   return (
-    <div
-      className="relative min-h-screen bg-neutral-50 dark:bg-neutral-900 py-16 px-4
-                  text-slate-800 dark:text-slate-100"
-    >
-      {/* Ambient */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-500/20 blur-[120px] rounded-full" /> */}
-        {/* <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-violet-500/20 blur-[120px] rounded-full" /> */}
-      </div>
-
+    <PageLayout showAmbient={false} className="py-16 px-4">
       <div className="relative z-10 max-w-5xl mx-auto">
+        
+        {/* Header */}
         <div className="flex items-start justify-between mb-10">
           <div>
-            <h1 className="text-4xl font-extrabold">Hồ sơ người dùng</h1>
-            <span className="block text-lg font-medium text-slate-600 dark:text-slate-400 mt-2">
+            <h1 className="text-4xl font-extrabold text-neutral-900 dark:text-white">Hồ sơ người dùng</h1>
+            <span className="block text-lg font-medium text-neutral-500 dark:text-neutral-400 mt-2">
               Quản lý thông tin & bảo mật tài khoản
             </span>
           </div>
@@ -126,187 +123,104 @@ export default function UserProfile() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* ===== PROFILE ===== */}
-          <div
-            className="rounded-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl
-                        border border-slate-200 dark:border-slate-700 shadow-xl p-8"
-          >
-            <h2 className="text-xl font-bold mb-6">Thông tin cá nhân</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          {/* ===== COLUMN 1: THÔNG TIN CÁ NHÂN ===== */}
+          <GlassCard padding="xl">
+            <h2 className="text-xl font-bold mb-6 text-neutral-900 dark:text-white flex items-center gap-2">
+              <UserIcon className="text-blue-500" /> Thông tin cá nhân
+            </h2>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="text-sm text-slate-500 dark:text-slate-400">
-                  Tên đăng nhập
-                </label>
-                <input
-                  disabled
-                  value={user.username || ""}
-                  className="w-full mt-1 p-3 rounded-lg
-                           bg-slate-100 dark:bg-slate-700
-                           border border-slate-200 dark:border-slate-600
-                           text-slate-500 dark:text-slate-400
-                           cursor-not-allowed"
-                />
+                <label className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-1 block">Tên đăng nhập</label>
+                <Input disabled value={user.username || ""} className="opacity-60 bg-neutral-100 dark:bg-neutral-800" />
               </div>
 
               <div>
-                <label className="text-sm text-slate-500 dark:text-slate-400">
-                  Email
-                </label>
-                <input
-                  disabled
-                  value={user.email || ""}
-                  className="w-full mt-1 p-3 rounded-lg
-                           bg-slate-100 dark:bg-slate-700
-                           border border-slate-200 dark:border-slate-600
-                           text-slate-500 dark:text-slate-400
-                           cursor-not-allowed"
-                />
+                <label className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-1 block">Email</label>
+                <Input disabled value={user.email || ""} className="opacity-60 bg-neutral-100 dark:bg-neutral-800" />
               </div>
 
               <div>
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Tên hiển thị
-                </label>
-                <input
-                  value={user.displayName || ""}
-                  onChange={(e) =>
-                    setUser({ ...user, displayName: e.target.value })
-                  }
-                  className="w-full mt-1 p-3 rounded-lg
-                           bg-white dark:bg-neutral-900
-                           border border-slate-300 dark:border-slate-600
-                           text-slate-900 dark:text-slate-100
-                           placeholder:text-slate-400
-                           focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Tiểu sử ngắn (Tagline)
-                </label>
-                <input
-                  value={user.tagline || ""}
-                  onChange={(e) =>
-                    setUser({ ...user, tagline: e.target.value })
-                  }
-                  placeholder="Ví dụ: Người đam mê viết lách "
-                  className="w-full mt-1 p-3 rounded-lg
-                          bg-white dark:bg-neutral-900
-                          border border-slate-300 dark:border-slate-600
-                          text-slate-900 dark:text-slate-100
-                          placeholder:text-slate-400
-                          focus:ring-2 focus:ring-blue-500 outline-none"
-                />
+                <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-1 block">Tên hiển thị</label>
+                <Input value={user.displayName || ""} onChange={(e) => setUser({ ...user, displayName: e.target.value })} placeholder="Nhập tên hiển thị" />
               </div>
 
               <div>
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Số điện thoại
-                </label>
-                <input
-                  value={user.phone || ""}
-                  onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                  className="w-full mt-1 p-3 rounded-lg
-                           bg-white dark:bg-neutral-900
-                           border border-slate-300 dark:border-slate-600
-                           text-slate-900 dark:text-slate-100
-                           placeholder:text-slate-400
-                           focus:ring-2 focus:ring-blue-500 outline-none"
-                />
+                <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-1 block">Tiểu sử ngắn (Tagline)</label>
+                <Input value={user.tagline || ""} onChange={(e) => setUser({ ...user, tagline: e.target.value })} placeholder="Ví dụ: Người đam mê viết lách" />
               </div>
 
-              <button
-                onClick={handleUpdateInfo}
-                disabled={loading}
-                className={`w-full mt-4 py-3 rounded-xl font-bold text-white transition cursor-pointer
-                ${
-                  loading
-                    ? "bg-slate-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-600 to-violet-600 hover:opacity-90"
-                }`}
-              >
-                {loading ? " Đang lưu..." : " Lưu thay đổi"}
-              </button>
+              <div>
+                <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-1 block">Số điện thoại</label>
+                <Input value={user.phone || ""} onChange={(e) => setUser({ ...user, phone: e.target.value })} placeholder="Nhập số điện thoại" />
+              </div>
+
+              <Button onClick={handleUpdateInfo} disabled={loading} intent="primary" className="w-full mt-2">
+                {loading ? "Đang lưu..." : "Lưu thay đổi"}
+              </Button>
             </div>
-          </div>
+          </GlassCard>
 
-          {/* ===== SECURITY ===== */}
-          <div
-            className="rounded-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl
-                        border border-slate-200 dark:border-slate-700 shadow-xl p-8 h-fit"
-          >
-            <button
-              onClick={() => setShowChangePassword(!showChangePassword)}
-              className="w-full flex items-center justify-between text-xl font-bold
-                       text-slate-800 dark:text-slate-100 cursor-pointer"
-            >
-              <span>Đổi mật khẩu</span>
-              <span
-                className={`transition-transform ${showChangePassword ? "rotate-90" : ""}`}
-              >
-                ▶
-              </span>
-            </button>
-
-            {showChangePassword && (
-              <div className="space-y-4 mt-6">
-                {["oldPassword", "newPassword", "confirmPassword"].map(
-                  (field, i) => (
-                    <input
-                      key={i}
-                      type="password"
-                      placeholder={
-                        field === "oldPassword"
-                          ? "Mật khẩu cũ"
-                          : field === "newPassword"
-                            ? "Mật khẩu mới"
-                            : "Xác nhận mật khẩu mới"
-                      }
-                      value={passData[field] || ""}
-                      onChange={(e) =>
-                        setPassData({ ...passData, [field]: e.target.value })
-                      }
-                      className="w-full p-3 rounded-lg
-                             bg-white dark:bg-neutral-900
-                             border border-slate-300 dark:border-slate-600
-                             text-slate-900 dark:text-slate-100
-                             placeholder:text-slate-400"
-                    />
-                  ),
+          {/* ===== COLUMN 2: BẢO MẬT & MỞ RỘNG ===== */}
+          <div className="space-y-8">
+            
+            <GlassCard padding="lg">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-bold text-lg text-neutral-900 dark:text-white">Trang công khai</h3>
+                  <p className="text-sm text-neutral-500 mt-1">Nơi người khác có thể tìm hiểu về bạn</p>
+                </div>
+                
+                {user._id && (
+                  <Button render={<a href={`/author/${user._id}`} />} intent="primarySoft" size="sm" className="w-full sm:w-auto flex-shrink-0">
+                    <ExternalLink size={16} /> Xem trang
+                  </Button>
                 )}
-
-                {showPasswordHint && (
-                  <p className="text-xs text-red-500 italic">
-                    Mật khẩu xác nhận chưa trùng
-                  </p>
-                )}
-
-                <button
-                  onClick={handleChangePassword}
-                  className="w-full py-3 rounded-xl font-bold text-white
-                           bg-neutral-900 hover:bg-black transition"
-                >
-                  Đổi mật khẩu
-                </button>
               </div>
-            )}
+            </GlassCard>
 
-            <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-700">
-              <button
-                onClick={handleLogout}
-                className="w-full py-2 rounded-lg text-sm font-semibold
-                         text-red-600 dark:text-red-400
-                         bg-red-50 dark:bg-red-500/10
-                         hover:bg-red-100 dark:hover:bg-red-500/20 transition cursor-pointer"
+            {/* ĐỔI MẬT KHẨU */}
+            <GlassCard padding="lg">
+              <div 
+                onClick={() => setShowChangePassword(!showChangePassword)}
+                className="flex items-center justify-between cursor-pointer group"
               >
-                Đăng xuất
-              </button>
-            </div>
+                <h3 className="font-bold text-lg text-neutral-900 dark:text-white flex items-center gap-2 group-hover:text-blue-500 transition-colors">
+                  <KeyRound className="text-neutral-400 group-hover:text-blue-500" /> Đổi mật khẩu
+                </h3>
+                <span className={`text-neutral-400 transition-transform duration-300 ${showChangePassword ? "rotate-90" : ""}`}>
+                  ▶
+                </span>
+              </div>
+
+              {showChangePassword && (
+                <div className="space-y-4 mt-6 animate-in slide-in-from-top-2 duration-200">
+                  <Input type="password" placeholder="Mật khẩu cũ" value={passData.oldPassword} onChange={(e) => setPassData({ ...passData, oldPassword: e.target.value })} />
+                  <Input type="password" placeholder="Mật khẩu mới" value={passData.newPassword} onChange={(e) => setPassData({ ...passData, newPassword: e.target.value })} />
+                  <Input type="password" placeholder="Xác nhận mật khẩu mới" value={passData.confirmPassword} onChange={(e) => setPassData({ ...passData, confirmPassword: e.target.value })} />
+                  
+                  {showPasswordHint && (
+                    <p className="text-xs text-red-500 dark:text-red-400 font-medium">Mật khẩu xác nhận chưa khớp!</p>
+                  )}
+
+                  <Button onClick={handleChangePassword} intent="neutral" className="w-full">
+                    Cập nhật mật khẩu
+                  </Button>
+                </div>
+              )}
+            </GlassCard>
+
+            {/* ĐĂNG XUẤT */}
+            <Button onClick={handleLogout} intent="dangerSoft" className="w-full h-14">
+              <LogOut size={18} /> Đăng xuất khỏi hệ thống
+            </Button>
+            
           </div>
         </div>
+
       </div>
-    </div>
+    </PageLayout>
   );
 }
