@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true }, // Mật khẩu đã mã hóa
   displayName: { type: String, unique: true, sparse: true },
   phone: { type: String, unique: true, sparse: true },
+  avatar: { type: String, default: "" },
   tagline: { type: String, default: "Người đam mê viết lách" }, 
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

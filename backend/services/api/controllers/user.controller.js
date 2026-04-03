@@ -11,25 +11,19 @@ exports.getUserById = async (req, res) => {
     }
 
     let isFollowing = false;
-
     if (req.userId) {
       isFollowing = user.followers.some(
         (id) => id.toString() === req.userId.toString()
       );
     }
 
-    res.json({
-      user,
-      isFollowing
-    });
-
+    res.json({ user, isFollowing });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 exports.getProfile = async (req, res) => {
-  console.log("Controller: Getting Profile for ID:", req.userId);
   try {
     const user = await User.findById(req.userId).select(
       "-password -resetPasswordToken -resetPasswordExpires",
@@ -40,43 +34,39 @@ exports.getProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log(" Found User:", user.username);
     res.json(user);
   } catch (err) {
     console.error(" Controller Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
-
-// Cập nhật thông tin (DisplayName, Phone)
+ 
 exports.updateProfile = async (req, res) => {
   try {
-    const { displayName, phone ,tagline} = req.body;
+    // Thêm avatar vào đây
+    const { displayName, phone, tagline, avatar } = req.body; 
     const userId = req.userId;
 
-    // Kiểm tra trùng lặp (nếu có nhập)
     if (displayName) {
       const existName = await User.findOne({
         displayName,
         _id: { $ne: userId },
       });
       if (existName)
-        return res
-          .status(400)
-          .json({ message: "Tên hiển thị này đã có người dùng." });
+        return res.status(400).json({ message: "Tên hiển thị này đã có người dùng." });
     }
+    
     if (phone) {
       const existPhone = await User.findOne({ phone, _id: { $ne: userId } });
       if (existPhone)
-        return res
-          .status(400)
-          .json({ message: "Số điện thoại này đã có người dùng." });
+        return res.status(400).json({ message: "Số điện thoại này đã có người dùng." });
     }
 
+    // Đẩy thêm avatar vào cục object cập nhật
     const user = await User.findByIdAndUpdate(
       userId,
-      { displayName, phone, tagline },
-      { new: true }, // Trả về data mới
+      { displayName, phone, tagline, avatar }, 
+      { new: true },
     ).select("-password");
 
     res.json({ success: true, user });
@@ -85,7 +75,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-// Đổi mật khẩu
 exports.changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
@@ -110,9 +99,7 @@ exports.toggleFollow = async (req, res) => {
     const currentUserId = req.userId;
 
     if (targetUserId === currentUserId) {
-      return res
-        .status(400)
-        .json({ message: "Bạn không thể tự theo dõi chính mình" });
+      return res.status(400).json({ message: "Bạn không thể tự theo dõi chính mình" });
     }
 
     const targetUser = await User.findById(targetUserId);
@@ -139,12 +126,10 @@ exports.toggleFollow = async (req, res) => {
   }
 };
 
-
 exports.getFollowers = async (req, res) => {
   try {
-    const { id } = req.params;
-    
-    const user = await User.findById(id).populate("followers", "username displayName");
+    const { id } = req.params; 
+    const user = await User.findById(id).populate("followers", "username displayName avatar");
     
     if (!user) return res.status(404).json({ message: "Không tìm thấy người dùng" });
 
@@ -156,9 +141,8 @@ exports.getFollowers = async (req, res) => {
 
 exports.getFollowing = async (req, res) => {
   try {
-    const { id } = req.params;
-    
-    const user = await User.findById(id).populate("following", "username displayName");
+    const { id } = req.params; 
+    const user = await User.findById(id).populate("following", "username displayName avatar");
     
     if (!user) return res.status(404).json({ message: "Không tìm thấy người dùng" });
 

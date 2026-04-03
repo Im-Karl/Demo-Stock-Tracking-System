@@ -12,7 +12,7 @@ const BlogSchema = new mongoose.Schema({
     required: true 
   },
 
-  thumbnail: String,
+  thumbnail: { type: String, default: "" },
   isPublic: { type: Boolean, default: false },
   isDeleted: { type: Boolean, default: false },
   deletedAt: { type: Date, default: null },

@@ -65,9 +65,18 @@ export default function AuthorPage({ author, blogs = [], stats }) {
       <main className="relative z-10 max-w-7xl mx-auto px-6 py-16">
         {author && (
           <GlassCard padding="xl" className="text-center mb-14">
-            <div className="mx-auto mb-4 w-28 h-28 rounded-full bg-gradient-to-tr from-blue-500 to-violet-500 flex items-center justify-center text-white text-4xl font-extrabold shadow-xl">
-              {(author.displayName || author.username)?.charAt(0).toUpperCase()}
+            
+            {/*  KHU VỰC AVATAR */}
+            <div className="mx-auto mb-4 w-28 h-28 rounded-full overflow-hidden shadow-xl border-4 border-white dark:border-neutral-800 bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center">
+              {author.avatar ? (
+                <img src={author.avatar} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-tr from-blue-500 to-violet-500 flex items-center justify-center text-white text-4xl font-extrabold">
+                  {(author.displayName || author.username)?.charAt(0).toUpperCase()}
+                </div>
+              )}
             </div>
+
             <h1 className="text-3xl md:text-4xl font-extrabold mb-2 text-neutral-900 dark:text-white">
               {author.displayName || author.username}
             </h1>

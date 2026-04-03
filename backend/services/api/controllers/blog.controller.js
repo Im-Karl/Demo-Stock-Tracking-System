@@ -1,16 +1,26 @@
 const Blog = require("../models/Blog");
 const User = require("../models/User");
 
+const extractThumbnailFromContent = (content) => {
+  if (!content) return null;
+  // Tìm chuỗi có dạng ![alt text](url) và lấy cái url
+  const match = content.match(/!\[.*?\]\((.*?)\)/);
+  return match ? match[1] : null; 
+};
+
 exports.createBlog = async (req, res) => {
   try {
     const { title, content, isPublic } = req.body;
     const authorId = req.userId;
     const slug = title.toLowerCase().replace(/ /g, "-") + "-" + Date.now();
 
+    const thumbnail = extractThumbnailFromContent(content);
+
     const newBlog = new Blog({
       title,
       slug,
       content,
+      thumbnail, // Lấy được URL thì lưu vào đây
       author: authorId,
       isPublic,
       publishedDate: isPublic ? new Date() : null,
@@ -26,7 +36,7 @@ exports.createBlog = async (req, res) => {
 exports.getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find({ isPublic: true, isDeleted: false })
-      .populate("author", "username displayName")
+      .populate("author", "username displayName avatar") // Có thể populate thêm avatar tác giả nếu cần
       .sort({ publishedDate: -1 });
     res.json(blogs);
   } catch (err) {
@@ -38,7 +48,7 @@ exports.getBlogBySlug = async (req, res) => {
   try {
     const blog = await Blog.findOne({ slug: req.params.slug }).populate(
       "author",
-      "username displayName",
+      "username displayName avatar",
     );
     if (!blog) return res.status(404).json({ message: "Not found" });
     res.json(blog);
@@ -113,21 +123,25 @@ exports.updateBlog = async (req, res) => {
       author: req.userId,
       isDeleted: false,
     });
+    
     if (!blog)
       return res.status(404).json({ message: "Không tìm thấy bài viết" });
 
-    //  LOGIC CHẶN Ở ĐÂY
     if (blog.isPublic) {
       return res
         .status(400)
         .json({
-          message:
-            "Bài viết đang Xuất bản. Vui lòng hạ về Bản nháp trước khi sửa!",
+          message: "Bài viết đang Xuất bản. Vui lòng hạ về Bản nháp trước khi sửa!",
         });
     }
 
     blog.title = title || blog.title;
-    blog.content = content || blog.content;
+    
+    // Nếu nội dung thay đổi, cập nhật lại content và trích xuất lại thumbnail
+    if (content) {
+      blog.content = content;
+      blog.thumbnail = extractThumbnailFromContent(content); // 👇 Cập nhật lại ảnh bìa
+    }
 
     await blog.save();
     res.json({ success: true, message: "Đã cập nhật bài viết", blog });
@@ -196,7 +210,7 @@ exports.getBlogsByAuthor = async (req, res) => {
   try {
     const { authorId } = req.params;
 
-    const author = await User.findById(authorId).select("username displayName tagline followers following");
+    const author = await User.findById(authorId).select("username displayName tagline followers following avatar");
     if (!author)
       return res.status(404).json({ message: "Không tìm thấy tác giả" });
 
@@ -205,11 +219,10 @@ exports.getBlogsByAuthor = async (req, res) => {
       isPublic: true,
       isDeleted: false,
     })
-      .populate("author", "username displayName")
+      .populate("author", "username displayName avatar")
       .sort({ publishedDate: -1 });
 
     const totalLikes = blogs.reduce((sum, blog) => sum + (blog.likes?.length || 0), 0);
-
 
     res.json({ success: true, author, blogs ,stats: { totalLikes }});
   } catch (error) {
@@ -223,8 +236,8 @@ exports.toggleLike = async (req,res) => {
     const blogId = req.params.id;
     const userId = req.userId;
 
-    const  blog = await Blog.findById(blogId);
-    if(!blog) return res.stats(404).json({message: "Không tìm thấy bài viết"});
+    const blog = await Blog.findById(blogId);
+    if(!blog) return res.status(404).json({message: "Không tìm thấy bài viết"});  
 
     const isLiked = blog.likes.some(id => id.toString() === userId.toString());
 
@@ -242,6 +255,6 @@ exports.toggleLike = async (req,res) => {
       likesCount: blog.likes.length
     });
   } catch (error) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: error.message }); 
   }
 }

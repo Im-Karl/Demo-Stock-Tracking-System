@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 import { authService } from "../../services/authService";
 import ThemeToggle from "../ui/ThemeToggle";
-import { ExternalLink, KeyRound, LogOut, User as UserIcon } from "lucide-react";
+import { ExternalLink, KeyRound, LogOut, User as UserIcon, Camera, Loader2 } from "lucide-react";
+import { uploadService } from "../../services/uploadService";
 import PageLayout from "../base-ui/PageLayout";
 import GlassCard from "../base-ui/GlassCard";
 import Button from "../base-ui/Button";
@@ -16,21 +17,30 @@ export default function UserProfile() {
     displayName: "",
     phone: "",
     tagline: "",
+    avatar: "", // 👈 Đã có trường avatar
   });
+  
   const [passData, setPassData] = useState({
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+  
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState(null);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  
+  // State cho Avatar
+  const [uploadingAvatar, setUploadingAvatar] = useState(false); 
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     authService
       .getProfile()
       .then((res) => {
         setUser(res.data);
+        const localUser = JSON.parse(localStorage.getItem("user") || "{}");
+        localStorage.setItem("user", JSON.stringify({ ...localUser, ...res.data }));
       })
       .catch((err) => {
         setFetchError(
@@ -41,6 +51,41 @@ export default function UserProfile() {
       });
   }, []);
 
+  // ===== LOGIC UPLOAD AVATAR =====
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Ảnh quá lớn! Vui lòng chọn ảnh dưới 2MB.");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      // 1. Up lên Supabase
+      const uploadRes = await uploadService.uploadImage(file);
+      const imageUrl = uploadRes.data.url;
+
+      // 2. Lưu vào DB của mình
+      await authService.updateProfile({ avatar: imageUrl });
+      
+      // 3. Cập nhật UI & LocalStorage
+      setUser({ ...user, avatar: imageUrl });
+      const currentUser = JSON.parse(localStorage.getItem("user"));
+      localStorage.setItem("user", JSON.stringify({ ...currentUser, avatar: imageUrl }));
+      
+      toast.success("Đổi ảnh đại diện thành công!");
+    } catch (err) {
+      toast.error("Lỗi khi tải ảnh lên!");
+      console.log(err);
+    } finally {
+      setUploadingAvatar(false);
+      if(fileInputRef.current) fileInputRef.current.value = ''; 
+    }
+  };
+
+  // ===== LOGIC CẬP NHẬT THÔNG TIN =====
   const handleUpdateInfo = async () => {
     setLoading(true);
     const dataToSend = {
@@ -60,6 +105,7 @@ export default function UserProfile() {
     }
   };
 
+  // ===== LOGIC ĐỔI MẬT KHẨU =====
   const handleChangePassword = async () => {
     if (passData.newPassword !== passData.confirmPassword) {
       toast.error("Mật khẩu xác nhận không khớp");
@@ -86,6 +132,7 @@ export default function UserProfile() {
     passData.confirmPassword &&
     passData.newPassword !== passData.confirmPassword;
 
+  // ===== RENDER LỖI & LOADING =====
   if (fetchError) {
     return (
       <PageLayout showAmbient={false} className="flex items-center justify-center p-4">
@@ -105,6 +152,7 @@ export default function UserProfile() {
       </PageLayout>
     );
 
+  // ===== RENDER GIAO DIỆN CHÍNH =====
   return (
     <PageLayout showAmbient={false} className="py-16 px-4">
       <div className="relative z-10 max-w-5xl mx-auto">
@@ -125,11 +173,43 @@ export default function UserProfile() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
-          {/* ===== COLUMN 1: THÔNG TIN CÁ NHÂN ===== */}
+          {/* ===== CỘT 1: THÔNG TIN CÁ NHÂN ===== */}
           <GlassCard padding="xl">
-            <h2 className="text-xl font-bold mb-6 text-neutral-900 dark:text-white flex items-center gap-2">
-              <UserIcon className="text-blue-500" /> Thông tin cá nhân
-            </h2>
+            
+            {/* AVATAR UPLOAD */}
+            <div className="flex flex-col items-center mb-8">
+              <div 
+                onClick={() => !uploadingAvatar && fileInputRef.current?.click()}
+                className="relative w-28 h-28 rounded-full group cursor-pointer border-4 border-white dark:border-neutral-800 shadow-xl overflow-hidden bg-neutral-200 dark:bg-neutral-800 transition-transform hover:scale-105"
+              >
+                {uploadingAvatar && (
+                  <div className="absolute inset-0 bg-black/60 z-20 flex items-center justify-center">
+                    <Loader2 className="animate-spin text-white" size={32} />
+                  </div>
+                )}
+                
+                <div className="absolute inset-0 bg-black/50 z-10 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <Camera className="text-white mb-1" size={24} />
+                  <span className="text-[10px] text-white font-bold uppercase">Đổi ảnh</span>
+                </div>
+
+                {user.avatar ? (
+                  <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center text-white text-4xl font-extrabold">
+                    {(user.displayName || user.username)?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleAvatarChange} 
+                accept="image/png, image/jpeg, image/webp" 
+                className="hidden" 
+              />
+            </div>
 
             <div className="space-y-5">
               <div>
@@ -163,7 +243,7 @@ export default function UserProfile() {
             </div>
           </GlassCard>
 
-          {/* ===== COLUMN 2: BẢO MẬT & MỞ RỘNG ===== */}
+          {/* ===== CỘT 2: BẢO MẬT & MỞ RỘNG ===== */}
           <div className="space-y-8">
             
             <GlassCard padding="lg">
@@ -181,7 +261,6 @@ export default function UserProfile() {
               </div>
             </GlassCard>
 
-            {/* ĐỔI MẬT KHẨU */}
             <GlassCard padding="lg">
               <div 
                 onClick={() => setShowChangePassword(!showChangePassword)}
@@ -212,7 +291,6 @@ export default function UserProfile() {
               )}
             </GlassCard>
 
-            {/* ĐĂNG XUẤT */}
             <Button onClick={handleLogout} intent="dangerSoft" className="w-full h-14">
               <LogOut size={18} /> Đăng xuất khỏi hệ thống
             </Button>
