@@ -7,6 +7,7 @@ import { blogService } from '../../services/blogService';
 import Button from '../base-ui/Button';
 import PageLayout from '../base-ui/PageLayout';
 import GlassCard from '../base-ui/GlassCard';
+import CommentSection from './CommentSection';
 
 export default function BlogDetail({ slug }) {
   const [blog, setBlog] = useState(null);
@@ -102,6 +103,7 @@ export default function BlogDetail({ slug }) {
           <ReactMarkdown>{blog.content}</ReactMarkdown>
         </div>
 
+        <CommentSection blogId={blog._id} />
       </GlassCard>
     </PageLayout>
   );

@@ -9,6 +9,7 @@ const authRoutes = require("./routes/auth.routes");
 const blogRoutes = require("./routes/blog.routes");
 const userRoutes = require("./routes/user.routes");
 const uploadRoutes = require("./routes/upload.routes");
+const commentRoutes = require('./routes/comment.routes');
 
 const app = express();
 const server = http.createServer(app);
@@ -38,6 +39,7 @@ app.use("/api/blogs", blogRoutes);
 
 app.use("/api/user", userRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use('/api/comments', commentRoutes);
 
 setupWebSocket(server);
 

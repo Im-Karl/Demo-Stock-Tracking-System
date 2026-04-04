@@ -1,127 +1,91 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { blogService } from "../../services/blogService";
+import BlogCard from "../../components/blog/BlogCard.jsx";
+
+const searchParams = Astro.url.searchParams;
+const keyword = searchParams.get("search") || "";
+const page = parseInt(searchParams.get("page") || "1");
 
 let blogs = [];
+let totalPages = 1;
+let currentPage = 1;
 let errorMessage = null;
 
 try {
-  console.log("--> Đang gọi API lấy danh sách blog từ Server Astro...");
-  const { data } = await blogService.getAll();
-  blogs = data;
-  console.log(`--> Lấy thành công ${blogs.length} bài viết.`);
-} catch (err) {
-  if (err instanceof Error) {
-    console.error("--> Lỗi FETCH BLOG tại Server:", err.message);
-
-    if ((err as any).code === "ECONNREFUSED") {
-      errorMessage =
-        "Không kết nối được Backend (Port 3000). Hãy kiểm tra xem server API đã bật chưa.";
-    } else {
-      errorMessage = "Lỗi tải dữ liệu: " + err.message;
-    }
-  } else {
-    console.error("--> Lỗi không xác định:", err);
-    errorMessage = "Đã xảy ra lỗi không xác định.";
-  }
+  const apiUrl = `http://localhost:3000/api/blogs?keyword=${encodeURIComponent(keyword)}&page=${page}&limit=9`;
+  const res = await fetch(apiUrl);
+  if (!res.ok) throw new Error("Lỗi kết nối Backend");
+  
+  const data = await res.json();
+  blogs = data.blogs || [];
+  totalPages = data.totalPages || 1;
+  currentPage = data.currentPage || 1;
+} catch (err: any) {
+  errorMessage = "Không thể tải danh sách bài viết: " + err.message;
 }
 ---
 
 <Layout title="Danh sách Blog">
-  <section
-    class="relative min-h-screen bg-neutral-50 dark:bg-neutral-900
-           text-slate-800 dark:text-slate-100 overflow-hidden"
-  >
-    <!-- Ambient light -->
-    <div class="absolute inset-0 pointer-events-none">
-      <!-- <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px]
-                  bg-blue-500/20 blur-[120px] rounded-full"></div>
-      <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px]
-                  bg-violet-500/20 blur-[120px] rounded-full"></div> -->
-    </div>
-
+  <section class="relative min-h-screen bg-neutral-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 overflow-hidden">
     <main class="relative z-10 max-w-7xl mx-auto px-6 py-16">
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-12 text-center">
+      
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-8 text-center text-neutral-900 dark:text-white">
         Góc Phân Tích
-        <span class="block mt-3 text-lg font-medium
-                     text-slate-600 dark:text-slate-400">
+        <span class="block mt-3 text-lg font-medium text-neutral-500 dark:text-neutral-400">
           Góc nhìn thị trường & chia sẻ từ cộng đồng đầu tư
         </span>
       </h1>
 
-      {/* ERROR */}
-      {
-        errorMessage && (
-          <div
-            class="mb-8 rounded-xl border border-red-300 dark:border-red-500/30
-                   bg-red-50 dark:bg-red-500/10
-                   text-red-700 dark:text-red-400
-                   px-6 py-4 text-center"
-          >
-            <strong class="font-bold"> Lỗi:</strong> {errorMessage}
-          </div>
-        )
-      }
+      <form method="GET" action="/blog" class="max-w-2xl mx-auto mb-12 relative group">
+        <input 
+          type="text" 
+          name="search" 
+          value={keyword}
+          placeholder="Tìm kiếm bài viết, mã cổ phiếu..." 
+          class="w-full py-4 pl-6 pr-14 rounded-full bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-neutral-900 dark:text-neutral-100 transition-all"
+        />
+        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full text-neutral-400 group-hover:text-blue-500 transition-colors">
+           <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+      </form>
 
-      {/* BLOG GRID */}
+      {errorMessage && (
+        <div class="mb-8 rounded-xl border border-red-300 bg-red-50 text-red-700 px-6 py-4 text-center max-w-2xl mx-auto">
+          <strong class="font-bold">Lỗi:</strong> {errorMessage}
+        </div>
+      )}
+
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {
-          blogs.map((blog: any) => (
-            <div
-  class="group h-full p-6 rounded-2xl
-         bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl
-         border border-slate-200 dark:border-slate-700
-         shadow-lg hover:shadow-2xl
-         transition-all hover:-translate-y-1
-         flex flex-col"
->
-
-  <a href={`/blog/${blog.slug}`}>
-    <h2
-      class="text-xl font-bold mb-3 line-clamp-2
-             text-slate-800 dark:text-slate-100
-             group-hover:text-blue-600 dark:group-hover:text-blue-400
-             transition"
-    >
-      {blog.title}
-    </h2>
-  </a>
-
-  <p class="text-sm mb-4 leading-relaxed
-           text-slate-600 dark:text-slate-400">
-    Tác giả:
-    <a 
-      href={`/author/${blog.author._id}`} 
-      class="ml-1 font-semibold text-blue-600 dark:text-blue-400 hover:underline transition"
-    >
-      {blog.author.displayName || blog.author.username}
-    </a>
-    <br />
-    <span class="text-xs text-slate-500 dark:text-slate-500">
-      {blog.publishedDate
-        ? new Date(blog.publishedDate).toLocaleDateString("vi-VN")
-        : "Nháp"}
-    </span>
-  </p>
-</div>
-          ))
-        }
+        {blogs.map((blog: any) => (
+    <BlogCard blog={blog} />
+  ))}
       </div>
 
-      {/* EMPTY STATE */}
-      {
-        !errorMessage && blogs.length === 0 && (
-          <div class="text-center py-24">
-            <p class="text-lg font-medium text-slate-600 dark:text-slate-400 mb-4">
-              Chưa có bài viết công khai nào
-            </p>
-            <p class="text-sm text-slate-500 dark:text-slate-500">
-              Trang chủ chỉ hiển thị bài Public.  
-              Hãy đăng nhập để xem bài riêng tư.
-            </p>
-          </div>
-        )
-      }
+      {totalPages > 1 && (
+        <div class="flex items-center justify-center gap-4 mt-16">
+          <a 
+            href={`/blog?search=${keyword}&page=${currentPage - 1}`} 
+            class={`px-4 py-2 rounded-lg font-semibold transition ${currentPage === 1 ? "opacity-50 pointer-events-none bg-neutral-200 dark:bg-neutral-800 text-neutral-400" : "bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+          >
+            Trang trước
+          </a>
+          <span class="font-bold text-neutral-700 dark:text-neutral-300">
+            Trang {currentPage} / {totalPages}
+          </span>
+          <a 
+            href={`/blog?search=${keyword}&page=${currentPage + 1}`} 
+            class={`px-4 py-2 rounded-lg font-semibold transition ${currentPage === totalPages ? "opacity-50 pointer-events-none bg-neutral-200 dark:bg-neutral-800 text-neutral-400" : "bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+          >
+            Trang sau
+          </a>
+        </div>
+      )}
+
+      {!errorMessage && blogs.length === 0 && (
+        <div class="text-center py-24 text-neutral-500">
+          {keyword ? `Không tìm thấy bài viết nào chứa từ khóa "${keyword}"` : "Chưa có bài viết nào."}
+        </div>
+      )}
     </main>
   </section>
 </Layout>

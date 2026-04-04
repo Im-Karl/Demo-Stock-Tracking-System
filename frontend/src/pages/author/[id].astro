@@ -9,12 +9,16 @@ let authorData = null;
 let blogs = [];
 let errorMessage = null;
 let stats = null;
+let totalPages = null
+let currentPage = null
 
 try {
   const { data } = await blogService.getBlogsByAuthor(id);
   authorData = data.author;
   blogs = data.blogs;
   stats = data.stats;
+  totalPages = data.totalPages;
+  currentPage = data.currentPage
 } catch (err) {
   console.error("Lỗi lấy author:", err);
   errorMessage = "Không thể tải dữ liệu tác giả.";
@@ -29,5 +33,8 @@ try {
     blogs={blogs}
     stats={stats}
     client:load
+
+    initialTotalPages={totalPages} 
+  initialCurrentPage={currentPage}
   />
 </Layout>

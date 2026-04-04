@@ -35,10 +35,31 @@ exports.createBlog = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({ isPublic: true, isDeleted: false })
-      .populate("author", "username displayName avatar") // Có thể populate thêm avatar tác giả nếu cần
-      .sort({ publishedDate: -1 });
-    res.json(blogs);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 9; // Mặc định 9 bài 1 trang
+    const keyword = req.query.keyword || "";
+
+    // Điều kiện lọc cơ bản
+    const query = { isPublic: true, isDeleted: false };
+    
+    // Nếu có nhập từ khóa -> Lọc theo tiêu đề (Không phân biệt hoa thường)
+    if (keyword) {
+      query.title = { $regex: keyword, $options: "i" };
+    }
+
+    // Đếm tổng số bài thỏa mãn để chia trang
+    const totalBlogs = await Blog.countDocuments(query);
+    const totalPages = Math.ceil(totalBlogs / limit) || 1;
+    const skip = (page - 1) * limit;
+
+    const blogs = await Blog.find(query)
+      .populate("author", "username displayName avatar")
+      .sort({ publishedDate: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    // Trả về kèm thông tin phân trang
+    res.json({ blogs, currentPage: page, totalPages, totalBlogs });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -140,7 +161,7 @@ exports.updateBlog = async (req, res) => {
     // Nếu nội dung thay đổi, cập nhật lại content và trích xuất lại thumbnail
     if (content) {
       blog.content = content;
-      blog.thumbnail = extractThumbnailFromContent(content); // 👇 Cập nhật lại ảnh bìa
+      blog.thumbnail = extractThumbnailFromContent(content);  
     }
 
     await blog.save();
@@ -209,22 +230,39 @@ exports.hardDeleteBlog = async (req, res) => {
 exports.getBlogsByAuthor = async (req, res) => {
   try {
     const { authorId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6; 
+    const keyword = req.query.keyword || "";
 
     const author = await User.findById(authorId).select("username displayName tagline followers following avatar");
-    if (!author)
-      return res.status(404).json({ message: "Không tìm thấy tác giả" });
+    if (!author) return res.status(404).json({ message: "Không tìm thấy tác giả" });
 
-    const blogs = await Blog.find({
-      author: authorId,
-      isPublic: true,
-      isDeleted: false,
-    })
+    const query = { author: authorId, isPublic: true, isDeleted: false };
+    if (keyword) {
+      query.title = { $regex: keyword, $options: "i" };
+    }
+
+    const totalBlogs = await Blog.countDocuments(query);
+    const totalPages = Math.ceil(totalBlogs / limit) || 1;
+    const skip = (page - 1) * limit;
+
+    const blogs = await Blog.find(query)
       .populate("author", "username displayName avatar")
-      .sort({ publishedDate: -1 });
+      .sort({ publishedDate: -1 })
+      .skip(skip)
+      .limit(limit);
 
-    const totalLikes = blogs.reduce((sum, blog) => sum + (blog.likes?.length || 0), 0);
+    const allBlogsForStats = await Blog.find({ author: authorId, isPublic: true, isDeleted: false }).select("likes");
+    const totalLikes = allBlogsForStats.reduce((sum, blog) => sum + (blog.likes?.length || 0), 0);
 
-    res.json({ success: true, author, blogs ,stats: { totalLikes }});
+    res.json({ 
+      success: true, 
+      author, 
+      blogs, 
+      currentPage: page, 
+      totalPages, 
+      stats: { totalLikes } 
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
