@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { commentService } from "../../services/commentService";
 import { toast } from "react-hot-toast";
+import { formatTimeAgo } from "../utils/timeFormat";
 import {
   MessageSquare,
   Reply,
@@ -192,13 +193,7 @@ export default function CommentSection({ blogId }) {
                 </span>
               </a>
               <span className="text-[11px] text-neutral-500">
-                {new Date(comment.createdAt).toLocaleString("vi-VN", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })}
+                {formatTimeAgo(comment.createdAt)}
               </span>
             </div>
 

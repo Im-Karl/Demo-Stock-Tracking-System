@@ -1,33 +1,50 @@
-<footer class="bg-gray-900 text-gray-300 py-12 mt-auto">
-  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+<footer class="mt-auto 
+bg-neutral-100/80 dark:bg-neutral-900/80 
+backdrop-blur-xl 
+border-t border-neutral-200 dark:border-neutral-800
+shadow-[0_-10px_30px_rgba(0,0,0,0.05)] 
+dark:shadow-[0_-10px_30px_rgba(0,0,0,0.4)]">
+
+  <div class="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
     
+    <!-- Brand -->
     <div>
-      <h3 class="text-white text-lg font-bold mb-4">FinSavvy AI</h3>
-      <p class="text-sm text-gray-400 leading-relaxed">
-        Nền tảng theo dõi chỉ số ngân hàng và tổng hợp tin tức tài chính tự động bằng AI. Kết nối cộng đồng nhà đầu tư thông minh.
+      <h3 class="text-lg font-bold text-neutral-900 dark:text-white mb-4">
+        FinSavvy AI
+      </h3>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+        Nền tảng theo dõi thị trường và tổng hợp tin tức tài chính bằng AI.
+        Kết nối cộng đồng nhà đầu tư thông minh.
       </p>
     </div>
 
+    <!-- Links -->
     <div>
-      <h3 class="text-white text-lg font-bold mb-4">Liên kết nhanh</h3>
+      <h3 class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-4 uppercase tracking-wider">
+        Khám phá
+      </h3>
       <ul class="space-y-2 text-sm">
-        <li><a href="/stock" class="hover:text-white">Bảng giá trực tuyến</a></li>
-        <li><a href="/news" class="hover:text-white">Tin tức thị trường</a></li>
-        <li><a href="/blog" class="hover:text-white">Bài viết phân tích</a></li>
+        <li><a href="/stock" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Bảng giá</a></li>
+        <li><a href="/news" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Tin tức</a></li>
+        <li><a href="/blog" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Bài viết</a></li>
       </ul>
     </div>
 
+    <!-- Contact -->
     <div>
-      <h3 class="text-white text-lg font-bold mb-4">Liên hệ</h3>
-      <ul class="space-y-2 text-sm">
+      <h3 class="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-4 uppercase tracking-wider">
+        Liên hệ
+      </h3>
+      <ul class="space-y-2 text-sm text-neutral-500 dark:text-neutral-400">
         <li>Email: support@stockbank.vn</li>
         <li>Hotline: 1900 1234</li>
-        <li>Địa chỉ: TP. Hồ Chí Minh, Việt Nam</li>
+        <li>TP. Hồ Chí Minh</li>
       </ul>
     </div>
 
   </div>
-  <div class="border-t border-gray-800 mt-8 pt-8 text-center text-xs text-gray-500">
-    &copy; {new Date().getFullYear()} FinSavvy AI. All rights reserved.
+
+  <div class="border-t border-neutral-200 dark:border-neutral-800 py-6 text-center text-xs text-neutral-400">
+    © {new Date().getFullYear()} FinSavvy AI
   </div>
 </footer>

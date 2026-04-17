@@ -26,15 +26,8 @@ export default function ThemeToggle() {
   if (!theme) return <div className="w-10 h-10"></div>;
 
   return (
-    <Button
-      onClick={toggleTheme}
-      intent="neutral"
-      size="icon"
-      className="!rounded-full shadow-sm"
-      aria-label="Toggle Dark Mode"
-      title="Đổi giao diện"
-    >
-      {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+    <Button onClick={toggleTheme} className="px-2!">
+      {theme === "light" ? <Moon size={24} /> : <Sun size={24} />}
     </Button>
   );
 }

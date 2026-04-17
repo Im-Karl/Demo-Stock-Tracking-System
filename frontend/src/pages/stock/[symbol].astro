@@ -4,6 +4,10 @@ import StockDetailClient from "../../components/stock/StockDetailClient.jsx";
 import StockNewsClient from "../../components/stock/StockNewsClient.jsx";
 import { Phone } from "lucide-react";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
 const { symbol } = Astro.params as { symbol: string };
 
 let companyInfo = null;
@@ -29,7 +33,9 @@ if (error || !companyInfo) {
 <Layout title={`${symbol} - ${companyInfo.organ_name_vi}`}>
   <div class="min-h-screen bg-gray-50 dark:bg-neutral-900 pb-20">
     <!-- Header background -->
-    <div class="h-64 bg-gradient-to-r from-blue-900 to-slate-900 w-full absolute top-0 left-0 z-0"></div>
+    <div class="h-64 bg-gradient-to-r 
+from-neutral-100 to-white 
+dark:from-neutral-900 dark:to-neutral-800 w-full absolute top-0 left-0 z-0"></div>
 
     <div class="container mx-auto px-4 pt-32 relative z-10">
       <!-- INFO CARD -->
@@ -131,7 +137,7 @@ if (error || !companyInfo) {
       <!-- MAIN GRID -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2">
-          <StockDetailClient symbol={symbol} client:load />
+            <StockDetailClient symbol={symbol} client:load />
         </div>
 
         {companyInfo.latestVideoId && (
