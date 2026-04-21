@@ -1,4 +1,4 @@
-import FancyIcon from "./FancyIcon";
+import FancyIcon from './FancyIcon';
 
 export default function StatsCard({ stats }) {
   return (

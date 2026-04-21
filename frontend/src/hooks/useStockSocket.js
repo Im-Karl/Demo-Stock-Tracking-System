@@ -3,11 +3,10 @@ import { useState, useEffect } from 'react';
 export function useStockSocket() {
   const [stocks, setStocks] = useState([]);
 
-  useEffect(() => { 
+  useEffect(() => {
     const ws = new WebSocket('ws://localhost:5000');
 
-    ws.onopen = () => { 
-    };
+    ws.onopen = () => {};
 
     ws.onmessage = (event) => {
       try {
@@ -16,7 +15,7 @@ export function useStockSocket() {
           setStocks(message.data);
         }
       } catch (err) {
-        console.error("Socket parse error:", err);
+        console.error('Socket parse error:', err);
       }
     };
 

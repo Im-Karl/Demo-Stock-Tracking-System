@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import { blogService } from "../../services/blogService";
-import { uploadService } from "../../services/uploadService";
-import { navigate } from "astro:transitions/client";
-import ReactMarkdown from "react-markdown";
-import { toast } from "react-hot-toast";
-import { FileEdit, HelpCircle, ImagePlus, Loader2 } from "lucide-react";
-import MarkdownHelpModal from "./MarkdownHelpModal";
-import Button from "../base-ui/Button";
-import PageLayout from "../base-ui/PageLayout";
-import GlassCard from "../base-ui/GlassCard";
+import React, { useState, useEffect, useRef } from 'react';
+import { blogService } from '../../services/blogService';
+import { uploadService } from '../../services/uploadService';
+import { navigate } from 'astro:transitions/client';
+import ReactMarkdown from 'react-markdown';
+import { toast } from 'react-hot-toast';
+import { FileEdit, HelpCircle, ImagePlus, Loader2 } from 'lucide-react';
+import MarkdownHelpModal from './MarkdownHelpModal';
+import Button from '../base-ui/Button';
+import PageLayout from '../base-ui/PageLayout';
+import GlassCard from '../base-ui/GlassCard';
 
 export default function EditBlogForm({ blogId }) {
   const [formData, setFormData] = useState({
-    title: "",
-    content: "",
+    title: '',
+    content: '',
     isPublic: true,
   });
   const [loading, setLoading] = useState(true);
@@ -43,8 +43,8 @@ export default function EditBlogForm({ blogId }) {
 
         setFormData(data);
       } catch (err) {
-        toast.error("Không tìm thấy bài viết");
-        navigate("/blog/manage");
+        toast.error('Không tìm thấy bài viết');
+        navigate('/blog/manage');
       } finally {
         setLoading(false);
       }
@@ -58,16 +58,12 @@ export default function EditBlogForm({ blogId }) {
     if (!blogId) return;
 
     const timeout = setTimeout(() => {
-      localStorage.setItem(
-        `draft_blog_edit_${blogId}`,
-        JSON.stringify(formData)
-      );
+      localStorage.setItem(`draft_blog_edit_${blogId}`, JSON.stringify(formData));
       setLastSaved(new Date());
     }, 1000);
 
     return () => clearTimeout(timeout);
   }, [formData, blogId]);
-
 
   // Upload ảnh & chèn Markdown
   const handleUploadBlogImage = async (e) => {
@@ -82,12 +78,12 @@ export default function EditBlogForm({ blogId }) {
         ...prev,
         content: prev.content + `\n![Hình ảnh bài viết](${url})\n`,
       }));
-      toast.success("Đã chèn ảnh vào bài viết!");
+      toast.success('Đã chèn ảnh vào bài viết!');
     } catch {
-      toast.error("Lỗi: Không thể tải ảnh lên Supabase");
+      toast.error('Lỗi: Không thể tải ảnh lên Supabase');
     } finally {
       setUploading(false);
-      if (imageInputRef.current) imageInputRef.current.value = "";
+      if (imageInputRef.current) imageInputRef.current.value = '';
     }
   };
 
@@ -95,18 +91,18 @@ export default function EditBlogForm({ blogId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title.trim() || !formData.content.trim()) {
-      toast.error("Vui lòng nhập tiêu đề và nội dung!");
+      toast.error('Vui lòng nhập tiêu đề và nội dung!');
       return;
     }
 
     setSaving(true);
     try {
       await blogService.updateBlog(blogId, formData);
-      toast.success("Cập nhật thành công!");
+      toast.success('Cập nhật thành công!');
       localStorage.removeItem(`draft_blog_edit_${blogId}`);
-      setTimeout(() => navigate("/blog/manage"), 1000);
+      setTimeout(() => navigate('/blog/manage'), 1000);
     } catch {
-      toast.error("Lỗi khi lưu bài viết");
+      toast.error('Lỗi khi lưu bài viết');
     } finally {
       setSaving(false);
     }
@@ -175,14 +171,16 @@ export default function EditBlogForm({ blogId }) {
                 className="w-5 h-5 rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500"
               />
               <span className="font-medium text-neutral-700 dark:text-neutral-300">
-                {formData.isPublic ? "Công khai" : "Riêng tư"}
+                {formData.isPublic ? 'Công khai' : 'Riêng tư'}
               </span>
             </label>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
             <div className="flex flex-col">
-              <label className="mb-3 text-xs font-bold uppercase text-neutral-500 dark:text-neutral-400">Soạn thảo Markdown</label>
+              <label className="mb-3 text-xs font-bold uppercase text-neutral-500 dark:text-neutral-400">
+                Soạn thảo Markdown
+              </label>
               <textarea
                 className="w-full min-h-[520px] p-5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 font-mono text-sm leading-relaxed focus:ring-2 focus:ring-blue-500 outline-none"
                 placeholder="# Viết nội dung tại đây..."
@@ -192,7 +190,9 @@ export default function EditBlogForm({ blogId }) {
             </div>
 
             <div className="flex flex-col">
-              <label className="mb-3 text-xs font-bold uppercase text-neutral-500 dark:text-neutral-400">Xem trước</label>
+              <label className="mb-3 text-xs font-bold uppercase text-neutral-500 dark:text-neutral-400">
+                Xem trước
+              </label>
               <div className="w-full min-h-[520px] p-6 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 overflow-y-auto prose prose-lg max-w-none prose-neutral dark:prose-invert">
                 {formData.content ? (
                   <ReactMarkdown
@@ -215,9 +215,11 @@ export default function EditBlogForm({ blogId }) {
           </div>
 
           <div className="flex justify-between items-center pt-8 border-t border-neutral-200 dark:border-neutral-700">
-            <Button type="button" intent="neutral" onClick={() => navigate("/blog/manage")}>Hủy bỏ</Button>
+            <Button type="button" intent="neutral" onClick={() => navigate('/blog/manage')}>
+              Hủy bỏ
+            </Button>
             <Button type="submit" intent="primary" disabled={saving}>
-              {saving ? "Đang lưu..." : "Lưu thay đổi"}
+              {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
             </Button>
           </div>
         </form>

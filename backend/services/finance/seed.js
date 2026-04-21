@@ -1,32 +1,32 @@
-const mongoose = require("mongoose");
-const connectDB = require("./db");
-const Company = require("./models/Company");
-const symbolSources = require("./symbol");  
+const mongoose = require('mongoose');
+const connectDB = require('./db');
+const Company = require('./models/Company');
+const symbolSources = require('./symbol');
 
 const seedData = async () => {
   await connectDB();
 
-  try { 
+  try {
     await Company.deleteMany({});
-    console.log("Đã xóa dữ liệu cũ.");
- 
-    const companies = symbolSources.map(bank => ({
+    console.log('Đã xóa dữ liệu cũ.');
+
+    const companies = symbolSources.map((bank) => ({
       symbol: bank.symbol,
       organ_name_vi: bank.organ_name_vi,
       organ_name_en: bank.organ_name_en,
-      introduce: bank.introduce,  
-      hotline: bank.hotlines,  
+      introduce: bank.introduce,
+      hotline: bank.hotlines,
       url: bank.url,
       exchange: bank.exchange,
       youtubeChannelId: bank.youtubeChannelId,
       facebookUrl: bank.facebookUrl,
-      status: "listed"
+      status: 'listed',
     }));
 
     await Company.insertMany(companies);
     console.log(`Đã nạp thành công ${companies.length} công ty vào MongoDB!`);
   } catch (err) {
-    console.error("Lỗi seed data:", err);
+    console.error('Lỗi seed data:', err);
   } finally {
     mongoose.connection.close();
   }

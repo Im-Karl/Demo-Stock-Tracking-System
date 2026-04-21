@@ -1,16 +1,16 @@
-const express = require("express");
-const cors = require("cors");
-const http = require("http");
-const WebSocket = require("ws");
-const { fetchLatestVideos } = require("./youtubeUpdater");
-const connectDB = require("./db");
-const Company = require("./models/Company");
-const symbolSources = require("./symbol");
+const express = require('express');
+const cors = require('cors');
+const http = require('http');
+const WebSocket = require('ws');
+const { fetchLatestVideos } = require('./youtubeUpdater');
+const connectDB = require('./db');
+const Company = require('./models/Company');
+const symbolSources = require('./symbol');
 
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 connectDB();
@@ -49,16 +49,16 @@ function simulateMarket() {
   });
 }
 
-app.get("/api/stock/:symbol", async (req, res) => {
+app.get('/api/stock/:symbol', async (req, res) => {
   try {
     const { symbol } = req.params;
 
     const company = await Company.findOne({
-      symbol: { $regex: new RegExp(`^${symbol}$`, "i") },
+      symbol: { $regex: new RegExp(`^${symbol}$`, 'i') },
     }).lean();
 
     if (!company) {
-      return res.status(404).json({ message: "Không tìm thấy mã cổ phiếu" });
+      return res.status(404).json({ message: 'Không tìm thấy mã cổ phiếu' });
     }
 
     const currentPrice = currentStocks.find((s) => s.symbol === company.symbol);
@@ -66,21 +66,21 @@ app.get("/api/stock/:symbol", async (req, res) => {
     res.json({ ...company, ...currentPrice });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Lỗi Server" });
+    res.status(500).json({ error: 'Lỗi Server' });
   }
 });
 
 const wss = new WebSocket.Server({ server });
 
-wss.on("connection", (ws) => {
+wss.on('connection', (ws) => {
   if (ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ type: "STOCK_UPDATE", data: currentStocks }));
+    ws.send(JSON.stringify({ type: 'STOCK_UPDATE', data: currentStocks }));
   }
 });
 
 setInterval(() => {
   simulateMarket();
-  const msg = JSON.stringify({ type: "STOCK_UPDATE", data: currentStocks });
+  const msg = JSON.stringify({ type: 'STOCK_UPDATE', data: currentStocks });
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) client.send(msg);
   });

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function StockNewsClient({ symbol }) {
   const [news, setNews] = useState([]);
@@ -13,20 +13,18 @@ export default function StockNewsClient({ symbol }) {
 
     setLoading(true);
     try {
-      const res = await fetch(
-        `http://localhost:4000/searchVN?keyword=${symbol}&page=${page}&limit=10`
-      );
+      const res = await fetch(`http://localhost:4000/searchVN?keyword=${symbol}&page=${page}&limit=10`);
 
       const data = await res.json();
 
       if (!data || data.length === 0) {
         setHasMore(false);
       } else {
-        setNews(prev => [...prev, ...data]);
-        setPage(prev => prev + 1);
+        setNews((prev) => [...prev, ...data]);
+        setPage((prev) => prev + 1);
       }
     } catch (err) {
-      console.error("Load news error:", err);
+      console.error('Load news error:', err);
       setHasMore(false);
     } finally {
       setLoading(false);
@@ -39,44 +37,36 @@ export default function StockNewsClient({ symbol }) {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => {
+      (entries) => {
         if (entries[0].isIntersecting) {
           fetchNews();
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     if (loadMoreRef.current) observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
   }, [fetchNews]);
 
-  const formatDate = date =>
+  const formatDate = (date) =>
     date
-      ? new Date(date).toLocaleDateString("vi-VN", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
+      ? new Date(date).toLocaleDateString('vi-VN', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
         })
-      : "";
+      : '';
 
   return (
     <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1 custom-scrollbar">
       {news.map((item, i) => (
-        <a
-          key={item.url + i}
-          href={item.url}
-          target="_blank"
-          className="group block"
-        >
+        <a key={item.url + i} href={item.url} target="_blank" className="group block">
           <div className="flex gap-3 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-colors">
             {/*  Sửa màu nền ảnh lỗi sang neutral */}
             <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-800">
               <img
-                src={
-                  item.image ||
-                  `https://ui-avatars.com/api/?name=${symbol}&background=random`
-                }
+                src={item.image || `https://ui-avatars.com/api/?name=${symbol}&background=random`}
                 alt={item.title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               />
@@ -90,7 +80,7 @@ export default function StockNewsClient({ symbol }) {
 
               <div className="mt-2 flex items-center justify-between text-[10px] text-neutral-500">
                 <span className="bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 px-1.5 py-0.5 rounded">
-                  {item.source || "Tổng hợp"}
+                  {item.source || 'Tổng hợp'}
                 </span>
                 <span>{formatDate(item.published)}</span>
               </div>
@@ -100,11 +90,7 @@ export default function StockNewsClient({ symbol }) {
       ))}
 
       <div ref={loadMoreRef} className="py-4 text-center text-xs text-neutral-500">
-        {loading
-          ? "Đang tải thêm..."
-          : hasMore
-          ? "Cuộn xuống để xem thêm"
-          : "— Hết tin —"}
+        {loading ? 'Đang tải thêm...' : hasMore ? 'Cuộn xuống để xem thêm' : '— Hết tin —'}
       </div>
     </div>
   );

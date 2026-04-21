@@ -11,12 +11,12 @@ import node from '@astrojs/node';
 export default defineConfig({
   output: 'server',
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
   },
 
   integrations: [react()],
 
   adapter: node({
-    mode: 'standalone'
-  })
+    mode: 'standalone',
+  }),
 });

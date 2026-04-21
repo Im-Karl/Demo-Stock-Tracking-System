@@ -1,18 +1,18 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { RefreshCcw, Home, AlertCircle } from "lucide-react";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { RefreshCcw, Home, AlertCircle } from 'lucide-react';
 
 export default function ErrorMarket({ code = 404 }) {
   const titleMap = {
-    404: "Mất tín hiệu thị trường",
-    500: "Data feed bị gián đoạn",
-    403: "Khu vực hạn chế",
+    404: 'Mất tín hiệu thị trường',
+    500: 'Data feed bị gián đoạn',
+    403: 'Khu vực hạn chế',
   };
 
   const descMap = {
-    404: "Không tìm thấy dữ liệu biểu đồ bạn yêu cầu. Có thể mã chứng khoán không tồn tại.",
-    500: "Máy chủ đang gặp sự cố khi xử lý dữ liệu tick. Đội ngũ kỹ thuật đang khắc phục.",
-    403: "Bạn không có quyền truy cập vào dữ liệu này. Vui lòng nâng cấp gói hoặc đăng nhập.",
+    404: 'Không tìm thấy dữ liệu biểu đồ bạn yêu cầu. Có thể mã chứng khoán không tồn tại.',
+    500: 'Máy chủ đang gặp sự cố khi xử lý dữ liệu tick. Đội ngũ kỹ thuật đang khắc phục.',
+    403: 'Bạn không có quyền truy cập vào dữ liệu này. Vui lòng nâng cấp gói hoặc đăng nhập.',
   };
 
   return (
@@ -25,12 +25,7 @@ export default function ErrorMarket({ code = 404 }) {
 
       {/* Main Chart SVG */}
       <div className="relative z-10 mb-8 p-8 rounded-3xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 shadow-xl">
-        <svg
-          width="300"
-          height="180"
-          viewBox="0 0 300 180"
-          className="overflow-visible"
-        >
+        <svg width="300" height="180" viewBox="0 0 300 180" className="overflow-visible">
           {/* Definitions for Gradients */}
           <defs>
             <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
@@ -73,7 +68,7 @@ export default function ErrorMarket({ code = 404 }) {
             filter="url(#glow)"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
+            transition={{ duration: 1.5, ease: 'easeInOut' }}
           />
 
           {/* The "Broken" Candle Animation */}
@@ -176,7 +171,7 @@ export default function ErrorMarket({ code = 404 }) {
         </h1>
 
         <p className="text-slate-600 dark:text-slate-400 text-center max-w-md mb-8 leading-relaxed">
-          {descMap[code] || "Đã có lỗi không xác định xảy ra."}
+          {descMap[code] || 'Đã có lỗi không xác định xảy ra.'}
         </p>
 
         {/* Action Buttons */}

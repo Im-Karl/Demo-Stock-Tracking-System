@@ -1,36 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
-import { toast } from "react-hot-toast";
-import { authService } from "../../services/authService";
-import ThemeToggle from "../ui/ThemeToggle";
-import {
-  ExternalLink,
-  KeyRound,
-  LogOut,
-  User as UserIcon,
-  Camera,
-  Loader2,
-} from "lucide-react";
-import { uploadService } from "../../services/uploadService";
-import PageLayout from "../base-ui/PageLayout";
-import GlassCard from "../base-ui/GlassCard";
-import Button from "../base-ui/Button";
-import Input from "../base-ui/Input";
+import React, { useState, useEffect, useRef } from 'react';
+import { toast } from 'react-hot-toast';
+import { authService } from '../../services/authService';
+import ThemeToggle from '../ui/ThemeToggle';
+import { ExternalLink, KeyRound, LogOut, User as UserIcon, Camera, Loader2 } from 'lucide-react';
+import { uploadService } from '../../services/uploadService';
+import PageLayout from '../base-ui/PageLayout';
+import GlassCard from '../base-ui/GlassCard';
+import Button from '../base-ui/Button';
+import Input from '../base-ui/Input';
 
 export default function UserProfile() {
   const [user, setUser] = useState({
-    _id: "",
-    username: "",
-    email: "",
-    displayName: "",
-    phone: "",
-    tagline: "",
-    avatar: "", // 👈 Đã có trường avatar
+    _id: '',
+    username: '',
+    email: '',
+    displayName: '',
+    phone: '',
+    tagline: '',
+    avatar: '', // 👈 Đã có trường avatar
   });
 
   const [passData, setPassData] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -46,18 +39,11 @@ export default function UserProfile() {
       .getProfile()
       .then((res) => {
         setUser(res.data);
-        const localUser = JSON.parse(localStorage.getItem("user") || "{}");
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ ...localUser, ...res.data }),
-        );
+        const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+        localStorage.setItem('user', JSON.stringify({ ...localUser, ...res.data }));
       })
       .catch((err) => {
-        setFetchError(
-          err.response?.data?.message ||
-            err.message ||
-            "Không thể tải thông tin cá nhân",
-        );
+        setFetchError(err.response?.data?.message || err.message || 'Không thể tải thông tin cá nhân');
       });
   }, []);
 
@@ -67,7 +53,7 @@ export default function UserProfile() {
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      toast.error("Ảnh quá lớn! Vui lòng chọn ảnh dưới 2MB.");
+      toast.error('Ảnh quá lớn! Vui lòng chọn ảnh dưới 2MB.');
       return;
     }
 
@@ -82,19 +68,16 @@ export default function UserProfile() {
 
       // 3. Cập nhật UI & LocalStorage
       setUser({ ...user, avatar: imageUrl });
-      const currentUser = JSON.parse(localStorage.getItem("user"));
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ ...currentUser, avatar: imageUrl }),
-      );
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      localStorage.setItem('user', JSON.stringify({ ...currentUser, avatar: imageUrl }));
 
-      toast.success("Đổi ảnh đại diện thành công!");
+      toast.success('Đổi ảnh đại diện thành công!');
     } catch (err) {
-      toast.error("Lỗi khi tải ảnh lên!");
+      toast.error('Lỗi khi tải ảnh lên!');
       console.log(err);
     } finally {
       setUploadingAvatar(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -102,17 +85,17 @@ export default function UserProfile() {
   const handleUpdateInfo = async () => {
     setLoading(true);
     const dataToSend = {
-      displayName: user.displayName === "" ? undefined : user.displayName,
-      phone: user.phone === "" ? undefined : user.phone,
-      tagline: user.tagline === "" ? undefined : user.tagline,
+      displayName: user.displayName === '' ? undefined : user.displayName,
+      phone: user.phone === '' ? undefined : user.phone,
+      tagline: user.tagline === '' ? undefined : user.tagline,
     };
 
     try {
       const res = await authService.updateProfile(dataToSend);
-      toast.success("Cập nhật thông tin thành công!");
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      toast.success('Cập nhật thông tin thành công!');
+      localStorage.setItem('user', JSON.stringify(res.data.user));
     } catch (err) {
-      toast.error(err.response?.data?.message || "Lỗi cập nhật thông tin");
+      toast.error(err.response?.data?.message || 'Lỗi cập nhật thông tin');
     } finally {
       setLoading(false);
     }
@@ -121,48 +104,39 @@ export default function UserProfile() {
   // ===== LOGIC ĐỔI MẬT KHẨU =====
   const handleChangePassword = async () => {
     if (passData.newPassword !== passData.confirmPassword) {
-      toast.error("Mật khẩu xác nhận không khớp");
+      toast.error('Mật khẩu xác nhận không khớp');
       return;
     }
 
     try {
       await authService.changePassword(passData);
-      toast.success("Đổi mật khẩu thành công!");
-      setPassData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+      toast.success('Đổi mật khẩu thành công!');
+      setPassData({ oldPassword: '', newPassword: '', confirmPassword: '' });
       setShowChangePassword(false);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Lỗi đổi mật khẩu");
+      toast.error(err.response?.data?.message || 'Lỗi đổi mật khẩu');
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.href = "/login";
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
   };
 
-  const showPasswordHint =
-    passData.confirmPassword &&
-    passData.newPassword !== passData.confirmPassword;
+  const showPasswordHint = passData.confirmPassword && passData.newPassword !== passData.confirmPassword;
 
   // ===== RENDER LỖI & LOADING =====
   if (fetchError) {
     return (
-      <PageLayout
-        showAmbient={false}
-        className="flex items-center justify-center p-4"
-      >
+      <PageLayout showAmbient={false} className="flex items-center justify-center p-4">
         <GlassCard
           intent="success"
           className="!border-red-500/40 !bg-red-50 dark:!bg-red-900/20 text-center max-w-md p-8"
         >
-          <h3 className="font-bold text-xl mb-2 text-red-600 dark:text-red-400">
-            Có lỗi xảy ra
-          </h3>
+          <h3 className="font-bold text-xl mb-2 text-red-600 dark:text-red-400">Có lỗi xảy ra</h3>
           <p className="text-red-700 dark:text-red-300">{fetchError}</p>
-          <p className="text-sm text-red-500/80 mt-4">
-            Hãy kiểm tra lại Server API hoặc đăng nhập lại.
-          </p>
+          <p className="text-sm text-red-500/80 mt-4">Hãy kiểm tra lại Server API hoặc đăng nhập lại.</p>
         </GlassCard>
       </PageLayout>
     );
@@ -170,13 +144,8 @@ export default function UserProfile() {
 
   if (!user.username && !fetchError)
     return (
-      <PageLayout
-        showAmbient={false}
-        className="flex items-center justify-center"
-      >
-        <div className="text-neutral-500 animate-pulse font-medium">
-          ⏳ Đang tải thông tin từ Server...
-        </div>
+      <PageLayout showAmbient={false} className="flex items-center justify-center">
+        <div className="text-neutral-500 animate-pulse font-medium">⏳ Đang tải thông tin từ Server...</div>
       </PageLayout>
     );
 
@@ -187,9 +156,7 @@ export default function UserProfile() {
         {/* Header */}
         <div className="flex items-start justify-between mb-10">
           <div>
-            <h1 className="text-4xl font-extrabold text-neutral-900 dark:text-white">
-              Hồ sơ người dùng
-            </h1>
+            <h1 className="text-4xl font-extrabold text-neutral-900 dark:text-white">Hồ sơ người dùng</h1>
             <span className="block text-lg font-medium text-neutral-500 dark:text-neutral-400 mt-2">
               Quản lý thông tin & bảo mật tài khoản
             </span>
@@ -204,9 +171,7 @@ export default function UserProfile() {
             {/* AVATAR UPLOAD */}
             <div className="flex flex-col items-center mb-8">
               <div
-                onClick={() =>
-                  !uploadingAvatar && fileInputRef.current?.click()
-                }
+                onClick={() => !uploadingAvatar && fileInputRef.current?.click()}
                 className="relative w-28 h-28 rounded-full group cursor-pointer border-4 border-white dark:border-neutral-800 shadow-xl overflow-hidden bg-neutral-200 dark:bg-neutral-800 transition-transform hover:scale-105"
               >
                 {uploadingAvatar && (
@@ -217,22 +182,14 @@ export default function UserProfile() {
 
                 <div className="absolute inset-0 bg-black/50 z-10 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <Camera className="text-white mb-1" size={24} />
-                  <span className="text-[10px] text-white font-bold uppercase">
-                    Đổi ảnh
-                  </span>
+                  <span className="text-[10px] text-white font-bold uppercase">Đổi ảnh</span>
                 </div>
 
                 {user.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt="Avatar"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center text-white text-4xl font-extrabold">
-                    {(user.displayName || user.username)
-                      ?.charAt(0)
-                      .toUpperCase()}
+                    {(user.displayName || user.username)?.charAt(0).toUpperCase()}
                   </div>
                 )}
               </div>
@@ -251,22 +208,12 @@ export default function UserProfile() {
                 <label className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-1 block">
                   Tên đăng nhập
                 </label>
-                <Input
-                  disabled
-                  value={user.username || ""}
-                  className="opacity-60 bg-neutral-100 dark:bg-neutral-800"
-                />
+                <Input disabled value={user.username || ''} className="opacity-60 bg-neutral-100 dark:bg-neutral-800" />
               </div>
 
               <div>
-                <label className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-1 block">
-                  Email
-                </label>
-                <Input
-                  disabled
-                  value={user.email || ""}
-                  className="opacity-60 bg-neutral-100 dark:bg-neutral-800"
-                />
+                <label className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-1 block">Email</label>
+                <Input disabled value={user.email || ''} className="opacity-60 bg-neutral-100 dark:bg-neutral-800" />
               </div>
 
               <div>
@@ -274,10 +221,8 @@ export default function UserProfile() {
                   Tên hiển thị
                 </label>
                 <Input
-                  value={user.displayName || ""}
-                  onChange={(e) =>
-                    setUser({ ...user, displayName: e.target.value })
-                  }
+                  value={user.displayName || ''}
+                  onChange={(e) => setUser({ ...user, displayName: e.target.value })}
                   placeholder="Nhập tên hiển thị"
                 />
               </div>
@@ -287,10 +232,8 @@ export default function UserProfile() {
                   Tiểu sử ngắn (Tagline)
                 </label>
                 <Input
-                  value={user.tagline || ""}
-                  onChange={(e) =>
-                    setUser({ ...user, tagline: e.target.value })
-                  }
+                  value={user.tagline || ''}
+                  onChange={(e) => setUser({ ...user, tagline: e.target.value })}
                   placeholder="Ví dụ: Người đam mê viết lách"
                 />
               </div>
@@ -300,19 +243,14 @@ export default function UserProfile() {
                   Số điện thoại
                 </label>
                 <Input
-                  value={user.phone || ""}
+                  value={user.phone || ''}
                   onChange={(e) => setUser({ ...user, phone: e.target.value })}
                   placeholder="Nhập số điện thoại"
                 />
               </div>
 
-              <Button
-                onClick={handleUpdateInfo}
-                disabled={loading}
-                intent="primary"
-                className="w-full mt-2"
-              >
-                {loading ? "Đang lưu..." : "Lưu thay đổi"}
+              <Button onClick={handleUpdateInfo} disabled={loading} intent="primary" className="w-full mt-2">
+                {loading ? 'Đang lưu...' : 'Lưu thay đổi'}
               </Button>
             </div>
           </GlassCard>
@@ -322,12 +260,8 @@ export default function UserProfile() {
             <GlassCard padding="lg">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <h3 className="font-bold text-lg text-neutral-900 dark:text-white">
-                    Trang công khai
-                  </h3>
-                  <p className="text-sm text-neutral-500 mt-1">
-                    Nơi người khác có thể tìm hiểu về bạn
-                  </p>
+                  <h3 className="font-bold text-lg text-neutral-900 dark:text-white">Trang công khai</h3>
+                  <p className="text-sm text-neutral-500 mt-1">Nơi người khác có thể tìm hiểu về bạn</p>
                 </div>
 
                 {user._id && (
@@ -349,11 +283,10 @@ export default function UserProfile() {
                 className="flex items-center justify-between cursor-pointer group"
               >
                 <h3 className="font-bold text-lg text-neutral-900 dark:text-white flex items-center gap-2 group-hover:text-blue-500 transition-colors">
-                  <KeyRound className="text-neutral-400 group-hover:text-blue-500" />{" "}
-                  Đổi mật khẩu
+                  <KeyRound className="text-neutral-400 group-hover:text-blue-500" /> Đổi mật khẩu
                 </h3>
                 <span
-                  className={`text-neutral-400 transition-transform duration-300 ${showChangePassword ? "rotate-90" : ""}`}
+                  className={`text-neutral-400 transition-transform duration-300 ${showChangePassword ? 'rotate-90' : ''}`}
                 >
                   ▶
                 </span>
@@ -365,17 +298,13 @@ export default function UserProfile() {
                     type="password"
                     placeholder="Mật khẩu cũ"
                     value={passData.oldPassword}
-                    onChange={(e) =>
-                      setPassData({ ...passData, oldPassword: e.target.value })
-                    }
+                    onChange={(e) => setPassData({ ...passData, oldPassword: e.target.value })}
                   />
                   <Input
                     type="password"
                     placeholder="Mật khẩu mới"
                     value={passData.newPassword}
-                    onChange={(e) =>
-                      setPassData({ ...passData, newPassword: e.target.value })
-                    }
+                    onChange={(e) => setPassData({ ...passData, newPassword: e.target.value })}
                   />
                   <Input
                     type="password"
@@ -390,27 +319,17 @@ export default function UserProfile() {
                   />
 
                   {showPasswordHint && (
-                    <p className="text-xs text-red-500 dark:text-red-400 font-medium">
-                      Mật khẩu xác nhận chưa khớp!
-                    </p>
+                    <p className="text-xs text-red-500 dark:text-red-400 font-medium">Mật khẩu xác nhận chưa khớp!</p>
                   )}
 
-                  <Button
-                    onClick={handleChangePassword}
-                    intent="neutral"
-                    className="w-full"
-                  >
+                  <Button onClick={handleChangePassword} intent="neutral" className="w-full">
                     Cập nhật mật khẩu
                   </Button>
                 </div>
               )}
             </GlassCard>
 
-            <Button
-              onClick={handleLogout}
-              intent="dangerSoft"
-              className="w-full h-14"
-            >
+            <Button onClick={handleLogout} intent="dangerSoft" className="w-full h-14">
               <LogOut size={18} /> Đăng xuất khỏi hệ thống
             </Button>
           </div>

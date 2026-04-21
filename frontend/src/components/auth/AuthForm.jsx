@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { authService } from '../../services/authService';
 import { User, Mail, Lock } from 'lucide-react';
-import Button from '../base-ui/Button'; 
-import Input from '../base-ui/Input';          
-import PageLayout from '../base-ui/PageLayout';  
+import Button from '../base-ui/Button';
+import Input from '../base-ui/Input';
+import PageLayout from '../base-ui/PageLayout';
 import GlassCard from '../base-ui/GlassCard';
 
 export default function AuthForm({ type }) {
@@ -13,15 +13,13 @@ export default function AuthForm({ type }) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    password: ''
+    password: '',
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = isLogin
-        ? await authService.login(formData)
-        : await authService.register(formData);
+      const res = isLogin ? await authService.login(formData) : await authService.register(formData);
 
       const data = res.data;
 
@@ -50,7 +48,6 @@ export default function AuthForm({ type }) {
 
   return (
     <PageLayout className="flex items-center justify-center">
-      
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -58,7 +55,6 @@ export default function AuthForm({ type }) {
         className="w-full max-w-md mx-auto"
       >
         <GlassCard>
-          
           <div className="text-center mb-8">
             <h2 className="text-3xl text-blue-600 dark:text-blue-400 font-extrabold mb-2">
               {isLogin ? 'Chào mừng trở lại' : 'Tạo tài khoản mới'}
@@ -70,33 +66,31 @@ export default function AuthForm({ type }) {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">Tên đăng nhập</label>
-              <Input 
-                icon={User} 
-                required 
-                onChange={e => setFormData({ ...formData, username: e.target.value })} 
-              />
+              <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">
+                Tên đăng nhập
+              </label>
+              <Input icon={User} required onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
             </div>
 
             {!isLogin && (
               <div>
                 <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">Email</label>
-                <Input 
-                  icon={Mail} 
-                  type="email" 
-                  required 
-                  onChange={e => setFormData({ ...formData, email: e.target.value })} 
+                <Input
+                  icon={Mail}
+                  type="email"
+                  required
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
             )}
 
             <div>
               <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">Mật khẩu</label>
-              <Input 
-                icon={Lock} 
-                type="password" 
-                required 
-                onChange={e => setFormData({ ...formData, password: e.target.value })} 
+              <Input
+                icon={Lock}
+                type="password"
+                required
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
             </div>
 
@@ -112,10 +106,8 @@ export default function AuthForm({ type }) {
               {isLogin ? 'Đăng Nhập' : 'Đăng Ký'}
             </Button>
           </form>
-
         </GlassCard>
       </motion.div>
-      
     </PageLayout>
   );
 }

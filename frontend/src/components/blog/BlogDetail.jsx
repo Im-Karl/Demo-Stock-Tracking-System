@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Skeleton } from '../ui/Skeleton';
-import { Heart } from 'lucide-react';  
+import { Heart } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { blogService } from '../../services/blogService'; 
+import { blogService } from '../../services/blogService';
 import Button from '../base-ui/Button';
 import PageLayout from '../base-ui/PageLayout';
 import GlassCard from '../base-ui/GlassCard';
@@ -26,23 +26,31 @@ export default function BlogDetail({ slug }) {
     }
 
     fetch(`http://localhost:3000/api/blogs/${slug}`)
-      .then(res => { if (!res.ok) throw new Error("Not found"); return res.json(); })
-      .then(data => {
+      .then((res) => {
+        if (!res.ok) throw new Error('Not found');
+        return res.json();
+      })
+      .then((data) => {
         setBlog(data);
         setLikesCount(data.likes?.length || 0);
         if (userObj && data.likes) setIsLiked(data.likes.includes(userObj._id));
         setLoading(false);
       })
-      .catch(err => { console.error(err); setLoading(false); });
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, [slug]);
 
   const handleLike = async () => {
-    if (!currentUser) return toast.error("Vui lòng đăng nhập để thích bài viết!");
+    if (!currentUser) return toast.error('Vui lòng đăng nhập để thích bài viết!');
     try {
-      const res = await blogService.toggleLike(blog._id); 
+      const res = await blogService.toggleLike(blog._id);
       setIsLiked(res.data.isLiked);
       setLikesCount(res.data.likesCount);
-    } catch (err) { toast.error("Lỗi khi tương tác"); }
+    } catch (err) {
+      toast.error('Lỗi khi tương tác');
+    }
   };
 
   const handleTogglePublic = async () => {
@@ -51,50 +59,84 @@ export default function BlogDetail({ slug }) {
     try {
       const res = await fetch(`http://localhost:3000/api/blogs/${slug}/toggle-public`, {
         method: 'PUT',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' },
       });
       const data = await res.json();
-      if (res.ok) setBlog(prev => ({ ...prev, isPublic: data.isPublic }));
-    } catch (error) { } finally { setIsUpdating(false); }
+      if (res.ok) setBlog((prev) => ({ ...prev, isPublic: data.isPublic }));
+    } catch (error) {
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
-  if (loading) return (
-    <PageLayout showAmbient={false} className="py-10">
-      <div className="max-w-3xl mx-auto"><Skeleton className="h-10 w-3/4 mb-4" /><Skeleton className="h-64 w-full" /></div>
-    </PageLayout>
-  );
-  
-  if (!blog) return <PageLayout showAmbient={false}><div className="text-center py-10">Bài viết không tồn tại.</div></PageLayout>;
- 
-  const isAuthor = currentUser && blog.author && (currentUser.username === blog.author.username);
+  if (loading)
+    return (
+      <PageLayout showAmbient={false} className="py-10">
+        <div className="max-w-3xl mx-auto">
+          <Skeleton className="h-10 w-3/4 mb-4" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      </PageLayout>
+    );
+
+  if (!blog)
+    return (
+      <PageLayout showAmbient={false}>
+        <div className="text-center py-10">Bài viết không tồn tại.</div>
+      </PageLayout>
+    );
+
+  const isAuthor = currentUser && blog.author && currentUser.username === blog.author.username;
 
   return (
     <PageLayout showAmbient={false} className="py-8">
       <GlassCard className="max-w-3xl mx-auto px-6 py-10 mb-20">
-        
         {isAuthor && (
           <div className="mb-8 p-4 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
             <div className="text-sm">
               <span className="font-bold text-blue-700 dark:text-blue-400">Quản lý bài viết</span>
-              <span className={`ml-2 px-2 py-1 rounded text-xs font-semibold ${blog.isPublic ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400" : "bg-neutral-200 text-neutral-700 dark:bg-neutral-600/40 dark:text-neutral-300"}`}>
-                {blog.isPublic ? "Đang Công Khai " : "Đang Riêng Tư "}
+              <span
+                className={`ml-2 px-2 py-1 rounded text-xs font-semibold ${blog.isPublic ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' : 'bg-neutral-200 text-neutral-700 dark:bg-neutral-600/40 dark:text-neutral-300'}`}
+              >
+                {blog.isPublic ? 'Đang Công Khai ' : 'Đang Riêng Tư '}
               </span>
             </div>
-            <Button onClick={handleTogglePublic} disabled={isUpdating} intent={blog.isPublic ? "warning" : "success"} size="sm">
-              {isUpdating ? "Đang xử lý..." : blog.isPublic ? "Chuyển thành Riêng tư" : "Công khai ngay"}
+            <Button
+              onClick={handleTogglePublic}
+              disabled={isUpdating}
+              intent={blog.isPublic ? 'warning' : 'success'}
+              size="sm"
+            >
+              {isUpdating ? 'Đang xử lý...' : blog.isPublic ? 'Chuyển thành Riêng tư' : 'Công khai ngay'}
             </Button>
           </div>
         )}
 
         <header className="mb-10 text-center border-b border-neutral-200 dark:border-neutral-700 pb-6">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-neutral-900 dark:text-white">{blog.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-neutral-900 dark:text-white">
+            {blog.title}
+          </h1>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-neutral-600 dark:text-neutral-400">
             <div>
-              Đăng bởi <span className="font-semibold text-blue-600 dark:text-blue-400"><a href={`/author/${blog.author._id}`} className="hover:underline cursor-pointer">{blog.author.displayName || blog.author.username}</a></span>
-              {" • "}<span>{blog.publishedDate ? new Date(blog.publishedDate).toLocaleDateString("vi-VN") : "Chưa xuất bản"}</span>
+              Đăng bởi{' '}
+              <span className="font-semibold text-blue-600 dark:text-blue-400">
+                <a href={`/author/${blog.author._id}`} className="hover:underline cursor-pointer">
+                  {blog.author.displayName || blog.author.username}
+                </a>
+              </span>
+              {' • '}
+              <span>
+                {blog.publishedDate ? new Date(blog.publishedDate).toLocaleDateString('vi-VN') : 'Chưa xuất bản'}
+              </span>
             </div>
-            <Button onClick={handleLike} intent={isLiked ? "dangerSoft" : "neutral"} size="sm" className="!rounded-full">
-              <Heart size={16} fill={isLiked ? "currentColor" : "none"} className={isLiked ? "text-red-500" : ""} /> {likesCount} Hữu ích
+            <Button
+              onClick={handleLike}
+              intent={isLiked ? 'dangerSoft' : 'neutral'}
+              size="sm"
+              className="!rounded-full"
+            >
+              <Heart size={16} fill={isLiked ? 'currentColor' : 'none'} className={isLiked ? 'text-red-500' : ''} />{' '}
+              {likesCount} Hữu ích
             </Button>
           </div>
         </header>

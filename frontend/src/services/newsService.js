@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const crawlerClient = axios.create({
-  baseURL: 'http://localhost:4000', 
+  baseURL: 'http://localhost:4000',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -22,5 +22,5 @@ export const newsService = {
   // 3. Tin VN - Không có mã (/searchVN_noSymbols)
   searchNoSymbol: (params = {}) => {
     return crawlerClient.get('/searchVN_noSymbols', { params });
-  }
+  },
 };

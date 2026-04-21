@@ -1,9 +1,9 @@
 export const formatTimeAgo = (dateString) => {
   const now = new Date();
   const date = new Date(dateString);
-  const diff = Math.floor((now - date) / 1000);  
+  const diff = Math.floor((now - date) / 1000);
 
-  if (diff < 60) return "Vừa xong";
+  if (diff < 60) return 'Vừa xong';
 
   const minutes = Math.floor(diff / 60);
   if (minutes < 60) return `${minutes} phút trước`;
@@ -31,5 +31,5 @@ export const formatSmartTime = (dateString) => {
 
   if (diffDays < 7) return formatTimeAgo(dateString);
 
-  return date.toLocaleDateString("vi-VN");
+  return date.toLocaleDateString('vi-VN');
 };

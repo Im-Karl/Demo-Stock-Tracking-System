@@ -1,164 +1,164 @@
 module.exports = [
   {
-    symbol: "NVB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Quốc Dân",
-    organ_name_en: "National Citizen CJS Bank",
-    aliases_vi: ["NCB", "Ngân hàng Quốc Dân"]
+    symbol: 'NVB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Quốc Dân',
+    organ_name_en: 'National Citizen CJS Bank',
+    aliases_vi: ['NCB', 'Ngân hàng Quốc Dân'],
   },
   {
-    symbol: "BAB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Bắc Á",
-    organ_name_en: "Bac A CJS Bank",
-    aliases_vi: ["Bac A Bank", "BAC A BANK"]
+    symbol: 'BAB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Bắc Á',
+    organ_name_en: 'Bac A CJS Bank',
+    aliases_vi: ['Bac A Bank', 'BAC A BANK'],
   },
   {
-    symbol: "SHB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Sài Gòn – Hà Nội",
-    organ_name_en: "Saigon-Hanoi CJS Bank",
-    aliases_vi: ["SHB", "Ngân hàng SHB"]
+    symbol: 'SHB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Sài Gòn – Hà Nội',
+    organ_name_en: 'Saigon-Hanoi CJS Bank',
+    aliases_vi: ['SHB', 'Ngân hàng SHB'],
   },
   {
-    symbol: "STB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Sài Gòn Thương Tín",
-    organ_name_en: "SaiGon Thuong Tin CJS Bank",
-    aliases_vi: ["Sacombank", "Ngân hàng Sacombank"]
+    symbol: 'STB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Sài Gòn Thương Tín',
+    organ_name_en: 'SaiGon Thuong Tin CJS Bank',
+    aliases_vi: ['Sacombank', 'Ngân hàng Sacombank'],
   },
   {
-    symbol: "VPB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Việt Nam Thịnh Vượng",
-    organ_name_en: "Vietnam Prosperity JSC Bank",
-    aliases_vi: ["VPBank", "Ngân hàng VPBank"]
+    symbol: 'VPB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Việt Nam Thịnh Vượng',
+    organ_name_en: 'Vietnam Prosperity JSC Bank',
+    aliases_vi: ['VPBank', 'Ngân hàng VPBank'],
   },
   {
-    symbol: "MBB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Quân đội",
-    organ_name_en: "Military CJS Bank",
-    aliases_vi: ["MBBank", "MB Bank", "Ngân hàng Quân đội"]
+    symbol: 'MBB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Quân đội',
+    organ_name_en: 'Military CJS Bank',
+    aliases_vi: ['MBBank', 'MB Bank', 'Ngân hàng Quân đội'],
   },
   {
-    symbol: "TCB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Kỹ thương Việt Nam",
-    organ_name_en: "Vietnam Technological And CJS Bank",
-    aliases_vi: ["Techcombank", "Ngân hàng Techcombank"]
+    symbol: 'TCB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Kỹ thương Việt Nam',
+    organ_name_en: 'Vietnam Technological And CJS Bank',
+    aliases_vi: ['Techcombank', 'Ngân hàng Techcombank'],
   },
   {
-    symbol: "TPB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Tiên Phong",
-    organ_name_en: "Tien Phong CJS Bank",
-    aliases_vi: ["TPBank", "Ngân hàng TPBank"]
+    symbol: 'TPB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Tiên Phong',
+    organ_name_en: 'Tien Phong CJS Bank',
+    aliases_vi: ['TPBank', 'Ngân hàng TPBank'],
   },
   {
-    symbol: "CTG",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Công thương Việt Nam",
-    organ_name_en: "Vietnam JSC Bank For Industry and Trade",
-    aliases_vi: ["VietinBank", "Ngân hàng Công Thương"]
+    symbol: 'CTG',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Công thương Việt Nam',
+    organ_name_en: 'Vietnam JSC Bank For Industry and Trade',
+    aliases_vi: ['VietinBank', 'Ngân hàng Công Thương'],
   },
   {
-    symbol: "ACB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Á Châu",
-    organ_name_en: "Asia CJS Bank",
-    aliases_vi: ["ACB", "Ngân hàng Á Châu"]
+    symbol: 'ACB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Á Châu',
+    organ_name_en: 'Asia CJS Bank',
+    aliases_vi: ['ACB', 'Ngân hàng Á Châu'],
   },
   {
-    symbol: "LPB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Lộc Phát Việt Nam",
-    organ_name_en: "Fortune Vietnam JSC Bank",
-    aliases_vi: ["LPBank", "Ngân hàng LPBank"]
+    symbol: 'LPB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Lộc Phát Việt Nam',
+    organ_name_en: 'Fortune Vietnam JSC Bank',
+    aliases_vi: ['LPBank', 'Ngân hàng LPBank'],
   },
   {
-    symbol: "MSB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Hàng Hải Việt Nam",
-    organ_name_en: "Vietnam Maritime CJS Bank",
-    aliases_vi: ["MSB", "Maritime Bank"]
+    symbol: 'MSB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Hàng Hải Việt Nam',
+    organ_name_en: 'Vietnam Maritime CJS Bank',
+    aliases_vi: ['MSB', 'Maritime Bank'],
   },
   {
-    symbol: "HDB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Phát Triển Thành phố Hồ Chí Minh",
-    organ_name_en: "Ho Chi Minh City Development JSC Bank",
-    aliases_vi: ["HDBank", "Ngân hàng HD Bank"]
+    symbol: 'HDB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Phát Triển Thành phố Hồ Chí Minh',
+    organ_name_en: 'Ho Chi Minh City Development JSC Bank',
+    aliases_vi: ['HDBank', 'Ngân hàng HD Bank'],
   },
   {
-    symbol: "EIB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Xuất nhập khẩu Việt Nam",
-    organ_name_en: "Vietnam Export Import CJS Bank",
-    aliases_vi: ["Eximbank", "Ngân hàng Eximbank"]
+    symbol: 'EIB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Xuất nhập khẩu Việt Nam',
+    organ_name_en: 'Vietnam Export Import CJS Bank',
+    aliases_vi: ['Eximbank', 'Ngân hàng Eximbank'],
   },
   {
-    symbol: "VIB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Quốc tế Việt Nam",
-    organ_name_en: "Viet Nam International CJS Bank",
-    aliases_vi: ["VIB", "Ngân hàng Quốc Tế"]
+    symbol: 'VIB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Quốc tế Việt Nam',
+    organ_name_en: 'Viet Nam International CJS Bank',
+    aliases_vi: ['VIB', 'Ngân hàng Quốc Tế'],
   },
   {
-    symbol: "OCB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Phương Đông",
-    organ_name_en: "Orient CJS Bank",
-    aliases_vi: ["OCB", "Ngân hàng Phương Đông"]
+    symbol: 'OCB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Phương Đông',
+    organ_name_en: 'Orient CJS Bank',
+    aliases_vi: ['OCB', 'Ngân hàng Phương Đông'],
   },
   {
-    symbol: "BID",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Đầu tư và Phát triển Việt Nam",
-    organ_name_en: "JSC Bank for Investment and Development of Vietnam",
-    aliases_vi: ["BIDV", "Ngân hàng BIDV"]
+    symbol: 'BID',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Đầu tư và Phát triển Việt Nam',
+    organ_name_en: 'JSC Bank for Investment and Development of Vietnam',
+    aliases_vi: ['BIDV', 'Ngân hàng BIDV'],
   },
   {
-    symbol: "VCB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam",
-    organ_name_en: "JSC Bank For Foreign Trade Of Vietnam",
-    aliases_vi: ["Vietcombank", "Ngân hàng Vietcombank"]
+    symbol: 'VCB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam',
+    organ_name_en: 'JSC Bank For Foreign Trade Of Vietnam',
+    aliases_vi: ['Vietcombank', 'Ngân hàng Vietcombank'],
   },
   {
-    symbol: "SSB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Đông Nam Á",
-    organ_name_en: "Southeast Asia CJS Bank",
-    aliases_vi: ["SeABank", "Ngân hàng Đông Nam Á"]
+    symbol: 'SSB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Đông Nam Á',
+    organ_name_en: 'Southeast Asia CJS Bank',
+    aliases_vi: ['SeABank', 'Ngân hàng Đông Nam Á'],
   },
   {
-    symbol: "NAB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Nam Á",
-    organ_name_en: "Nam A CJS Bank",
-    aliases_vi: ["Nam A Bank", "Ngân hàng Nam Á"]
+    symbol: 'NAB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Nam Á',
+    organ_name_en: 'Nam A CJS Bank',
+    aliases_vi: ['Nam A Bank', 'Ngân hàng Nam Á'],
   },
   {
-    symbol: "VAB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Việt Á",
-    organ_name_en: "Vietnam-Asia CJS Bank",
-    aliases_vi: ["VietABank", "Ngân hàng Việt Á"]
+    symbol: 'VAB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Việt Á',
+    organ_name_en: 'Vietnam-Asia CJS Bank',
+    aliases_vi: ['VietABank', 'Ngân hàng Việt Á'],
   },
   {
-    symbol: "ABB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần An Bình",
-    organ_name_en: "An Binh CJS Bank",
-    aliases_vi: ["ABBank", "Ngân hàng An Bình"]
+    symbol: 'ABB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần An Bình',
+    organ_name_en: 'An Binh CJS Bank',
+    aliases_vi: ['ABBank', 'Ngân hàng An Bình'],
   },
   {
-    symbol: "BVB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Bản Việt",
-    organ_name_en: "Viet Capital CJS Bank",
-    aliases_vi: ["VietCapitalBank", "Ngân hàng Bản Việt"]
+    symbol: 'BVB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Bản Việt',
+    organ_name_en: 'Viet Capital CJS Bank',
+    aliases_vi: ['VietCapitalBank', 'Ngân hàng Bản Việt'],
   },
   {
-    symbol: "KLB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Kiên Long",
-    organ_name_en: "Kien Long CJS Bank",
-    aliases_vi: ["KienlongBank", "Ngân hàng Kiên Long"]
+    symbol: 'KLB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Kiên Long',
+    organ_name_en: 'Kien Long CJS Bank',
+    aliases_vi: ['KienlongBank', 'Ngân hàng Kiên Long'],
   },
   {
-    symbol: "PGB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Thịnh vượng và Phát triển",
-    organ_name_en: "Prosperity and Growth CJS Bank",
-    aliases_vi: ["PGBank", "Ngân hàng PGBank"]
+    symbol: 'PGB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Thịnh vượng và Phát triển',
+    organ_name_en: 'Prosperity and Growth CJS Bank',
+    aliases_vi: ['PGBank', 'Ngân hàng PGBank'],
   },
   {
-    symbol: "SGB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Sài Gòn Công thương",
-    organ_name_en: "Saigon Bank For Industry and Trade JS Bank",
-    aliases_vi: ["SaigonBank", "Ngân hàng Sài Gòn"]
+    symbol: 'SGB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Sài Gòn Công thương',
+    organ_name_en: 'Saigon Bank For Industry and Trade JS Bank',
+    aliases_vi: ['SaigonBank', 'Ngân hàng Sài Gòn'],
   },
   {
-    symbol: "VBB",
-    organ_name_vi: "Ngân hàng Thương mại Cổ phần Việt Nam Thương Tín",
-    organ_name_en: "Vietnam Thuong Tin CJS Bank",
-    aliases_vi: ["VietBank", "Ngân hàng Việt Bank"]
-  }
+    symbol: 'VBB',
+    organ_name_vi: 'Ngân hàng Thương mại Cổ phần Việt Nam Thương Tín',
+    organ_name_en: 'Vietnam Thuong Tin CJS Bank',
+    aliases_vi: ['VietBank', 'Ngân hàng Việt Bank'],
+  },
 ];

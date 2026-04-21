@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import Button from "../base-ui/Button";
-import HeaderTab from "./HeaderTab";
-import ThemeToggle from "../ui/ThemeToggle";
+import React, { useState } from 'react';
+import Button from '../base-ui/Button';
+import HeaderTab from './HeaderTab';
+import ThemeToggle from '../ui/ThemeToggle';
 
 function getUserFromStorage() {
-  if (typeof window === "undefined") return null;
-  const userStr = localStorage.getItem("user");
+  if (typeof window === 'undefined') return null;
+  const userStr = localStorage.getItem('user');
   if (!userStr) return null;
   try {
     return JSON.parse(userStr);
   } catch (e) {
-    console.error("Lỗi parse user", e);
+    console.error('Lỗi parse user', e);
     return null;
   }
 }

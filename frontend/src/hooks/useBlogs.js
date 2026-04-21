@@ -8,7 +8,7 @@ export const useBlogs = () => {
     queryFn: async () => {
       const { data } = await blogService.getAll();
       return data;
-    }
+    },
   });
 };
 
@@ -31,7 +31,7 @@ export const useCreateBlog = () => {
     mutationFn: blogService.create,
     onSuccess: () => {
       queryClient.invalidateQueries(['blogs']);
-    }
+    },
   });
 };
 
@@ -43,6 +43,6 @@ export const useTogglePublic = () => {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries(['blog', variables.slug]);
       queryClient.invalidateQueries(['blogs']);
-    }
+    },
   });
 };

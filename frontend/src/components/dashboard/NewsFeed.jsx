@@ -12,10 +12,16 @@ export default function NewsFeed() {
     const params = { page: pageParam, limit: 12 };
     let res;
     switch (activeTab) {
-      case 'world': res = await newsService.searchWorld(params); break;
-      case 'general': res = await newsService.searchNoSymbol(params); break;
+      case 'world':
+        res = await newsService.searchWorld(params);
+        break;
+      case 'general':
+        res = await newsService.searchNoSymbol(params);
+        break;
       case 'symbol':
-      default: res = await newsService.searchBySymbol(params); break;
+      default:
+        res = await newsService.searchBySymbol(params);
+        break;
     }
     return res.data;
   };
@@ -27,13 +33,15 @@ export default function NewsFeed() {
       if (!lastPage || lastPage.length < 12) return undefined;
       return allPages.length + 1;
     },
-    staleTime: 60000
+    staleTime: 60000,
   });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) fetchNextPage(); },
-      { root: null, rootMargin: '0px 0px -30% 0px', threshold: 0 }
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) fetchNextPage();
+      },
+      { root: null, rootMargin: '0px 0px -30% 0px', threshold: 0 },
     );
     if (loadMoreRef.current) observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
@@ -45,12 +53,26 @@ export default function NewsFeed() {
 
   return (
     <div className="space-y-6 text-neutral-900 dark:text-neutral-100">
-
       {/* TABS */}
       <div className="flex flex-wrap gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-1">
-        <TabButton isActive={activeTab === 'symbol'} onClick={() => setActiveTab('symbol')} icon={<TrendingUp size={18} />} label="Chứng khoán VN" />
-        <TabButton isActive={activeTab === 'general'} onClick={() => setActiveTab('general')} icon={<Newspaper size={18} />} label="Kinh tế Vĩ mô" />
-        <TabButton isActive={activeTab === 'world'} onClick={() => setActiveTab('world')} icon={<Globe size={18} />} label="Quốc tế" />
+        <TabButton
+          isActive={activeTab === 'symbol'}
+          onClick={() => setActiveTab('symbol')}
+          icon={<TrendingUp size={18} />}
+          label="Chứng khoán VN"
+        />
+        <TabButton
+          isActive={activeTab === 'general'}
+          onClick={() => setActiveTab('general')}
+          icon={<Newspaper size={18} />}
+          label="Kinh tế Vĩ mô"
+        />
+        <TabButton
+          isActive={activeTab === 'world'}
+          onClick={() => setActiveTab('world')}
+          icon={<Globe size={18} />}
+          label="Quốc tế"
+        />
       </div>
 
       {/* ERROR */}
@@ -62,22 +84,18 @@ export default function NewsFeed() {
 
       {/* LIST */}
       <div className="grid grid-cols-1 gap-4">
-        {isLoading ? (
-          [1, 2, 3, 4].map(i => <SkeletonCard key={i} />)
-        ) : (
-          data?.pages.map((group, i) => (
-            <React.Fragment key={i}>
-              {group.map((article, index) => (
-                <NewsItem key={`${article.url}-${index}`} article={article} />
-              ))}
-            </React.Fragment>
-          ))
-        )}
+        {isLoading
+          ? [1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)
+          : data?.pages.map((group, i) => (
+              <React.Fragment key={i}>
+                {group.map((article, index) => (
+                  <NewsItem key={`${article.url}-${index}`} article={article} />
+                ))}
+              </React.Fragment>
+            ))}
 
         {!isLoading && data?.pages[0]?.length === 0 && (
-          <div className="text-center py-10 text-neutral-500 dark:text-neutral-400">
-            Chưa có tin tức nào.
-          </div>
+          <div className="text-center py-10 text-neutral-500 dark:text-neutral-400">Chưa có tin tức nào.</div>
         )}
       </div>
 
@@ -91,7 +109,8 @@ export default function NewsFeed() {
         ) : hasNextPage ? (
           <span className="text-xs text-neutral-400 dark:text-neutral-500">Cuộn xuống để xem thêm</span>
         ) : (
-          !isLoading && data?.pages[0]?.length > 0 && (
+          !isLoading &&
+          data?.pages[0]?.length > 0 && (
             <span className="text-xs text-neutral-400 dark:text-neutral-500">— Bạn đã xem hết tin —</span>
           )
         )}
@@ -108,9 +127,10 @@ function TabButton({ isActive, onClick, icon, label }) {
       onClick={onClick}
       className={`
         flex items-center gap-2 px-4 py-3 text-sm font-bold transition-all border-b-2 cursor-pointer
-        ${isActive
-          ? 'border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10'
-          : 'border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+        ${
+          isActive
+            ? 'border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10'
+            : 'border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
         }
       `}
     >
@@ -124,20 +144,20 @@ function NewsItem({ article }) {
   return (
     <a href={article.url} target="_blank" rel="noreferrer" className="group block h-full outline-none">
       {/*  Dùng GlassCard với padding="none" để hình ảnh tràn lề */}
-      <GlassCard padding="none" className="flex flex-col sm:flex-row h-full overflow-hidden transition-transform duration-300 hover:-translate-y-1">
-        
+      <GlassCard
+        padding="none"
+        className="flex flex-col sm:flex-row h-full overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+      >
         <div className="sm:w-48 h-48 sm:h-auto bg-neutral-100 dark:bg-neutral-800 relative overflow-hidden flex-shrink-0">
           {article.image ? (
             <img
               src={article.image}
               alt={article.title}
               className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-              onError={e => (e.target.style.display = 'none')}
+              onError={(e) => (e.target.style.display = 'none')}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-neutral-400 text-xs">
-              No Image
-            </div>
+            <div className="w-full h-full flex items-center justify-center text-neutral-400 text-xs">No Image</div>
           )}
           <span className="absolute top-2 left-2 bg-blue-600 dark:bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded font-bold shadow">
             {article.source}
@@ -153,14 +173,11 @@ function NewsItem({ article }) {
           </p>
           <div className="flex justify-between text-xs text-neutral-400 dark:text-neutral-500 border-t border-neutral-100 dark:border-neutral-800/50 pt-3">
             {article.author && (
-              <span className="font-medium text-neutral-600 dark:text-neutral-300">
-                Tác giả: {article.author}
-              </span>
+              <span className="font-medium text-neutral-600 dark:text-neutral-300">Tác giả: {article.author}</span>
             )}
             <span>{article.published || 'Mới cập nhật'}</span>
           </div>
         </div>
-
       </GlassCard>
     </a>
   );

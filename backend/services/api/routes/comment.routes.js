@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const commentController = require('../controllers/comment.controller');
-const { verifyToken } = require('../middleware/auth'); 
+const { verifyToken } = require('../middleware/auth');
 
 router.get('/blog/:blogId', commentController.getCommentsByBlog);
 router.post('/blog/:blogId', verifyToken, commentController.addComment);

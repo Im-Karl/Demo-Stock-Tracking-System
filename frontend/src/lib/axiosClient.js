@@ -6,23 +6,26 @@ const axiosClient = axios.create({
     'Content-Type': 'application/json',
   },
   // Thêm timeout để nếu mạng lag quá thì báo lỗi thay vì treo
-  timeout: 10000, 
+  timeout: 10000,
 });
 
 // 1. Interceptor Request: Gắn Token & Log xem đang gọi API nào
-axiosClient.interceptors.request.use((config) => {
-  // Check môi trường: Browser hay Server?
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+axiosClient.interceptors.request.use(
+  (config) => {
+    // Check môi trường: Browser hay Server?
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } else {
+      // Nếu chạy trên Server (Astro SSR), ta có thể log ra Terminal để debug
+      console.log(`[SSR Request] ${config.method.toUpperCase()} ${config.url}`);
     }
-  } else {
-    // Nếu chạy trên Server (Astro SSR), ta có thể log ra Terminal để debug
-    console.log(`[SSR Request] ${config.method.toUpperCase()} ${config.url}`);
-  }
-  return config;
-}, (error) => Promise.reject(error));
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
 
 // 2. Interceptor Response: Log lỗi chi tiết nếu thất bại
 axiosClient.interceptors.response.use(
@@ -39,9 +42,8 @@ axiosClient.interceptors.response.use(
       console.error(' API Setup Error:', error.message);
     }
     return Promise.reject(error);
-  }
+  },
 );
-
 
 axiosClient.interceptors.response.use(
   (response) => {
@@ -49,23 +51,23 @@ axiosClient.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      if (typeof window !== "undefined") {
-        console.warn("Token đã hết hạn hoặc không hợp lệ. Đang đăng xuất...");
-        
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        
+      if (typeof window !== 'undefined') {
+        console.warn('Token đã hết hạn hoặc không hợp lệ. Đang đăng xuất...');
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+
         if (!window.location.pathname.includes('/login')) {
-            toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
-            setTimeout(() => {
-                window.location.href = "/login";
-            }, 1500);
+          toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 1500);
         }
       }
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosClient;

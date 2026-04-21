@@ -1,55 +1,40 @@
-import React, { useState, useMemo } from "react";
-import {
-  ArrowUp,
-  ArrowDown,
-  Heart,
-  Trophy,
-  Activity,
-  AlertCircle,
-  Search,
-} from "lucide-react";
-import { useStockSocket } from "../../hooks/useStockSocket";
-import { motion, AnimatePresence } from "framer-motion";
-import GlassCard from "../base-ui/GlassCard";
-import Input from "../base-ui/Input";
+import React, { useState, useMemo } from 'react';
+import { ArrowUp, ArrowDown, Heart, Trophy, Activity, AlertCircle, Search } from 'lucide-react';
+import { useStockSocket } from '../../hooks/useStockSocket';
+import { motion, AnimatePresence } from 'framer-motion';
+import GlassCard from '../base-ui/GlassCard';
+import Input from '../base-ui/Input';
 
 export default function StockBoard() {
   const stocks = useStockSocket();
 
-  const [exchangeFilter, setExchangeFilter] = useState("ALL");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [exchangeFilter, setExchangeFilter] = useState('ALL');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const exchanges = useMemo(() => {
     const unique = new Set(stocks.map((s) => s.exchange).filter(Boolean));
-    return ["ALL", ...Array.from(unique)];
+    return ['ALL', ...Array.from(unique)];
   }, [stocks]);
 
   const [wishlist, setWishlist] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("stock_wishlist");
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('stock_wishlist');
       return saved ? JSON.parse(saved) : [];
     }
     return [];
   });
 
   const toggleWishlist = (symbol) => {
-    const newWishlist = wishlist.includes(symbol)
-      ? wishlist.filter((item) => item !== symbol)
-      : [...wishlist, symbol];
+    const newWishlist = wishlist.includes(symbol) ? wishlist.filter((item) => item !== symbol) : [...wishlist, symbol];
 
     setWishlist(newWishlist);
-    localStorage.setItem("stock_wishlist", JSON.stringify(newWishlist));
+    localStorage.setItem('stock_wishlist', JSON.stringify(newWishlist));
   };
 
   const filteredStocks = useMemo(() => {
-    let data =
-      exchangeFilter === "ALL"
-        ? stocks
-        : stocks.filter((s) => s.exchange === exchangeFilter);
-    if (searchTerm.trim() !== "") {
-      data = data.filter((s) =>
-        s.symbol.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
+    let data = exchangeFilter === 'ALL' ? stocks : stocks.filter((s) => s.exchange === exchangeFilter);
+    if (searchTerm.trim() !== '') {
+      data = data.filter((s) => s.symbol.toLowerCase().includes(searchTerm.toLowerCase()));
     }
     return [...data].sort((a, b) => b.price - a.price);
   }, [stocks, exchangeFilter, searchTerm]);
@@ -57,47 +42,47 @@ export default function StockBoard() {
   const getRankStyle = (index) => {
     switch (index) {
       case 0:
-        return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-300 dark:border-yellow-500/30";
+        return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-300 dark:border-yellow-500/30';
       case 1:
-        return "bg-neutral-100 text-neutral-700 border-neutral-200 dark:bg-neutral-500/20 dark:text-neutral-300 dark:border-neutral-500/30";
+        return 'bg-neutral-100 text-neutral-700 border-neutral-200 dark:bg-neutral-500/20 dark:text-neutral-300 dark:border-neutral-500/30';
       case 2:
-        return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-500/20 dark:text-orange-300 dark:border-orange-500/30";
+        return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-500/20 dark:text-orange-300 dark:border-orange-500/30';
       default:
-        return "text-neutral-600 dark:text-neutral-400 font-medium border-transparent";
+        return 'text-neutral-600 dark:text-neutral-400 font-medium border-transparent';
     }
   };
 
   const getExchangeBadge = (exchange) => {
     switch (exchange) {
-      case "HOSE":
-        return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30";
-      case "HNX":
-        return "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/30";
-      case "UPCOM":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/30";
+      case 'HOSE':
+        return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30';
+      case 'HNX':
+        return 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/30';
+      case 'UPCOM':
+        return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/30';
       default:
-        return "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400";
+        return 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400';
     }
   };
 
   const getStatus = (lastUpdated) => {
     if (!lastUpdated)
       return {
-        text: "Đang GD",
-        color: "text-emerald-600 dark:text-emerald-400",
+        text: 'Đang GD',
+        color: 'text-emerald-600 dark:text-emerald-400',
         icon: Activity,
       };
     const diffTime = Math.abs(Date.now() - new Date(lastUpdated));
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (diffDays > 30)
       return {
-        text: "Tạm ngừng",
-        color: "text-red-500 dark:text-red-400",
+        text: 'Tạm ngừng',
+        color: 'text-red-500 dark:text-red-400',
         icon: AlertCircle,
       };
     return {
-      text: "Đang GD",
-      color: "text-emerald-600 dark:text-emerald-400",
+      text: 'Đang GD',
+      color: 'text-emerald-600 dark:text-emerald-400',
       icon: Activity,
     };
   };
@@ -107,10 +92,7 @@ export default function StockBoard() {
       <GlassCard padding="none">
         <div className="animate-pulse space-y-4 p-6">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="h-12 bg-neutral-100 dark:bg-neutral-800/50 rounded-lg w-full"
-            />
+            <div key={i} className="h-12 bg-neutral-100 dark:bg-neutral-800/50 rounded-lg w-full" />
           ))}
         </div>
       </GlassCard>
@@ -130,11 +112,11 @@ export default function StockBoard() {
                 className={`px-4 py-2 rounded-full text-xs font-bold border transition cursor-pointer
                   ${
                     active
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-neutral-100 text-neutral-600 border-neutral-200 hover:bg-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-400 dark:border-neutral-700 dark:hover:bg-neutral-800"
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-neutral-100 text-neutral-600 border-neutral-200 hover:bg-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-400 dark:border-neutral-700 dark:hover:bg-neutral-800'
                   }`}
               >
-                {ex === "ALL" ? "Tất cả" : ex}
+                {ex === 'ALL' ? 'Tất cả' : ex}
               </button>
             );
           })}
@@ -182,7 +164,7 @@ export default function StockBoard() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                     className="group hover:bg-blue-50/50 dark:hover:bg-neutral-800/50 transition-colors"
                   >
                     <td className="px-4 py-4 text-center">
@@ -194,10 +176,7 @@ export default function StockBoard() {
                     </td>
 
                     <td className="px-6 py-4">
-                      <a
-                        href={`/stock/${stock.symbol}`}
-                        className="flex items-center group/link"
-                      >
+                      <a href={`/stock/${stock.symbol}`} className="flex items-center group/link">
                         <div>
                           <div className="font-bold text-neutral-900 dark:text-neutral-100 group-hover/link:text-blue-600 dark:group-hover/link:text-blue-400 transition-colors">
                             {stock.symbol}
@@ -213,12 +192,12 @@ export default function StockBoard() {
                       <span
                         className={`px-2.5 py-1 rounded-md text-[10px] font-bold border ${getExchangeBadge(stock.exchange)}`}
                       >
-                        {stock.exchange || "OTC"}
+                        {stock.exchange || 'OTC'}
                       </span>
                     </td>
 
                     <td className="px-6 py-4 text-right font-bold text-neutral-900 dark:text-white">
-                      {stock.price.toLocaleString("vi-VN")}
+                      {stock.price.toLocaleString('vi-VN')}
                     </td>
 
                     <td className="px-6 py-4 text-right">
@@ -226,12 +205,12 @@ export default function StockBoard() {
                         className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border
                           ${
                             isUp
-                              ? "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30"
-                              : "bg-red-100 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30"
+                              ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30'
+                              : 'bg-red-100 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30'
                           }
                         `}
                       >
-                        {isUp ? "+" : ""}
+                        {isUp ? '+' : ''}
                         {stock.percentChange}%
                       </span>
                     </td>
@@ -261,12 +240,9 @@ export default function StockBoard() {
                       <motion.button
                         whileTap={{ scale: 0.8 }}
                         onClick={() => toggleWishlist(stock.symbol)}
-                        className={`p-2 rounded-full cursor-pointer transition-colors ${isWishlisted ? "text-pink-500 hover:bg-pink-500/10" : "text-neutral-400 hover:text-pink-400 hover:bg-neutral-800"}`}
+                        className={`p-2 rounded-full cursor-pointer transition-colors ${isWishlisted ? 'text-pink-500 hover:bg-pink-500/10' : 'text-neutral-400 hover:text-pink-400 hover:bg-neutral-800'}`}
                       >
-                        <Heart
-                          size={18}
-                          fill={isWishlisted ? "currentColor" : "none"}
-                        />
+                        <Heart size={18} fill={isWishlisted ? 'currentColor' : 'none'} />
                       </motion.button>
                     </td>
                   </motion.tr>
@@ -278,11 +254,7 @@ export default function StockBoard() {
       </div>
 
       <div className="bg-neutral-50/50 dark:bg-neutral-800/30 px-6 py-4 border-t border-neutral-200 dark:border-neutral-800/50 text-sm text-neutral-500 flex justify-center">
-        Đang theo dõi:{" "}
-        <b className="ml-1 text-neutral-900 dark:text-neutral-200">
-          {wishlist.length}
-        </b>{" "}
-        &nbsp;mã
+        Đang theo dõi: <b className="ml-1 text-neutral-900 dark:text-neutral-200">{wishlist.length}</b> &nbsp;mã
       </div>
     </GlassCard>
   );

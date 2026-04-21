@@ -7,6 +7,6 @@ export const useNewsVN = (limit) => {
     queryFn: async () => {
       const { data } = await newsService.searchVN(limit);
       return data;
-    }
+    },
   });
 };

@@ -16,7 +16,7 @@ export function useAuth() {
       localStorage.setItem('user', JSON.stringify(res.data.user));
       window.location.href = '/';
     } catch (err) {
-      setError(err.response?.data?.message || "Lỗi đăng nhập");
+      setError(err.response?.data?.message || 'Lỗi đăng nhập');
     } finally {
       setLoading(false);
     }

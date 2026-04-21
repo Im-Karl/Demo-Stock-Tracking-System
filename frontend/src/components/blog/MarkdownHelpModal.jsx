@@ -1,7 +1,7 @@
-import React from "react";
-import ReactMarkdown from "react-markdown";
-import Button from "../base-ui/Button";
-import { X } from "lucide-react";
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import Button from '../base-ui/Button';
+import { X } from 'lucide-react';
 
 const markdownHelpContent = `
 ## Tiêu đề (Heading)
@@ -199,18 +199,17 @@ export default function MarkdownHelpModal({ isOpen, onClose }) {
 
         {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-neutral-200 dark:border-neutral-800">
-          <h2 className="text-2xl font-extrabold text-neutral-800 dark:text-neutral-100">
-            Hướng dẫn sử dụng Markdown
-          </h2>
+          <h2 className="text-2xl font-extrabold text-neutral-800 dark:text-neutral-100">Hướng dẫn sử dụng Markdown</h2>
         </div>
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-
             {/* Markdown source */}
             <div className="flex flex-col h-full">
-              <label className="text-xs font-bold uppercase mb-2 text-neutral-500 dark:text-neutral-400">Markdown</label>
+              <label className="text-xs font-bold uppercase mb-2 text-neutral-500 dark:text-neutral-400">
+                Markdown
+              </label>
               <textarea
                 readOnly
                 value={markdownHelpContent}
@@ -225,7 +224,6 @@ export default function MarkdownHelpModal({ isOpen, onClose }) {
                 <ReactMarkdown>{markdownHelpContent}</ReactMarkdown>
               </div>
             </div>
-
           </div>
         </div>
       </div>
