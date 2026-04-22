@@ -5,7 +5,7 @@ import clsx from 'clsx';
 const cardStyles = cva('relative overflow-hidden transition-colors shadow-sm', {
   variants: {
     intent: {
-      default: 'bg-white dark:bg-grey-800',
+      default: 'bg-white dark:bg-grey-900',
       success: 'bg-emerald-50 dark:bg-emerald-900/30',
       warning: 'bg-amber-50 dark:bg-amber-900/30',
       danger: 'bg-red-50 dark:bg-red-900/30',
@@ -31,10 +31,10 @@ const cardStyles = cva('relative overflow-hidden transition-colors shadow-sm', {
   },
 });
 
-export default function GlassCard({ children, className, intent, rounded, padding, ...props }) {
+export default function GlassCard({ as: Component = 'div', children, className, intent, rounded, padding, ...props }) {
   return (
-    <div className={clsx(cardStyles({ intent, rounded, padding }), className)} {...props}>
+    <Component className={clsx(cardStyles({ intent, rounded, padding }), className)} {...props}>
       {children}
-    </div>
+    </Component>
   );
 }

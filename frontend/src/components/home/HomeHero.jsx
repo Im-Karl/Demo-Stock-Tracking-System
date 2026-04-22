@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { RiFireFill, RiNewsFill, RiTeamFill, RiLightbulbFill, RiSparklingFill, RiChatSmile3Fill } from 'react-icons/ri';
 import Button from '../base-ui/Button';
+import GlassCard from '../base-ui/GlassCard';
 
 export default function HomeHero() {
   const features = [
@@ -46,14 +47,14 @@ export default function HomeHero() {
         <div className="absolute inset-0 bg-grey-900/60" />
       </div>
 
-      <div className="container mx-auto p-10 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-0 items-center">
+      <div className="container mx-auto p-10 relative z-10">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
           <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 text-white font-heading">
-            Đánh giá thông minh thị trường Việt Nam
+            Đánh giá thông minh <br className="hidden lg:block" /> thị trường Việt Nam
           </h1>
 
           <ul className="text-lg mb-8 leading-12 text-white/90">
@@ -100,7 +101,7 @@ export default function HomeHero() {
         />
       </div>
 
-      <section className="relative py-20 bg-grey-50 dark:bg-grey-900 overflow-hidden">
+      <section className="relative py-20 bg-grey-50 dark:bg-black overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -110,7 +111,7 @@ export default function HomeHero() {
             className="mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-extrabold mb-4 font-heading text-grey-900 dark:text-grey-50">FinSavvy là gì?</h2>
-            <p className="text-lg text-grey-600 dark:text-grey-400 max-w-3xl">
+            <p className="text-lg text-grey-600 dark:text-grey-400">
               FinSavvy là hệ thống phân tích và đánh giá thị trường toàn diện, bao gồm dự đoán giá cổ phiếu, cảnh báo
               bất thường, thu thập thông tin từ các trang báo lớn, và cùng nhau chia sẻ tại qua các bài viết.
             </p>
@@ -121,13 +122,14 @@ export default function HomeHero() {
               const Icon = item.icon;
 
               return (
-                <motion.div
+                <GlassCard
                   key={i}
+                  as={motion.div}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.6 }}
                   viewport={{ once: true }}
-                  className="flex items-start gap-5 p-8 bg-white dark:bg-grey-800 rounded-sm shadow-sm transition-shadow hover:shadow-md"
+                  className="flex flex-col items-start gap-5 hover:!shadow-md transition-shadow cursor-default"
                 >
                   <div
                     className={`w-14 h-14 flex items-center justify-center shrink-0 rounded-sm ${item.color}`}
@@ -139,7 +141,7 @@ export default function HomeHero() {
                     <h4 className="text-xl font-bold mb-2 font-heading text-grey-900 dark:text-grey-50">{item.title}</h4>
                     <p className="text-grey-600 dark:text-grey-400">{item.desc}</p>
                   </div>
-                </motion.div>
+                </GlassCard>
               );
             })}
           </div>

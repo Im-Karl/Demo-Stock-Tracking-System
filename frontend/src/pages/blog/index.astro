@@ -26,12 +26,12 @@ try {
 ---
 
 <Layout title="Danh sách Blog">
-  <section class="relative min-h-screen bg-neutral-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 overflow-hidden">
+  <section class="relative min-h-screen text-grey-800 dark:text-grey-100 overflow-hidden">
     <main class="relative z-10 max-w-7xl mx-auto px-6 py-16">
       
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-8 text-center text-neutral-900 dark:text-white">
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-8 text-center text-grey-900 dark:text-grey-50 font-heading">
         Góc Phân Tích
-        <span class="block mt-3 text-lg font-medium text-neutral-500 dark:text-neutral-400">
+        <span class="block mt-3 text-lg font-medium text-grey-500 dark:text-grey-400">
           Góc nhìn thị trường & chia sẻ từ cộng đồng đầu tư
         </span>
       </h1>
@@ -42,39 +42,39 @@ try {
           name="search" 
           value={keyword}
           placeholder="Tìm kiếm bài viết, mã cổ phiếu..." 
-          class="w-full py-4 pl-6 pr-14 rounded-full bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-neutral-900 dark:text-neutral-100 transition-all"
+          class="w-full py-4 pl-6 pr-14 rounded-sm bg-white dark:bg-grey-800 border border-grey-300 dark:border-grey-700 shadow-sm focus:ring-2 focus:ring-primary-500 focus:outline-none text-grey-900 dark:text-grey-100 transition-all"
         />
-        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full text-neutral-400 group-hover:text-blue-500 transition-colors">
+        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-sm text-grey-400 hover:text-primary-500 transition-colors cursor-pointer">
            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         </button>
       </form>
 
       {errorMessage && (
-        <div class="mb-8 rounded-xl border border-red-300 bg-red-50 text-red-700 px-6 py-4 text-center max-w-2xl mx-auto">
+        <div class="mb-8 rounded-sm border border-red-300 bg-red-50 text-red-700 px-6 py-4 text-center max-w-2xl mx-auto shadow-sm">
           <strong class="font-bold">Lỗi:</strong> {errorMessage}
         </div>
       )}
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {blogs.map((blog: any) => (
-    <BlogCard blog={blog} />
-  ))}
+          <BlogCard blog={blog} />
+        ))}
       </div>
 
       {totalPages > 1 && (
         <div class="flex items-center justify-center gap-4 mt-16">
           <a 
             href={`/blog?search=${keyword}&page=${currentPage - 1}`} 
-            class={`px-4 py-2 rounded-lg font-semibold transition ${currentPage === 1 ? "opacity-50 pointer-events-none bg-neutral-200 dark:bg-neutral-800 text-neutral-400" : "bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+            class={`px-4 py-2 rounded-sm font-semibold transition shadow-sm ${currentPage === 1 ? "opacity-50 pointer-events-none bg-grey-200 dark:bg-grey-800 text-grey-400" : "bg-white dark:bg-grey-800 border border-grey-300 dark:border-grey-700 hover:bg-grey-100 dark:hover:bg-grey-700"}`}
           >
             Trang trước
           </a>
-          <span class="font-bold text-neutral-700 dark:text-neutral-300">
+          <span class="font-bold text-grey-700 dark:text-grey-300">
             Trang {currentPage} / {totalPages}
           </span>
           <a 
             href={`/blog?search=${keyword}&page=${currentPage + 1}`} 
-            class={`px-4 py-2 rounded-lg font-semibold transition ${currentPage === totalPages ? "opacity-50 pointer-events-none bg-neutral-200 dark:bg-neutral-800 text-neutral-400" : "bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+            class={`px-4 py-2 rounded-sm font-semibold transition shadow-sm ${currentPage === totalPages ? "opacity-50 pointer-events-none bg-grey-200 dark:bg-grey-800 text-grey-400" : "bg-white dark:bg-grey-800 border border-grey-300 dark:border-grey-700 hover:bg-grey-100 dark:hover:bg-grey-700"}`}
           >
             Trang sau
           </a>
@@ -82,7 +82,7 @@ try {
       )}
 
       {!errorMessage && blogs.length === 0 && (
-        <div class="text-center py-24 text-neutral-500">
+        <div class="text-center py-24 text-grey-500 font-medium">
           {keyword ? `Không tìm thấy bài viết nào chứa từ khóa "${keyword}"` : "Chưa có bài viết nào."}
         </div>
       )}

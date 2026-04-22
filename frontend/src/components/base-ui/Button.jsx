@@ -58,10 +58,10 @@ const button = cva(
           'text-grey-800',
           'hover:bg-grey-200',
           'active:bg-grey-300',
-          'dark:bg-grey-800',
+          'dark:bg-grey-900',
           'dark:text-grey-100',
-          'dark:hover:bg-grey-700',
-          'dark:active:bg-grey-600',
+          'dark:hover:bg-grey-800',
+          'dark:active:bg-grey-700',
         ],
         ghost: [
           'bg-transparent',

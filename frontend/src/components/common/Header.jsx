@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../base-ui/Button';
+import Avatar from '../base-ui/Avatar';
 import Tab from '../base-ui/Tab';
 import ThemeToggle from '../ui/ThemeToggle';
 
@@ -57,12 +58,12 @@ export default function Header() {
               <Button render={<a href="/blog/manage" />} intent="primary">
                 Bài viết
               </Button>
-              <a href="/profile">
-                <img
-                  src={user.avatar}
-                  width={40}
-                  height={40}
-                  className="border border-grey-200 dark:border-grey-700 object-cover size-10 rounded-full"
+              <a href="/profile" className="outline-none rounded-full ring-primary-500 focus-visible:ring-2">
+                <Avatar
+                  src={user.avatar !== '/images/default-avatar.png' ? user.avatar : null}
+                  alt={user.displayName || user.username || 'User'}
+                  fallback={user.displayName || user.username || 'U'}
+                  size="md"
                 />
               </a>
             </>

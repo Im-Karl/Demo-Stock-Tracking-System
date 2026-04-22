@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { newsService } from '../../services/newsService';
 import { RiNewspaperFill, RiEarthFill, RiStockFill, RiLoader4Fill, RiInformationFill } from 'react-icons/ri';
-import GlassCard from '../base-ui/GlassCard';
+import ArticleCard from '../base-ui/ArticleCard';
 import Tab from '../base-ui/Tab';
 import { Tooltip } from '@base-ui/react/tooltip';
 
@@ -148,61 +148,35 @@ export default function NewsFeed() {
 
 function NewsItem({ article }) {
   return (
-    <a href={article.url} target="_blank" rel="noreferrer" className="group block h-full outline-none">
-      <GlassCard
-        padding="none"
-        className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-1"
-      >
-        <div className="w-full h-48 bg-grey-100 dark:bg-grey-700 relative overflow-hidden flex-shrink-0">
-          {article.image ? (
-            <img
-              src={article.image}
-              alt={article.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-              onError={(e) => (e.target.style.display = 'none')}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-grey-400 text-xs font-medium">No Image</div>
-          )}
-        </div>
-
-        <div className="p-5 flex-1 flex flex-col justify-start">
-          <h3 className="font-bold text-lg mb-2 line-clamp-2 text-grey-900 dark:text-grey-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors font-heading leading-tight">
-            {article.title}
-          </h3>
-          <p className="text-sm text-grey-600 dark:text-grey-400 line-clamp-3 leading-relaxed mb-4">
-            {article.content}
-          </p>
-          
-          <div className="flex justify-between items-center text-xs text-grey-500 dark:text-grey-500 font-medium mt-auto pt-4">
-            <span className="text-grey-700 dark:text-grey-300 font-bold truncate pr-2">
-              {article.source} {article.author && <span className="font-normal opacity-80">/ {article.author}</span>}
-            </span>
-            <span className="whitespace-nowrap flex-shrink-0">{article.published || 'Mới cập nhật'}</span>
-          </div>
-        </div>
-      </GlassCard>
-    </a>
+    <ArticleCard
+      href={article.url}
+      image={article.image}
+      title={article.title}
+      description={article.content}
+      source={article.source}
+      authorName={article.author}
+      date={article.published || 'Mới cập nhật'}
+    />
   );
 }
 
 function SkeletonCard() {
   return (
-    <div className="flex flex-col h-full min-h-[360px] rounded-sm overflow-hidden animate-pulse bg-white dark:bg-grey-800 shadow-sm">
-      <div className="w-full h-48 bg-grey-200 dark:bg-grey-700 shrink-0"></div>
+    <div className="flex flex-col h-full min-h-[360px] rounded-sm overflow-hidden animate-pulse bg-white dark:bg-grey-900 shadow-sm">
+      <div className="w-full h-48 bg-grey-200 dark:bg-grey-800 shrink-0"></div>
       <div className="flex-1 p-5 flex flex-col">
         <div className="space-y-3 mb-4">
-          <div className="h-5 bg-grey-200 dark:bg-grey-700 rounded-sm w-full"></div>
-          <div className="h-5 bg-grey-200 dark:bg-grey-700 rounded-sm w-3/4"></div>
+          <div className="h-5 bg-grey-200 dark:bg-grey-800 rounded-sm w-full"></div>
+          <div className="h-5 bg-grey-200 dark:bg-grey-800 rounded-sm w-3/4"></div>
         </div>
         <div className="space-y-2 mb-6">
-          <div className="h-4 bg-grey-200 dark:bg-grey-700 rounded-sm w-full"></div>
-          <div className="h-4 bg-grey-200 dark:bg-grey-700 rounded-sm w-5/6"></div>
-          <div className="h-4 bg-grey-200 dark:bg-grey-700 rounded-sm w-2/3"></div>
+          <div className="h-4 bg-grey-200 dark:bg-grey-800 rounded-sm w-full"></div>
+          <div className="h-4 bg-grey-200 dark:bg-grey-800 rounded-sm w-5/6"></div>
+          <div className="h-4 bg-grey-200 dark:bg-grey-800 rounded-sm w-2/3"></div>
         </div>
         <div className="flex justify-between mt-auto pt-4">
-          <div className="h-3 bg-grey-200 dark:bg-grey-700 rounded-sm w-1/3"></div>
-          <div className="h-3 bg-grey-200 dark:bg-grey-700 rounded-sm w-1/4"></div>
+          <div className="h-3 bg-grey-200 dark:bg-grey-800 rounded-sm w-1/3"></div>
+          <div className="h-3 bg-grey-200 dark:bg-grey-800 rounded-sm w-1/4"></div>
         </div>
       </div>
     </div>

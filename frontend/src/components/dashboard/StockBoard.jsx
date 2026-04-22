@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { RiArrowUpFill, RiArrowDownFill, RiHeartFill, RiTrophyFill, RiPulseFill, RiErrorWarningFill, RiSearchLine } from 'react-icons/ri';
+import { RiArrowUpFill, RiArrowDownFill, RiHeartFill, RiTrophyFill, RiPulseFill, RiErrorWarningFill, RiSearchLine, RiVipDiamondFill, RiMedalFill } from 'react-icons/ri';
 import { useStockSocket } from '../../hooks/useStockSocket';
 import { motion, AnimatePresence } from 'framer-motion';
-import GlassCard from '../base-ui/GlassCard';
 import Input from '../base-ui/Input';
+import Badge from '../base-ui/Badge';
 
 export default function StockBoard() {
   const stocks = useStockSocket();
@@ -13,7 +13,7 @@ export default function StockBoard() {
 
   const exchanges = useMemo(() => {
     const unique = new Set(stocks.map((s) => s.exchange).filter(Boolean));
-    return ['ALL', ...Array.from(unique)];
+    return ['ALL', 'FAVOURITES', ...Array.from(unique)];
   }, [stocks]);
 
   const [wishlist, setWishlist] = useState(() => {
@@ -32,36 +32,57 @@ export default function StockBoard() {
   };
 
   const filteredStocks = useMemo(() => {
-    let data = exchangeFilter === 'ALL' ? stocks : stocks.filter((s) => s.exchange === exchangeFilter);
+    let data;
+    if (exchangeFilter === 'ALL') {
+      data = stocks;
+    } else if (exchangeFilter === 'FAVOURITES') {
+      data = stocks.filter((s) => wishlist.includes(s.symbol));
+    } else {
+      data = stocks.filter((s) => s.exchange === exchangeFilter);
+    }
+
     if (searchTerm.trim() !== '') {
       data = data.filter((s) => s.symbol.toLowerCase().includes(searchTerm.toLowerCase()));
     }
     return [...data].sort((a, b) => b.price - a.price);
-  }, [stocks, exchangeFilter, searchTerm]);
+  }, [stocks, exchangeFilter, searchTerm, wishlist]);
 
   const getRankStyle = (index) => {
     switch (index) {
-      case 0:
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-300 dark:border-yellow-500/30';
-      case 1:
-        return 'bg-neutral-100 text-neutral-700 border-neutral-200 dark:bg-neutral-500/20 dark:text-neutral-300 dark:border-neutral-500/30';
-      case 2:
-        return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-500/20 dark:text-orange-300 dark:border-orange-500/30';
+      case 0: // Diamond
+        return 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300';
+      case 1: // Gold
+        return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300';
+      case 2: // Copper
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
       default:
-        return 'text-neutral-600 dark:text-neutral-400 font-medium border-transparent';
+        return 'text-grey-600 dark:text-grey-400 font-medium';
     }
   };
 
-  const getExchangeBadge = (exchange) => {
+  const getRankIcon = (index) => {
+    switch (index) {
+      case 0:
+        return <RiVipDiamondFill size={14} />;
+      case 1:
+        return <RiTrophyFill size={14} />;
+      case 2:
+        return <RiMedalFill size={14} />;
+      default:
+        return index + 1;
+    }
+  };
+
+  const getExchangeIntent = (exchange) => {
     switch (exchange) {
       case 'HOSE':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30';
+        return 'success';
       case 'HNX':
-        return 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/30';
+        return 'warning';
       case 'UPCOM':
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/30';
+        return 'primary';
       default:
-        return 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400';
+        return 'neutral';
     }
   };
 
@@ -77,11 +98,11 @@ export default function StockBoard() {
     if (diffDays > 30)
       return {
         text: 'Tạm ngừng',
-        color: 'text-red-500 dark:text-red-400',
+        color: 'text-red-600 dark:text-red-400',
         icon: RiErrorWarningFill,
       };
     return {
-      text: 'Đang GD',
+      text: 'Hoạt động',
       color: 'text-emerald-600 dark:text-emerald-400',
       icon: RiPulseFill,
     };
@@ -89,35 +110,39 @@ export default function StockBoard() {
 
   if (stocks.length === 0) {
     return (
-      <GlassCard padding="none">
+      <div className="w-full">
         <div className="animate-pulse space-y-4 p-6">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-12 bg-neutral-100 dark:bg-neutral-800/50 rounded-lg w-full" />
+            <div key={i} className="h-12 bg-grey-100 dark:bg-grey-800 rounded-sm w-full" />
           ))}
         </div>
-      </GlassCard>
+      </div>
     );
   }
 
   return (
-    <GlassCard padding="none">
-      <div className="flex items-center justify-between flex-wrap gap-4 px-6 py-5 border-b border-neutral-200 dark:border-neutral-800/50">
+    <div className="w-full">
+      {/* HEADER SECTION */}
+      <div className="flex items-center justify-between flex-wrap gap-4 pb-5">
         <div className="flex flex-wrap gap-2">
           {exchanges.map((ex) => {
             const active = exchangeFilter === ex;
+            const isFav = ex === 'FAVOURITES';
             return (
-              <button
+              <Badge
                 key={ex}
+                intent={active ? (isFav ? 'danger' : 'primary') : 'neutral'}
+                variant={active ? 'solid' : 'soft'}
+                size="md"
                 onClick={() => setExchangeFilter(ex)}
-                className={`px-4 py-2 rounded-full text-xs font-bold border transition cursor-pointer
-                  ${
-                    active
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-neutral-100 text-neutral-600 border-neutral-200 hover:bg-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-400 dark:border-neutral-700 dark:hover:bg-neutral-800'
-                  }`}
+                className="!px-3.5 !py-1.5"
               >
-                {ex === 'ALL' ? 'Tất cả' : ex}
-              </button>
+                {ex === 'ALL' ? 'Tất cả' : isFav ? (
+                  <span className="flex items-center gap-1.5">
+                    <RiHeartFill className={active ? '' : 'text-pink-500'} /> Yêu thích
+                  </span>
+                ) : ex}
+              </Badge>
             );
           })}
         </div>
@@ -134,23 +159,25 @@ export default function StockBoard() {
         </div>
       </div>
 
-      <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full text-left border-collapse min-w-[800px]">
-          <thead>
-            <tr className="bg-neutral-50/50 dark:bg-neutral-800/30 border-b border-neutral-200 dark:border-neutral-800 text-xs uppercase text-neutral-500 dark:text-neutral-400 font-bold tracking-wider">
-              <th className="px-4 py-5 text-center w-16">#</th>
-              <th className="px-6 py-5">Mã CP</th>
-              <th className="px-6 py-5 text-center">Sàn</th>
-              <th className="px-6 py-5 text-right">Giá (VND)</th>
-              <th className="px-6 py-5 text-right">+/-</th>
-              <th className="px-6 py-5 text-center">Xu hướng</th>
-              <th className="px-6 py-5 text-right">KLGD</th>
-              <th className="px-6 py-5 text-center">Trạng thái</th>
-              <th className="px-6 py-5 text-center">Yêu thích</th>
+      {/* TABLE SECTION */}
+      <div className="overflow-x-auto overflow-y-hidden custom-scrollbar p-2 -m-2">
+        <table className="w-full text-left border-separate border-spacing-0 min-w-[800px]">
+          <thead className="relative z-10 drop-shadow">
+            <tr className="text-xs uppercase text-grey-500 dark:text-grey-400 font-bold tracking-wider *:bg-white dark:*:bg-grey-900 *:py-5">
+              <th className="px-4 text-center w-16 rounded-l-sm">#</th>
+              <th className="px-6">Mã cổ phiếu</th>
+              <th className="px-6 text-center">Sàn</th>
+              <th className="px-6 text-right">Giá (VND)</th>
+              <th className="px-6 text-right">+/-</th>
+              <th className="px-6 text-center">Xu hướng</th>
+              <th className="px-6 text-right">Khối lượng</th>
+              <th className="px-6 text-center">Trạng thái</th>
+              <th className="px-6 text-center rounded-r-sm">Yêu thích</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/50">
+          <tbody>
+            <tr><td colSpan="9" className="h-4"></td></tr>
             <AnimatePresence>
               {filteredStocks.map((stock, index) => {
                 const isUp = stock.percentChange >= 0;
@@ -165,23 +192,23 @@ export default function StockBoard() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    className="group hover:bg-blue-50/50 dark:hover:bg-neutral-800/50 transition-colors"
+                    className="group even:bg-grey-50/50 odd:bg-white dark:even:bg-grey-800/30 dark:odd:bg-transparent hover:bg-grey-100 dark:hover:bg-grey-800/60 transition-colors"
                   >
                     <td className="px-4 py-4 text-center">
                       <div
-                        className={`w-8 h-8 mx-auto flex items-center justify-center rounded-full border ${getRankStyle(index)}`}
+                        className={`w-8 h-8 mx-auto flex items-center justify-center rounded-sm ${getRankStyle(index)}`}
                       >
-                        {index < 3 ? <RiTrophyFill size={14} /> : index + 1}
+                        {getRankIcon(index)}
                       </div>
                     </td>
 
                     <td className="px-6 py-4">
-                      <a href={`/stock/${stock.symbol}`} className="flex items-center group/link">
+                      <a href={`/stock/${stock.symbol}`} className="flex items-center group/link outline-none">
                         <div>
-                          <div className="font-bold text-neutral-900 dark:text-neutral-100 group-hover/link:text-blue-600 dark:group-hover/link:text-blue-400 transition-colors">
+                          <div className="font-bold text-grey-900 dark:text-grey-100 group-hover/link:text-primary-600 dark:group-hover/link:text-primary-400 transition-colors">
                             {stock.symbol}
                           </div>
-                          <div className="text-[10px] text-neutral-500 uppercase tracking-wide">
+                          <div className="text-[10px] text-grey-500 uppercase tracking-wide">
                             {stock.organ_name_en}
                           </div>
                         </div>
@@ -189,41 +216,31 @@ export default function StockBoard() {
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      <span
-                        className={`px-2.5 py-1 rounded-md text-[10px] font-bold border ${getExchangeBadge(stock.exchange)}`}
-                      >
+                      <Badge intent={getExchangeIntent(stock.exchange)} size="sm">
                         {stock.exchange || 'OTC'}
-                      </span>
+                      </Badge>
                     </td>
 
-                    <td className="px-6 py-4 text-right font-bold text-neutral-900 dark:text-white">
+                    <td className="px-6 py-4 text-right font-bold text-grey-900 dark:text-white">
                       {stock.price.toLocaleString('vi-VN')}
                     </td>
 
                     <td className="px-6 py-4 text-right">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border
-                          ${
-                            isUp
-                              ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30'
-                              : 'bg-red-100 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/30'
-                          }
-                        `}
-                      >
+                      <Badge intent={isUp ? 'success' : 'danger'} size="md">
                         {isUp ? '+' : ''}
                         {stock.percentChange}%
-                      </span>
+                      </Badge>
                     </td>
 
                     <td className="px-6 py-4 text-center">
                       {isUp ? (
-                        <RiArrowUpFill className="w-5 h-5 text-emerald-500 inline" />
+                        <RiArrowUpFill className="w-5 h-5 text-emerald-600 dark:text-emerald-500 inline" />
                       ) : (
-                        <RiArrowDownFill className="w-5 h-5 text-red-500 inline" />
+                        <RiArrowDownFill className="w-5 h-5 text-red-600 dark:text-red-500 inline" />
                       )}
                     </td>
 
-                    <td className="px-6 py-4 text-right text-sm font-mono font-medium text-neutral-700 dark:text-neutral-300">
+                    <td className="px-6 py-4 text-right text-sm font-mono font-medium text-grey-700 dark:text-grey-300">
                       {stock.volume?.toLocaleString()}
                     </td>
 
@@ -231,7 +248,7 @@ export default function StockBoard() {
                       <div
                         className={`flex items-center justify-center gap-1.5 text-xs font-medium ${statusInfo.color}`}
                       >
-                        <statusInfo.icon size={14} />
+                        <statusInfo.icon size={20} />
                         {statusInfo.text}
                       </div>
                     </td>
@@ -240,9 +257,9 @@ export default function StockBoard() {
                       <motion.button
                         whileTap={{ scale: 0.8 }}
                         onClick={() => toggleWishlist(stock.symbol)}
-                        className={`p-2 rounded-full cursor-pointer transition-colors ${isWishlisted ? 'text-pink-500 hover:bg-pink-500/10' : 'text-neutral-400 hover:text-pink-400 hover:bg-neutral-800'}`}
+                        className={`p-2 rounded-full cursor-pointer transition-colors outline-none focus-visible:ring-2 ring-primary-500 ${isWishlisted ? 'text-pink-500 hover:bg-pink-50 dark:hover:bg-pink-500/10' : 'text-grey-400 hover:text-pink-500 hover:bg-grey-100 dark:hover:bg-grey-800'}`}
                       >
-                        <RiHeartFill size={18} fill={isWishlisted ? 'currentColor' : 'none'} />
+                        <RiHeartFill size={18} />
                       </motion.button>
                     </td>
                   </motion.tr>
@@ -252,10 +269,6 @@ export default function StockBoard() {
           </tbody>
         </table>
       </div>
-
-      <div className="bg-neutral-50/50 dark:bg-neutral-800/30 px-6 py-4 border-t border-neutral-200 dark:border-neutral-800/50 text-sm text-neutral-500 flex justify-center">
-        Đang theo dõi: <b className="ml-1 text-neutral-900 dark:text-neutral-200">{wishlist.length}</b> &nbsp;mã
-      </div>
-    </GlassCard>
+    </div>
   );
 }

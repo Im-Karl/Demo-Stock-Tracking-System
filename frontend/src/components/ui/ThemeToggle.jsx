@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { RiSunFill, RiMoonFill } from 'react-icons/ri';
-import Button from '../base-ui/Button';
+import Switch from '../base-ui/Switch';
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState('light');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const isDark = document.documentElement.classList.contains('dark');
     setTheme(isDark ? 'dark' : 'light');
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
+  const handleCheckedChange = (checked) => {
+    const newTheme = checked ? 'dark' : 'light';
     setTheme(newTheme);
 
     if (newTheme === 'dark') {
@@ -19,15 +21,20 @@ export default function ThemeToggle() {
     } else {
       document.documentElement.classList.remove('dark');
     }
-
     localStorage.setItem('theme', newTheme);
   };
 
-  if (!theme) return <div className="w-10 h-10"></div>;
+  if (!mounted) return <div className="w-[52px] h-8"></div>;
+
+  const isDark = theme === 'dark';
 
   return (
-    <Button onClick={toggleTheme} className="px-2!">
-      {theme === 'light' ? <RiMoonFill size={24} /> : <RiSunFill size={24} />}
-    </Button>
+    <Switch
+      checked={isDark}
+      onCheckedChange={handleCheckedChange}
+      uncheckedIcon={<RiSunFill />}
+      checkedIcon={<RiMoonFill />}
+      aria-label="Toggle theme"
+    />
   );
 }
