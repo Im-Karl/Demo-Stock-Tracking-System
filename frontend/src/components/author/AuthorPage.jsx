@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Heart, FileText, UserPlus, Search } from 'lucide-react';
+import { RiGroupFill, RiHeartFill, RiFileTextFill, RiUserAddFill, RiSearchLine } from 'react-icons/ri';
 import { toast } from 'react-hot-toast';
 import { authService } from '../../services/authService';
 import FollowModal from './FollowModal';
@@ -107,7 +107,7 @@ export default function AuthorPage({ author, blogs = [], stats, initialTotalPage
 
             <div className="flex flex-wrap justify-center gap-8 mb-8">
               <div className="text-center">
-                <FileText size={18} className="mx-auto mb-1 text-neutral-400" />
+                <RiFileTextFill size={18} className="mx-auto mb-1 text-neutral-400" />
                 {/* Lấy tổng bài trên DB chứ không phải số bài đang hiển thị */}
                 <div className="text-xl font-bold">{stats?.totalBlogs || displayBlogs.length}</div>
                 <div className="text-xs text-neutral-400">Bài viết</div>
@@ -116,7 +116,7 @@ export default function AuthorPage({ author, blogs = [], stats, initialTotalPage
                 className="text-center cursor-pointer hover:scale-105 transition transform group"
                 onClick={() => openModal('followers')}
               >
-                <Users size={18} className="mx-auto mb-1 text-neutral-400 group-hover:text-blue-500" />
+                <RiGroupFill size={18} className="mx-auto mb-1 text-neutral-400 group-hover:text-blue-500" />
                 <div className="text-xl font-bold">{followerCount}</div>
                 <div className="text-xs text-neutral-400 group-hover:text-blue-500">Người theo dõi</div>
               </div>
@@ -124,12 +124,12 @@ export default function AuthorPage({ author, blogs = [], stats, initialTotalPage
                 className="text-center cursor-pointer hover:scale-105 transition transform group"
                 onClick={() => openModal('following')}
               >
-                <UserPlus size={18} className="mx-auto mb-1 text-neutral-400 group-hover:text-violet-500" />
+                <RiUserAddFill size={18} className="mx-auto mb-1 text-neutral-400 group-hover:text-violet-500" />
                 <div className="text-xl font-bold">{followingCount}</div>
                 <div className="text-xs text-neutral-400 group-hover:text-violet-500">Đang theo dõi</div>
               </div>
               <div className="text-center">
-                <Heart size={18} className="mx-auto mb-1 text-neutral-400" />
+                <RiHeartFill size={18} className="mx-auto mb-1 text-neutral-400" />
                 <div className="text-xl font-bold">{stats?.totalLikes || 0}</div>
                 <div className="text-xs text-neutral-400">Lượt thích</div>
               </div>
@@ -168,7 +168,7 @@ export default function AuthorPage({ author, blogs = [], stats, initialTotalPage
               type="submit"
               className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full text-neutral-400 group-hover:text-blue-500 transition-colors"
             >
-              <Search size={18} />
+              <RiSearchLine size={18} />
             </button>
           </form>
         </div>

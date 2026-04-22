@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import { authService } from '../../services/authService';
 import ThemeToggle from '../ui/ThemeToggle';
-import { ExternalLink, KeyRound, LogOut, User as UserIcon, Camera, Loader2 } from 'lucide-react';
+import { RiExternalLinkFill, RiKeyFill, RiLogoutBoxRFill, RiUserFill as UserIcon, RiCameraFill, RiLoader4Fill } from 'react-icons/ri';
 import { uploadService } from '../../services/uploadService';
 import PageLayout from '../base-ui/PageLayout';
 import GlassCard from '../base-ui/GlassCard';
@@ -176,12 +176,12 @@ export default function UserProfile() {
               >
                 {uploadingAvatar && (
                   <div className="absolute inset-0 bg-black/60 z-20 flex items-center justify-center">
-                    <Loader2 className="animate-spin text-white" size={32} />
+                    <RiLoader4Fill className="animate-spin text-white" size={32} />
                   </div>
                 )}
 
                 <div className="absolute inset-0 bg-black/50 z-10 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <Camera className="text-white mb-1" size={24} />
+                  <RiCameraFill className="text-white mb-1" size={24} />
                   <span className="text-[10px] text-white font-bold uppercase">Đổi ảnh</span>
                 </div>
 
@@ -271,7 +271,7 @@ export default function UserProfile() {
                     size="sm"
                     className="w-full sm:w-auto flex-shrink-0"
                   >
-                    <ExternalLink size={16} /> Xem trang
+                    <RiExternalLinkFill size={16} /> Xem trang
                   </Button>
                 )}
               </div>
@@ -283,7 +283,7 @@ export default function UserProfile() {
                 className="flex items-center justify-between cursor-pointer group"
               >
                 <h3 className="font-bold text-lg text-neutral-900 dark:text-white flex items-center gap-2 group-hover:text-blue-500 transition-colors">
-                  <KeyRound className="text-neutral-400 group-hover:text-blue-500" /> Đổi mật khẩu
+                  <RiKeyFill className="text-neutral-400 group-hover:text-blue-500" /> Đổi mật khẩu
                 </h3>
                 <span
                   className={`text-neutral-400 transition-transform duration-300 ${showChangePassword ? 'rotate-90' : ''}`}
@@ -330,7 +330,7 @@ export default function UserProfile() {
             </GlassCard>
 
             <Button onClick={handleLogout} intent="dangerSoft" className="w-full h-14">
-              <LogOut size={18} /> Đăng xuất khỏi hệ thống
+              <RiLogoutBoxRFill size={18} /> Đăng xuất khỏi hệ thống
             </Button>
           </div>
         </div>

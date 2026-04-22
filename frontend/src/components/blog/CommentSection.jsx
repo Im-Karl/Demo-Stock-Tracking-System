@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { commentService } from '../../services/commentService';
 import { toast } from 'react-hot-toast';
 import { formatTimeAgo } from '../utils/timeFormat';
-import { MessageSquare, Reply, Trash2, CornerDownRight, Send, ChevronDown, ChevronUp, ArrowUpDown } from 'lucide-react';
+import { RiMessage2Fill, RiReplyFill, RiDeleteBinFill, RiCornerDownRightFill, RiSendPlaneFill, RiArrowDownSFill, RiArrowUpSFill, RiArrowUpDownFill } from 'react-icons/ri';
 import Button from '../base-ui/Button';
 
 export default function CommentSection({ blogId }) {
@@ -210,7 +210,7 @@ export default function CommentSection({ blogId }) {
             </div>
           )}
 
-          {/* Hộp nhập Reply */}
+          {/* Hộp nhập RiReplyFill */}
           {replyingTo === comment._id && (
             <form
               onSubmit={(e) => {
@@ -220,7 +220,7 @@ export default function CommentSection({ blogId }) {
               className="mt-3 flex gap-2 md:gap-3 animate-in fade-in slide-in-from-top-2"
             >
               <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center flex-shrink-0 text-neutral-500">
-                <CornerDownRight size={14} />
+                <RiCornerDownRightFill size={14} />
               </div>
               <div className="flex-1 flex items-start gap-2 relative">
                 <textarea
@@ -239,7 +239,7 @@ export default function CommentSection({ blogId }) {
                   className="!rounded-lg flex-shrink-0 h-8 w-8 absolute bottom-1.5 right-1.5"
                   disabled={!localReplyText.trim()}
                 >
-                  <Send size={12} className="-ml-0.5" />
+                  <RiSendPlaneFill size={12} className="-ml-0.5" />
                 </Button>
               </div>
             </form>
@@ -253,7 +253,7 @@ export default function CommentSection({ blogId }) {
                   onClick={() => setShowReplies(true)}
                   className="flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 px-3 py-1.5 rounded-full transition-colors mt-1"
                 >
-                  <CornerDownRight size={14} /> Xem {replies.length} câu trả lời
+                  <RiCornerDownRightFill size={14} /> Xem {replies.length} câu trả lời
                 </button>
               ) : (
                 <>
@@ -261,7 +261,7 @@ export default function CommentSection({ blogId }) {
                     onClick={() => setShowReplies(false)}
                     className="flex items-center gap-1 text-[11px] font-bold text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 mt-1 ml-1 mb-2 transition-colors"
                   >
-                    <ChevronUp size={14} /> Thu gọn câu trả lời
+                    <RiArrowUpSFill size={14} /> Thu gọn câu trả lời
                   </button>
 
                   <div className="animate-in fade-in duration-300">
@@ -285,7 +285,7 @@ export default function CommentSection({ blogId }) {
       {/* Header Bình luận & Filter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <h3 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-          <MessageSquare className="text-blue-500" /> Bình luận ({comments.length})
+          <RiMessage2Fill className="text-blue-500" /> Bình luận ({comments.length})
         </h3>
 
         <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-lg w-fit border border-neutral-200 dark:border-neutral-700">
@@ -349,7 +349,7 @@ export default function CommentSection({ blogId }) {
           {visibleRoots < sortedRootComments.length && (
             <div className="text-center mt-8 pt-4">
               <Button intent="neutral" onClick={() => setVisibleRoots((prev) => prev + 5)} className="!rounded-full">
-                <ChevronDown size={16} className="mr-1" /> Xem thêm bình luận cũ hơn
+                <RiArrowDownSFill size={16} className="mr-1" /> Xem thêm bình luận cũ hơn
               </Button>
             </div>
           )}

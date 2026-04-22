@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Sun, Moon } from 'lucide-react';
+import { RiSunFill, RiMoonFill } from 'react-icons/ri';
 import Button from '../base-ui/Button';
 
 export default function ThemeToggle() {
@@ -27,7 +27,7 @@ export default function ThemeToggle() {
 
   return (
     <Button onClick={toggleTheme} className="px-2!">
-      {theme === 'light' ? <Moon size={24} /> : <Sun size={24} />}
+      {theme === 'light' ? <RiMoonFill size={24} /> : <RiSunFill size={24} />}
     </Button>
   );
 }

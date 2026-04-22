@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, KeyRound } from 'lucide-react';
+import { RiMailFill, RiKeyFill } from 'react-icons/ri';
 import { authService } from '../../services/authService';
 import Button from '../base-ui/Button';
 import PageLayout from '../base-ui/PageLayout';
@@ -51,7 +51,7 @@ export default function ForgotPasswordForm() {
           className="max-w-md w-full p-8 rounded-3xl bg-white/60 dark:bg-neutral-800/60 backdrop-blur-xl border border-emerald-500/40 shadow-2xl text-center"
         >
           <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
-            <KeyRound size={32} />
+            <RiKeyFill size={32} />
           </div>
           <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">Đã cấp lại mật khẩu</h2>
           <p className="text-neutral-600 dark:text-neutral-300 mb-6">{message}</p>
@@ -91,7 +91,7 @@ export default function ForgotPasswordForm() {
               Email đăng ký
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+              <RiMailFill className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
               <input
                 type="email"
                 required

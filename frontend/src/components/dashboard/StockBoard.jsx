@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ArrowUp, ArrowDown, Heart, Trophy, Activity, AlertCircle, Search } from 'lucide-react';
+import { RiArrowUpFill, RiArrowDownFill, RiHeartFill, RiTrophyFill, RiPulseFill, RiErrorWarningFill, RiSearchLine } from 'react-icons/ri';
 import { useStockSocket } from '../../hooks/useStockSocket';
 import { motion, AnimatePresence } from 'framer-motion';
 import GlassCard from '../base-ui/GlassCard';
@@ -70,7 +70,7 @@ export default function StockBoard() {
       return {
         text: 'Đang GD',
         color: 'text-emerald-600 dark:text-emerald-400',
-        icon: Activity,
+        icon: RiPulseFill,
       };
     const diffTime = Math.abs(Date.now() - new Date(lastUpdated));
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -78,12 +78,12 @@ export default function StockBoard() {
       return {
         text: 'Tạm ngừng',
         color: 'text-red-500 dark:text-red-400',
-        icon: AlertCircle,
+        icon: RiErrorWarningFill,
       };
     return {
       text: 'Đang GD',
       color: 'text-emerald-600 dark:text-emerald-400',
-      icon: Activity,
+      icon: RiPulseFill,
     };
   };
 
@@ -124,7 +124,7 @@ export default function StockBoard() {
 
         <div className="w-full sm:w-64">
           <Input
-            icon={Search}
+            icon={RiSearchLine}
             type="text"
             placeholder="Tìm mã cổ phiếu..."
             value={searchTerm}
@@ -171,7 +171,7 @@ export default function StockBoard() {
                       <div
                         className={`w-8 h-8 mx-auto flex items-center justify-center rounded-full border ${getRankStyle(index)}`}
                       >
-                        {index < 3 ? <Trophy size={14} /> : index + 1}
+                        {index < 3 ? <RiTrophyFill size={14} /> : index + 1}
                       </div>
                     </td>
 
@@ -217,9 +217,9 @@ export default function StockBoard() {
 
                     <td className="px-6 py-4 text-center">
                       {isUp ? (
-                        <ArrowUp className="w-5 h-5 text-emerald-500 inline" />
+                        <RiArrowUpFill className="w-5 h-5 text-emerald-500 inline" />
                       ) : (
-                        <ArrowDown className="w-5 h-5 text-red-500 inline" />
+                        <RiArrowDownFill className="w-5 h-5 text-red-500 inline" />
                       )}
                     </td>
 
@@ -242,7 +242,7 @@ export default function StockBoard() {
                         onClick={() => toggleWishlist(stock.symbol)}
                         className={`p-2 rounded-full cursor-pointer transition-colors ${isWishlisted ? 'text-pink-500 hover:bg-pink-500/10' : 'text-neutral-400 hover:text-pink-400 hover:bg-neutral-800'}`}
                       >
-                        <Heart size={18} fill={isWishlisted ? 'currentColor' : 'none'} />
+                        <RiHeartFill size={18} fill={isWishlisted ? 'currentColor' : 'none'} />
                       </motion.button>
                     </td>
                   </motion.tr>

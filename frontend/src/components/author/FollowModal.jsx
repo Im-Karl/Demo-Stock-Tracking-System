@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { RiCloseFill } from 'react-icons/ri';
 import { authService } from '../../services/authService';
 import { toast } from 'react-hot-toast';
 
@@ -75,7 +75,7 @@ export default function FollowModal({ isOpen, onClose, authorId, type }) {
             onClick={onClose}
             className="p-1.5 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
           >
-            <X size={20} className="text-neutral-500" />
+            <RiCloseFill size={20} className="text-neutral-500" />
           </button>
         </div>
 

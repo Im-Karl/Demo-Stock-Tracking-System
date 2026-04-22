@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import StockDetailClient from "../../components/stock/StockDetailClient.jsx";
 import StockNewsClient from "../../components/stock/StockNewsClient.jsx";
-import { Phone } from "lucide-react";
+import { RiPhoneFill } from 'react-icons/ri';
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -125,7 +125,7 @@ dark:from-neutral-900 dark:to-neutral-800 w-full absolute top-0 left-0 z-0"></di
                     href={`tel:${phone}`}
                     class="text-orange-700 dark:text-orange-400 font-bold hover:underline flex items-center gap-1"
                   >
-                    <Phone /> {phone}
+                    <RiPhoneFill /> {phone}
                   </a>
                 ))}
               </div>

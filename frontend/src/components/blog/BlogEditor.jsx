@@ -4,7 +4,7 @@ import { blogService } from '../../services/blogService';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HelpCircle, ImagePlus, Loader2, FileEdit } from 'lucide-react';
+import { RiQuestionFill, RiImageAddFill, RiLoader4Fill, RiFileEditFill } from 'react-icons/ri';
 import { uploadService } from '../../services/uploadService';
 import MarkdownHelpModal from './MarkdownHelpModal';
 import Button from '../base-ui/Button';
@@ -163,7 +163,7 @@ function BlogEditorContent() {
             disabled={uploading}
             title="Chèn ảnh vào bài"
           >
-            {uploading ? <Loader2 className="animate-spin" size={20} /> : <ImagePlus size={20} />}
+            {uploading ? <RiLoader4Fill className="animate-spin" size={20} /> : <RiImageAddFill size={20} />}
           </Button>
 
           <Button
@@ -173,7 +173,7 @@ function BlogEditorContent() {
             onClick={() => setShowHelp(true)}
             title="Hướng dẫn Markdown"
           >
-            <HelpCircle size={20} />
+            <RiQuestionFill size={20} />
           </Button>
         </div>
 
@@ -227,7 +227,7 @@ function BlogEditorContent() {
                 </ReactMarkdown>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-neutral-400 opacity-60">
-                  <FileEdit size={48} className="mb-4" />
+                  <RiFileEditFill size={48} className="mb-4" />
                   <p className="italic text-center">Nội dung hiển thị tại đây…</p>
                 </div>
               )}

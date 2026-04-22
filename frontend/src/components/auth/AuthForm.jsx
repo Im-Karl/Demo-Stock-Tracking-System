@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { authService } from '../../services/authService';
-import { User, Mail, Lock } from 'lucide-react';
+import { RiUserFill, RiMailFill, RiLockFill } from 'react-icons/ri';
 import Button from '../base-ui/Button';
 import Input from '../base-ui/Input';
 import PageLayout from '../base-ui/PageLayout';
@@ -69,14 +69,14 @@ export default function AuthForm({ type }) {
               <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">
                 Tên đăng nhập
               </label>
-              <Input icon={User} required onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
+              <Input icon={RiUserFill} required onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
             </div>
 
             {!isLogin && (
               <div>
                 <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">Email</label>
                 <Input
-                  icon={Mail}
+                  icon={RiMailFill}
                   type="email"
                   required
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -87,7 +87,7 @@ export default function AuthForm({ type }) {
             <div>
               <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">Mật khẩu</label>
               <Input
-                icon={Lock}
+                icon={RiLockFill}
                 type="password"
                 required
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}

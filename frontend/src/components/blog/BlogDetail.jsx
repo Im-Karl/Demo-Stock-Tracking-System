@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Skeleton } from '../ui/Skeleton';
-import { Heart } from 'lucide-react';
+import { RiHeartFill } from 'react-icons/ri';
 import { toast } from 'react-hot-toast';
 import { blogService } from '../../services/blogService';
 import Button from '../base-ui/Button';
@@ -135,7 +135,7 @@ export default function BlogDetail({ slug }) {
               size="sm"
               className="!rounded-full"
             >
-              <Heart size={16} fill={isLiked ? 'currentColor' : 'none'} className={isLiked ? 'text-red-500' : ''} />{' '}
+              <RiHeartFill size={16} fill={isLiked ? 'currentColor' : 'none'} className={isLiked ? 'text-red-500' : ''} />{' '}
               {likesCount} Hữu ích
             </Button>
           </div>

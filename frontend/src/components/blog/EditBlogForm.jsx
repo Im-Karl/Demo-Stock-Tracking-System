@@ -4,7 +4,7 @@ import { uploadService } from '../../services/uploadService';
 import { navigate } from 'astro:transitions/client';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'react-hot-toast';
-import { FileEdit, HelpCircle, ImagePlus, Loader2 } from 'lucide-react';
+import { RiFileEditFill, RiQuestionFill, RiImageAddFill, RiLoader4Fill } from 'react-icons/ri';
 import MarkdownHelpModal from './MarkdownHelpModal';
 import Button from '../base-ui/Button';
 import PageLayout from '../base-ui/PageLayout';
@@ -129,7 +129,7 @@ export default function EditBlogForm({ blogId }) {
             disabled={uploading}
             title="Chèn ảnh vào bài"
           >
-            {uploading ? <Loader2 className="animate-spin" size={20} /> : <ImagePlus size={20} />}
+            {uploading ? <RiLoader4Fill className="animate-spin" size={20} /> : <RiImageAddFill size={20} />}
           </Button>
           <Button
             type="button"
@@ -139,7 +139,7 @@ export default function EditBlogForm({ blogId }) {
             onClick={() => setShowHelp(true)}
             title="Hướng dẫn Markdown"
           >
-            <HelpCircle size={20} />
+            <RiQuestionFill size={20} />
           </Button>
         </div>
 
@@ -152,7 +152,7 @@ export default function EditBlogForm({ blogId }) {
         />
 
         <h2 className="text-3xl font-extrabold mb-10 flex items-center gap-3 text-blue-600 dark:text-blue-400">
-          <FileEdit /> Chỉnh sửa bài viết
+          <RiFileEditFill /> Chỉnh sửa bài viết
         </h2>
 
         <form onSubmit={handleSubmit}>

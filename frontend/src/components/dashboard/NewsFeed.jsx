@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { newsService } from '../../services/newsService';
-import { Newspaper, Globe, TrendingUp, Loader2, Info } from 'lucide-react';
+import { RiNewspaperFill, RiEarthFill, RiStockFill, RiLoader4Fill, RiInformationFill } from 'react-icons/ri';
 import GlassCard from '../base-ui/GlassCard';
 import Tab from '../base-ui/Tab';
 import { Tooltip } from '@base-ui/react/tooltip';
@@ -60,21 +60,21 @@ export default function NewsFeed() {
         <Tab
           active={activeTab === 'symbol'}
           onClick={() => setActiveTab('symbol')}
-          icon={<TrendingUp size={18} />}
+          icon={<RiStockFill size={18} />}
         >
           Chứng khoán VN
         </Tab>
         <Tab
           active={activeTab === 'general'}
           onClick={() => setActiveTab('general')}
-          icon={<Newspaper size={18} />}
+          icon={<RiNewspaperFill size={18} />}
         >
           Kinh tế Vĩ mô
         </Tab>
         <Tab
           active={activeTab === 'world'}
           onClick={() => setActiveTab('world')}
-          icon={<Globe size={18} />}
+          icon={<RiEarthFill size={18} />}
         >
           Quốc tế
         </Tab>
@@ -83,7 +83,7 @@ export default function NewsFeed() {
         <div className="ml-auto flex items-center pr-2">
           <Tooltip.Root>
             <Tooltip.Trigger delay={50} className="text-grey-400 hover:text-grey-600 dark:hover:text-grey-200 transition-colors cursor-help p-2 rounded-sm outline-none">
-              <Info size={20} />
+              <RiInformationFill size={20} />
             </Tooltip.Trigger>
             <Tooltip.Portal>
               <Tooltip.Positioner side="bottom" sideOffset={8}>
@@ -128,7 +128,7 @@ export default function NewsFeed() {
       <div ref={loadMoreRef} className="py-6 text-center">
         {isFetchingNextPage ? (
           <div className="flex items-center justify-center gap-2 text-primary-600 dark:text-primary-400">
-            <Loader2 className="animate-spin" size={20} />
+            <RiLoader4Fill className="animate-spin" size={20} />
             <span className="text-sm font-medium">Đang tải thêm tin...</span>
           </div>
         ) : hasNextPage ? (

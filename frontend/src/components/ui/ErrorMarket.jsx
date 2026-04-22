@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { RefreshCcw, Home, AlertCircle } from 'lucide-react';
+import { RiRefreshFill, RiHomeFill, RiErrorWarningFill } from 'react-icons/ri';
 
 export default function ErrorMarket({ code = 404 }) {
   const titleMap = {
@@ -154,7 +154,7 @@ export default function ErrorMarket({ code = 404 }) {
           animate={{ scale: 1 }}
           className="absolute -top-4 -right-4 bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-800 flex items-center gap-1"
         >
-          <AlertCircle size={12} />
+          <RiErrorWarningFill size={12} />
           {code}
         </motion.div>
       </div>
@@ -182,7 +182,7 @@ export default function ErrorMarket({ code = 404 }) {
             onClick={() => location.reload()}
             className="cursor-pointer flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-500 shadow-lg shadow-blue-500/20 transition-all"
           >
-            <RefreshCcw size={18} />
+            <RiRefreshFill size={18} />
             Thử lại ngay
           </motion.button>
 
@@ -192,7 +192,7 @@ export default function ErrorMarket({ code = 404 }) {
             whileTap={{ scale: 0.95 }}
             className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-all"
           >
-            <Home size={18} />
+            <RiHomeFill size={18} />
             Về trang chủ
           </motion.a>
         </div>

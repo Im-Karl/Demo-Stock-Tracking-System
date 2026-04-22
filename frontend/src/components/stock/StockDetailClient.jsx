@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useStockSocket } from '../../hooks/useStockSocket';
-import { ArrowUp, ArrowDown, Activity, BarChart3 } from 'lucide-react';
+import { RiArrowUpFill, RiArrowDownFill, RiPulseFill, RiBarChartFill } from 'react-icons/ri';
 import { motion } from 'framer-motion';
 import GlassCard from '../base-ui/GlassCard';
 import { Area, CartesianGrid, ComposedChart, Legend, Line, Tooltip, XAxis, YAxis } from 'recharts';
@@ -143,7 +143,7 @@ export default function StockDetailClient({ symbol }) {
   if (!stockData) {
     return (
       <GlassCard className="flex flex-col items-center justify-center gap-3 animate-pulse py-12">
-        <Activity className="text-blue-500 animate-spin" />
+        <RiPulseFill className="text-blue-500 animate-spin" />
         <span className="text-neutral-500 text-sm font-medium">Đang kết nối dữ liệu realtime...</span>
       </GlassCard>
     );
@@ -185,7 +185,7 @@ export default function StockDetailClient({ symbol }) {
           className="relative p-6 h-40 rounded-2xl bg-white/60 dark:bg-neutral-800/60 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700/50 shadow-xl overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-6 text-blue-300 dark:text-blue-700 opacity-10 pointer-events-none">
-            <Activity size={140} />
+            <RiPulseFill size={140} />
           </div>
 
           <p
@@ -197,7 +197,7 @@ export default function StockDetailClient({ symbol }) {
           <div
             className={`flex items-center gap-2 text-4xl font-extrabold ${isUp ? 'text-emerald-500' : 'text-red-500'}`}
           >
-            {isUp ? <ArrowUp /> : <ArrowDown />}
+            {isUp ? <RiArrowUpFill /> : <RiArrowDownFill />}
             {stockData.percentChange}%
           </div>
 
@@ -228,7 +228,7 @@ export default function StockDetailClient({ symbol }) {
 
       {/* BIỂU ĐỒ - Dùng GlassCard */}
       <GlassCard className="min-h-[300px] flex flex-col items-center justify-center gap-3 text-neutral-400">
-        <BarChart3 size={64} className="opacity-30" />
+        <RiBarChartFill size={64} className="opacity-30" />
         <p className="font-medium">
           Biểu đồ nến {symbol} đang được xây dựng...
           <PredictionsGraph />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { blogService } from '../../services/blogService';
-import { Edit, Trash2, RotateCcw, XCircle, FileText, Lock, Globe } from 'lucide-react';
+import { RiEdit2Fill, RiDeleteBinFill, RiRestartFill, RiCloseCircleFill, RiFileTextFill, RiLockFill, RiEarthFill } from 'react-icons/ri';
 import toast from 'react-hot-toast';
 import Button from '../base-ui/Button';
 import PageLayout from '../base-ui/PageLayout';
@@ -113,7 +113,7 @@ export default function BlogManager() {
                       handleToggleStatus(blog.slug);
                     }}
                   >
-                    <Lock size={16} /> Hạ về nháp
+                    <RiLockFill size={16} /> Hạ về nháp
                   </Button>
                   <Button
                     size="icon"
@@ -123,7 +123,7 @@ export default function BlogManager() {
                       handleSoftDelete(blog._id);
                     }}
                   >
-                    <Trash2 size={18} />
+                    <RiDeleteBinFill size={18} />
                   </Button>
                 </>
               )}
@@ -137,14 +137,14 @@ export default function BlogManager() {
                       handleToggleStatus(blog.slug);
                     }}
                   >
-                    <Globe size={16} /> Xuất bản
+                    <RiEarthFill size={16} /> Xuất bản
                   </Button>
                   <Button
                     size="icon"
                     intent="primarySoft"
                     render={<a href={`/blog/edit/${blog._id}`} onClick={(e) => e.stopPropagation()} />}
                   >
-                    <Edit size={18} />
+                    <RiEdit2Fill size={18} />
                   </Button>
                   <Button
                     size="icon"
@@ -154,7 +154,7 @@ export default function BlogManager() {
                       handleSoftDelete(blog._id);
                     }}
                   >
-                    <Trash2 size={18} />
+                    <RiDeleteBinFill size={18} />
                   </Button>
                 </>
               )}
@@ -168,7 +168,7 @@ export default function BlogManager() {
                       handleRestore(blog._id);
                     }}
                   >
-                    <RotateCcw size={16} /> Khôi phục
+                    <RiRestartFill size={16} /> Khôi phục
                   </Button>
                   <Button
                     size="sm"
@@ -178,7 +178,7 @@ export default function BlogManager() {
                       handleHardDelete(blog._id);
                     }}
                   >
-                    <XCircle size={16} /> Xóa vĩnh viễn
+                    <RiCloseCircleFill size={16} /> Xóa vĩnh viễn
                   </Button>
                 </>
               )}
@@ -201,7 +201,7 @@ export default function BlogManager() {
       <div className="max-w-5xl mx-auto px-6">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-extrabold flex items-center gap-3 text-blue-600 dark:text-blue-400">
-            <FileText /> Quản lý bài viết
+            <RiFileTextFill /> Quản lý bài viết
           </h1>
 
           <Button

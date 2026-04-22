@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import Button from '../base-ui/Button';
-import { X } from 'lucide-react';
+import { RiCloseFill } from 'react-icons/ri';
 
 const markdownHelpContent = `
 ## Tiêu đề (Heading)
@@ -193,7 +193,7 @@ export default function MarkdownHelpModal({ isOpen, onClose }) {
         {/*  Nút Close bằng Base UI */}
         <div className="absolute top-4 right-4 z-10">
           <Button intent="neutral" size="icon" className="!rounded-full" onClick={onClose}>
-            <X size={20} />
+            <RiCloseFill size={20} />
           </Button>
         </div>
 
