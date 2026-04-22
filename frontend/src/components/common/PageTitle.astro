@@ -1,0 +1,22 @@
+---
+import Breadcrumbs from '../base-ui/Breadcrumbs.jsx';
+
+interface Props {
+  title: string;
+  breadcrumbs?: { label: string; href?: string }[];
+}
+
+const { title, breadcrumbs } = Astro.props;
+---
+
+<header class="mb-10 pb-2">
+  {breadcrumbs && breadcrumbs.length > 0 && (
+    <div class="mb-4">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
+  )}
+
+  <h1 class="text-4xl md:text-5xl font-extrabold text-grey-900 dark:text-grey-50 font-heading">
+    {title}
+  </h1>
+</header>

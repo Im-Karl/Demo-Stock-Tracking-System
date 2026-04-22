@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageTitle from '../components/common/PageTitle.astro';
 import StockBoard from '../components/dashboard/StockBoard.jsx';
 ---
 
@@ -8,26 +9,18 @@ import StockBoard from '../components/dashboard/StockBoard.jsx';
 
     <div class="relative container mx-auto px-4">
 
-      <!-- HEADER -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl font-extrabold mb-3 text-grey-900 dark:text-grey-50 font-heading">
-          Thị Trường Ngân Hàng
-          <span class="text-primary-500">
-            Live
-          </span>
-        </h1>
-
-        <p class="text-grey-600 dark:text-grey-400 max-w-xl mx-auto">
-          Cập nhật chỉ số realtime từ các sàn giao dịch
-        </p>
-      </div>
+      <PageTitle
+        title="Thị Trường Ngân Hàng"
+        breadcrumbs={[
+          { label: 'Trang chủ', href: '/' },
+          { label: 'Thị trường' },
+        ]}
+      />
 
       <!-- BẢNG GIÁ -->
       <div class="mb-14">
         <StockBoard client:load />
       </div>
-
-
 
     </div>
   </main>

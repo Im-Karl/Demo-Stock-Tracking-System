@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../components/common/PageTitle.astro';
 import BlogDetail from '../../components/blog/BlogDetail.jsx';
 
 const { slug } = Astro.params;
@@ -7,12 +8,15 @@ if (!slug) return Astro.redirect('/404');
 ---
 
 <Layout title="Chi tiết bài viết">
-  <section class="relative min-h-screen bg-neutral-50 dark:bg-neutral-900 text-slate-800 dark:text-slate-100 overflow-hidden"> 
-    <div class="absolute inset-0 pointer-events-none"></div>
+  <main class="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-20">
+    <PageTitle
+      breadcrumbs={[
+        { label: 'Trang chủ', href: '/' },
+        { label: 'Cộng đồng', href: '/blog' },
+        { label: 'Bài viết' },
+      ]}
+    />
 
-    <main class="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-20">
-      <BlogDetail slug={slug} client:only="react" />
-    </main>
-    
-  </section>
+    <BlogDetail slug={slug} client:only="react" />
+  </main>
 </Layout>

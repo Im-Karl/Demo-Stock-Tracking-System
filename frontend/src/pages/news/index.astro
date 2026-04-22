@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../components/common/PageTitle.astro';
 import NewsFeedWrapper from '../../components/dashboard/NewsFeedWrapper.jsx';
 ---
 
@@ -8,19 +9,13 @@ import NewsFeedWrapper from '../../components/dashboard/NewsFeedWrapper.jsx';
 
     <div class="relative container mx-auto px-4 max-w-5xl">
 
-      <!-- HEADER -->
-      <header class="mb-10 pb-6">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-grey-900 dark:text-grey-50 font-heading">
-          Tin Tức
-          <span class="text-primary-500">
-            Tài Chính
-          </span>
-        </h1>
-
-        <p class="mt-3 text-grey-600 dark:text-grey-400 max-w-2xl">
-          Cập nhật liên tục từ các nguồn uy tín trong nước và quốc tế
-        </p>
-      </header>
+      <PageTitle
+        title="Tin Tức Tài Chính"
+        breadcrumbs={[
+          { label: 'Trang chủ', href: '/' },
+          { label: 'Tin tức' },
+        ]}
+      />
 
       <!-- MAIN CONTENT -->
       <NewsFeedWrapper client:load />

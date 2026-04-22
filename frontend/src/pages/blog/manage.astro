@@ -1,10 +1,20 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../components/common/PageTitle.astro';
 import BlogManager from '../../components/blog/BlogManager.jsx';
-
-// Có thể thêm logic check cookie đăng nhập ở đây (Server side check) nếu muốn
 ---
 
 <Layout title="Quản lý bài viết">
-  <BlogManager client:only="react" />
+  <main class="relative z-10 max-w-5xl mx-auto px-6 py-16">
+    <PageTitle
+      title="Quản lý bài viết"
+      breadcrumbs={[
+        { label: 'Trang chủ', href: '/' },
+        { label: 'Cộng đồng', href: '/blog' },
+        { label: 'Quản lý bài viết' },
+      ]}
+    />
+
+    <BlogManager client:only="react" />
+  </main>
 </Layout>

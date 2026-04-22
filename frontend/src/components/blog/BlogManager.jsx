@@ -199,14 +199,9 @@ export default function BlogManager() {
   return (
     <PageLayout showAmbient={false} className="py-10">
       <div className="max-w-5xl mx-auto px-6">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-extrabold flex items-center gap-3 text-blue-600 dark:text-blue-400">
-            <RiFileTextFill /> Quản lý bài viết
-          </h1>
-
+        <div className="flex items-center justify-end mb-8">
           <Button
             intent="primary"
-            className="flex items-center gap-2 w-auto hover:scale-105 active:scale-95 transition"
             render={<a href="/blog/create" />}
           >
             Viết bài mới
