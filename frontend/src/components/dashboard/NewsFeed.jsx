@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { newsService } from '../../services/newsService';
-import { Newspaper, Globe, TrendingUp, Loader2 } from 'lucide-react';
+import { Newspaper, Globe, TrendingUp, Loader2, Info } from 'lucide-react';
 import GlassCard from '../base-ui/GlassCard';
+import Tab from '../base-ui/Tab';
+import { Tooltip } from '@base-ui/react/tooltip';
 
 export default function NewsFeed() {
   const [activeTab, setActiveTab] = useState('symbol');
@@ -52,66 +54,89 @@ export default function NewsFeed() {
   }, [activeTab]);
 
   return (
-    <div className="space-y-6 text-neutral-900 dark:text-neutral-100">
-      {/* TABS */}
-      <div className="flex flex-wrap gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-1">
-        <TabButton
-          isActive={activeTab === 'symbol'}
+    <div className="space-y-6 text-grey-900 dark:text-grey-100">
+      {/* TABS (Underlined) */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-grey-200 dark:border-grey-800">
+        <Tab
+          active={activeTab === 'symbol'}
           onClick={() => setActiveTab('symbol')}
           icon={<TrendingUp size={18} />}
-          label="Chứng khoán VN"
-        />
-        <TabButton
-          isActive={activeTab === 'general'}
+        >
+          Chứng khoán VN
+        </Tab>
+        <Tab
+          active={activeTab === 'general'}
           onClick={() => setActiveTab('general')}
           icon={<Newspaper size={18} />}
-          label="Kinh tế Vĩ mô"
-        />
-        <TabButton
-          isActive={activeTab === 'world'}
+        >
+          Kinh tế Vĩ mô
+        </Tab>
+        <Tab
+          active={activeTab === 'world'}
           onClick={() => setActiveTab('world')}
           icon={<Globe size={18} />}
-          label="Quốc tế"
-        />
+        >
+          Quốc tế
+        </Tab>
+
+        {/* TOOLTIP TIP */}
+        <div className="ml-auto flex items-center pr-2">
+          <Tooltip.Root>
+            <Tooltip.Trigger delay={50} className="text-grey-400 hover:text-grey-600 dark:hover:text-grey-200 transition-colors cursor-help p-2 rounded-sm outline-none">
+              <Info size={20} />
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Positioner side="bottom" sideOffset={8}>
+                <Tooltip.Popup className="bg-white dark:bg-grey-800 text-grey-900 dark:text-grey-100 px-5 py-4 rounded-sm shadow-md text-sm w-72 z-50 outline-none">
+                  <h4 className="font-bold mb-3 text-primary-600 dark:text-primary-400 font-heading text-lg">Mẹo theo dõi</h4>
+                  <ul className="space-y-3 list-disc pl-5 text-grey-600 dark:text-grey-400">
+                    <li>Chọn <b className="text-grey-800 dark:text-grey-200">Chứng khoán VN</b> để xem tin liên quan trực tiếp mã CK.</li>
+                    <li>Chọn <b className="text-grey-800 dark:text-grey-200">Quốc Tế</b> để theo dõi FED và thị trường Mỹ. <span className="text-xs text-grey-500 block mt-1">(Một số nguồn quốc tế yêu cầu trả phí)</span></li>
+                  </ul>
+                </Tooltip.Popup>
+              </Tooltip.Positioner>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </div>
       </div>
 
       {/* ERROR */}
       {isError && (
-        <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl border border-red-200 dark:border-red-800/50 text-center">
+        <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-sm text-center">
           Lỗi tải tin: {error.message}
         </div>
       )}
 
       {/* LIST */}
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading
-          ? [1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)
+          ? [1, 2, 3, 4, 5, 6].map((i) => <SkeletonCard key={i} />)
           : data?.pages.map((group, i) => (
-              <React.Fragment key={i}>
-                {group.map((article, index) => (
-                  <NewsItem key={`${article.url}-${index}`} article={article} />
-                ))}
-              </React.Fragment>
-            ))}
+            <React.Fragment key={i}>
+              {group.map((article, index) => (
+                <NewsItem key={`${article.url}-${index}`} article={article} />
+              ))}
+            </React.Fragment>
+          ))}
 
         {!isLoading && data?.pages[0]?.length === 0 && (
-          <div className="text-center py-10 text-neutral-500 dark:text-neutral-400">Chưa có tin tức nào.</div>
+          <div className="text-center py-10 text-grey-500 dark:text-grey-400 font-medium">Chưa có tin tức nào.</div>
         )}
       </div>
 
       {/* LOAD MORE */}
       <div ref={loadMoreRef} className="py-6 text-center">
         {isFetchingNextPage ? (
-          <div className="flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400">
+          <div className="flex items-center justify-center gap-2 text-primary-600 dark:text-primary-400">
             <Loader2 className="animate-spin" size={20} />
             <span className="text-sm font-medium">Đang tải thêm tin...</span>
           </div>
         ) : hasNextPage ? (
-          <span className="text-xs text-neutral-400 dark:text-neutral-500">Cuộn xuống để xem thêm</span>
+          <span className="text-xs text-grey-400 dark:text-grey-500 uppercase tracking-widest font-bold">Cuộn xuống để xem thêm</span>
         ) : (
           !isLoading &&
           data?.pages[0]?.length > 0 && (
-            <span className="text-xs text-neutral-400 dark:text-neutral-500">— Bạn đã xem hết tin —</span>
+            <span className="text-xs text-grey-400 dark:text-grey-500 uppercase tracking-widest font-bold">— Bạn đã xem hết tin —</span>
           )
         )}
       </div>
@@ -121,34 +146,14 @@ export default function NewsFeed() {
 
 /* ================= COMPONENTS ================= */
 
-function TabButton({ isActive, onClick, icon, label }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`
-        flex items-center gap-2 px-4 py-3 text-sm font-bold transition-all border-b-2 cursor-pointer
-        ${
-          isActive
-            ? 'border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10'
-            : 'border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-        }
-      `}
-    >
-      {icon}
-      {label}
-    </button>
-  );
-}
-
 function NewsItem({ article }) {
   return (
     <a href={article.url} target="_blank" rel="noreferrer" className="group block h-full outline-none">
-      {/*  Dùng GlassCard với padding="none" để hình ảnh tràn lề */}
       <GlassCard
         padding="none"
-        className="flex flex-col sm:flex-row h-full overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+        className="flex flex-col h-full overflow-hidden transition-transform duration-300 hover:-translate-y-1"
       >
-        <div className="sm:w-48 h-48 sm:h-auto bg-neutral-100 dark:bg-neutral-800 relative overflow-hidden flex-shrink-0">
+        <div className="w-full h-48 bg-grey-100 dark:bg-grey-700 relative overflow-hidden flex-shrink-0">
           {article.image ? (
             <img
               src={article.image}
@@ -157,25 +162,23 @@ function NewsItem({ article }) {
               onError={(e) => (e.target.style.display = 'none')}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-neutral-400 text-xs">No Image</div>
+            <div className="w-full h-full flex items-center justify-center text-grey-400 text-xs font-medium">No Image</div>
           )}
-          <span className="absolute top-2 left-2 bg-blue-600 dark:bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded font-bold shadow">
-            {article.source}
-          </span>
         </div>
 
-        <div className="p-5 flex-1 flex flex-col">
-          <h3 className="font-bold mb-2 line-clamp-2 text-neutral-900 dark:text-neutral-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        <div className="p-5 flex-1 flex flex-col justify-start">
+          <h3 className="font-bold text-lg mb-2 line-clamp-2 text-grey-900 dark:text-grey-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors font-heading leading-tight">
             {article.title}
           </h3>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2 mb-3 flex-1 leading-relaxed">
+          <p className="text-sm text-grey-600 dark:text-grey-400 line-clamp-3 leading-relaxed mb-4">
             {article.content}
           </p>
-          <div className="flex justify-between text-xs text-neutral-400 dark:text-neutral-500 border-t border-neutral-100 dark:border-neutral-800/50 pt-3">
-            {article.author && (
-              <span className="font-medium text-neutral-600 dark:text-neutral-300">Tác giả: {article.author}</span>
-            )}
-            <span>{article.published || 'Mới cập nhật'}</span>
+          
+          <div className="flex justify-between items-center text-xs text-grey-500 dark:text-grey-500 font-medium mt-auto pt-4">
+            <span className="text-grey-700 dark:text-grey-300 font-bold truncate pr-2">
+              {article.source} {article.author && <span className="font-normal opacity-80">/ {article.author}</span>}
+            </span>
+            <span className="whitespace-nowrap flex-shrink-0">{article.published || 'Mới cập nhật'}</span>
           </div>
         </div>
       </GlassCard>
@@ -185,12 +188,22 @@ function NewsItem({ article }) {
 
 function SkeletonCard() {
   return (
-    <div className="flex h-36 rounded-2xl overflow-hidden animate-pulse bg-white/60 dark:bg-neutral-800/60 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700">
-      <div className="w-48 bg-neutral-200 dark:bg-neutral-700/50"></div>
-      <div className="flex-1 p-5 space-y-4 flex flex-col justify-center">
-        <div className="h-4 bg-neutral-200 dark:bg-neutral-700/50 rounded w-3/4"></div>
-        <div className="h-4 bg-neutral-200 dark:bg-neutral-700/50 rounded w-full"></div>
-        <div className="h-3 bg-neutral-200 dark:bg-neutral-700/50 rounded w-1/4 mt-auto"></div>
+    <div className="flex flex-col h-full min-h-[360px] rounded-sm overflow-hidden animate-pulse bg-white dark:bg-grey-800 shadow-sm">
+      <div className="w-full h-48 bg-grey-200 dark:bg-grey-700 shrink-0"></div>
+      <div className="flex-1 p-5 flex flex-col">
+        <div className="space-y-3 mb-4">
+          <div className="h-5 bg-grey-200 dark:bg-grey-700 rounded-sm w-full"></div>
+          <div className="h-5 bg-grey-200 dark:bg-grey-700 rounded-sm w-3/4"></div>
+        </div>
+        <div className="space-y-2 mb-6">
+          <div className="h-4 bg-grey-200 dark:bg-grey-700 rounded-sm w-full"></div>
+          <div className="h-4 bg-grey-200 dark:bg-grey-700 rounded-sm w-5/6"></div>
+          <div className="h-4 bg-grey-200 dark:bg-grey-700 rounded-sm w-2/3"></div>
+        </div>
+        <div className="flex justify-between mt-auto pt-4">
+          <div className="h-3 bg-grey-200 dark:bg-grey-700 rounded-sm w-1/3"></div>
+          <div className="h-3 bg-grey-200 dark:bg-grey-700 rounded-sm w-1/4"></div>
+        </div>
       </div>
     </div>
   );

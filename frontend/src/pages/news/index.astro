@@ -4,91 +4,26 @@ import NewsFeedWrapper from '../../components/dashboard/NewsFeedWrapper.jsx';
 ---
 
 <Layout title="Tin tức 24h">
-  <main
-    class="relative min-h-screen
-           bg-neutral-50 dark:bg-neutral-900
-           text-slate-900 dark:text-slate-100
-           overflow-hidden"
-  >
+  <main class="relative min-h-screen pt-10 pb-20">
 
-    <!-- AMBIENT LIGHT -->
-    <div class="absolute inset-0 pointer-events-none">
-      <!-- <div class="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-blue-500/20 blur-[120px] rounded-full" />
-      <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-violet-500/20 blur-[120px] rounded-full" /> -->
-    </div>
-
-    <div class="relative container mx-auto px-4 py-10">
+    <div class="relative container mx-auto px-4 max-w-5xl">
 
       <!-- HEADER -->
-      <header
-        class="mb-10 pb-6
-               border-b border-slate-200 dark:border-slate-800"
-      >
-        <h1
-          class="text-3xl md:text-4xl font-extrabold
-                 text-slate-900 dark:text-slate-100"
-        >
+      <header class="mb-10 pb-6">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-grey-900 dark:text-grey-50 font-heading">
           Tin Tức
-          <span
-            class="text-transparent bg-clip-text
-                   bg-gradient-to-r
-                   from-blue-600 to-violet-600
-                   dark:from-blue-400 dark:to-violet-400"
-          >
+          <span class="text-primary-500">
             Tài Chính
           </span>
         </h1>
 
-        <p class="mt-2 text-slate-600 dark:text-slate-400 max-w-2xl">
+        <p class="mt-3 text-grey-600 dark:text-grey-400 max-w-2xl">
           Cập nhật liên tục từ các nguồn uy tín trong nước và quốc tế
         </p>
       </header>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-        <!-- MAIN CONTENT -->
-        <div class="lg:col-span-2">
-          <NewsFeedWrapper client:load />
-        </div>
-
-        <!-- SIDEBAR -->
-        <aside class="space-y-6">
-
-          <!-- TIP CARD -->
-          <div
-            class="p-6 rounded-2xl
-                   bg-white/70 dark:bg-slate-800/50
-                   backdrop-blur-xl
-                   border border-slate-200 dark:border-blue-500/30
-                   shadow-xl"
-          >
-            <h3
-              class="font-bold mb-3
-                     text-slate-900 dark:text-blue-300"
-            >
-               Mẹo theo dõi
-            </h3>
-
-            <ul
-              class="text-sm space-y-2 list-disc pl-4
-                     text-slate-600 dark:text-slate-400"
-            >
-              <li>
-                Chọn tab <b class="text-slate-800 dark:text-slate-200">Chứng khoán VN</b>
-                để xem tin liên quan trực tiếp đến các mã (VCB, HPG...).
-              </li>
-              <li>
-                Chọn tab <b class="text-slate-800 dark:text-slate-200">Quốc Tế</b>
-                để theo dõi diễn biến FED và thị trường Mỹ.
-                <span class="text-xs opacity-80 block mt-1">
-                  (Một số nguồn quốc tế yêu cầu trả phí)
-                </span>
-              </li>
-            </ul>
-          </div>
-
-        </aside>
-      </div>
+      <!-- MAIN CONTENT -->
+      <NewsFeedWrapper client:load />
 
     </div>
   </main>

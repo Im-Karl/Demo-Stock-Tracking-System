@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Button from '../base-ui/Button';
-import HeaderTab from './HeaderTab';
+import Tab from '../base-ui/Tab';
 import ThemeToggle from '../ui/ThemeToggle';
 
 function getUserFromStorage() {
@@ -19,7 +19,7 @@ export default function Header() {
   const [user, setUser] = useState(getUserFromStorage);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-2xl border-b border-white/20 dark:border-neutral-800/50 shadow-lg shadow-black/5">
+    <header className="sticky top-0 z-50 bg-white dark:bg-grey-900 shadow-md">
       <div className="relative px-4 h-16 flex items-center">
         <a href="/" className="flex items-center gap-2">
           {/* 1. Mobile */}
@@ -43,10 +43,10 @@ export default function Header() {
 
         {/* MENU – chỉ khi login */}
         {user && (
-          <nav className="absolute left-1/2 -translate-x-1/2 hidden lg:flex gap-1">
-            <HeaderTab href="/stock">Thị trường</HeaderTab>
-            <HeaderTab href="/news">Tin tức</HeaderTab>
-            <HeaderTab href="/blog">Cộng đồng</HeaderTab>
+          <nav className="absolute left-1/2 -translate-x-1/2 hidden lg:flex gap-4 h-full items-center">
+            <Tab href="/stock">Thị trường</Tab>
+            <Tab href="/news">Tin tức</Tab>
+            <Tab href="/blog">Cộng đồng</Tab>
           </nav>
         )}
 
@@ -62,7 +62,7 @@ export default function Header() {
                   src={user.avatar}
                   width={40}
                   height={40}
-                  className="border border-neutral-200 dark:border-neutral-700 object-cover size-10"
+                  className="border border-grey-200 dark:border-grey-700 object-cover size-10 rounded-full"
                 />
               </a>
             </>
