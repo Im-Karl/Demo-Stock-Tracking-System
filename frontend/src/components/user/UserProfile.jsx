@@ -141,8 +141,9 @@ export default function UserProfile() {
 
   if (!user.username && !fetchError)
     return (
-      <div className="text-grey-500 animate-pulse font-medium py-20 text-center">
-        ⏳ Đang tải thông tin từ Server...
+      <div className="flex flex-col items-center justify-center text-grey-500 animate-pulse font-medium py-20 text-center gap-3">
+        <RiLoader4Fill className="animate-spin" size={24} />
+        Đang tải thông tin từ Server...
       </div>
     );
 

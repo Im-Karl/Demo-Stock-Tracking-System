@@ -8,8 +8,6 @@ import { RiQuestionFill, RiImageAddFill, RiLoader4Fill, RiFileEditFill } from 'r
 import { uploadService } from '../../services/uploadService';
 import MarkdownHelpModal from './MarkdownHelpModal';
 import Button from '../base-ui/Button';
-import PageLayout from '../base-ui/PageLayout';
-import GlassCard from '../base-ui/GlassCard';
 
 const queryClient = new QueryClient();
 
@@ -34,7 +32,7 @@ function BlogEditorContent() {
         if (parsed.title || parsed.content) {
           setTitle(parsed.title || '');
           setContent(parsed.content || '');
-          toast('Đã khôi phục dữ liệu chưa lưu lúc trước!', { icon: '♻️' });
+          toast.success('Đã khôi phục dữ liệu chưa lưu lúc trước!');
         }
       } catch (e) {
         localStorage.removeItem('draft_blog_create');
@@ -143,39 +141,7 @@ function BlogEditorContent() {
   };
 
   return (
-    <PageLayout showAmbient={false} className="py-12 px-6">
-      <GlassCard className="relative max-w-6xl mx-auto p-8">
-        <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2">
-            <div
-              className={`w-2 h-2 rounded-full ${syncStatus === 'Đã lưu nháp an toàn' ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'}`}
-            ></div>
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">{syncStatus}</span>
-          </div>
-
-          <div className="w-px h-6 bg-neutral-200 dark:bg-neutral-700 mx-1 hidden sm:block"></div>
-
-          <Button
-            type="button"
-            intent="neutral"
-            size="icon"
-            onClick={() => imageInputRef.current?.click()}
-            disabled={uploading}
-            title="Chèn ảnh vào bài"
-          >
-            {uploading ? <RiLoader4Fill className="animate-spin" size={20} /> : <RiImageAddFill size={20} />}
-          </Button>
-
-          <Button
-            type="button"
-            intent="primary"
-            size="icon"
-            onClick={() => setShowHelp(true)}
-            title="Hướng dẫn Markdown"
-          >
-            <RiQuestionFill size={20} />
-          </Button>
-        </div>
+    <div className="relative w-full">
 
         <input
           type="file"
@@ -185,24 +151,56 @@ function BlogEditorContent() {
           accept="image/png, image/jpeg, image/webp"
         />
 
-        {/* TIÊU ĐỀ */}
-        <div className="mb-10 mt-6 space-y-5">
+        {/* TIÊU ĐỀ & ACTIONS */}
+        <div className="mb-10 mt-4 flex flex-col lg:flex-row lg:items-end gap-6 justify-between border-b border-grey-200 dark:border-grey-800 pb-3 group focus-within:border-primary-500 transition-colors">
           <input
-            className="w-full text-4xl md:text-5xl font-extrabold bg-transparent border-b border-neutral-300 dark:border-neutral-700 pb-3 outline-none text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-blue-500 transition"
+            className="flex-1 w-full text-4xl md:text-5xl font-extrabold bg-transparent outline-none text-grey-900 dark:text-grey-100 placeholder:text-grey-400"
             placeholder="Tiêu đề bài viết..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
+
+          <div className="flex items-center gap-3 shrink-0 mb-1">
+            <div className="hidden sm:flex items-center gap-2">
+              <div
+                className={`w-2 h-2 rounded-full ${syncStatus === 'Đã lưu nháp an toàn' ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'}`}
+              ></div>
+              <span className="text-xs font-medium text-grey-500">{syncStatus}</span>
+            </div>
+
+            <div className="w-px h-6 bg-grey-200 dark:bg-grey-800 mx-1 hidden sm:block"></div>
+
+            <Button
+              type="button"
+              intent="neutral"
+              size="icon"
+              onClick={() => imageInputRef.current?.click()}
+              disabled={uploading}
+              title="Chèn ảnh vào bài"
+            >
+              {uploading ? <RiLoader4Fill className="animate-spin" size={20} /> : <RiImageAddFill size={20} />}
+            </Button>
+
+            <Button
+              type="button"
+              intent="primary"
+              size="icon"
+              onClick={() => setShowHelp(true)}
+              title="Hướng dẫn Markdown"
+            >
+              <RiQuestionFill size={20} />
+            </Button>
+          </div>
         </div>
 
         {/* EDITOR & PREVIEW */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
           <div className="flex flex-col">
-            <label className="mb-3 text-xs font-bold uppercase text-neutral-500 dark:text-neutral-400">
+            <label className="mb-3 text-xs font-bold uppercase text-grey-500">
               Soạn thảo Markdown
             </label>
             <textarea
-              className="w-full min-h-[520px] p-5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 font-mono text-sm leading-relaxed focus:ring-2 focus:ring-blue-500 outline-none custom-scrollbar"
+              className="w-full min-h-[520px] p-5 rounded-xl bg-grey-50 dark:bg-grey-900/40 border-none text-grey-900 dark:text-grey-100 placeholder:text-grey-500 font-mono text-sm leading-relaxed focus:ring-2 focus:ring-primary-500 outline-none custom-scrollbar"
               placeholder="# Viết nội dung tại đây..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -210,15 +208,15 @@ function BlogEditorContent() {
           </div>
 
           <div className="flex flex-col">
-            <label className="mb-3 text-xs font-bold uppercase text-neutral-500 dark:text-neutral-400">Xem trước</label>
-            <div className="w-full min-h-[520px] p-6 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 overflow-y-auto prose prose-lg max-w-none prose-neutral dark:prose-invert custom-scrollbar">
+            <label className="mb-3 text-xs font-bold uppercase text-grey-500">Xem trước</label>
+            <div className="w-full min-h-[520px] p-6 rounded-xl bg-grey-50 dark:bg-grey-900/40 border-none overflow-y-auto prose prose-lg max-w-none prose-neutral dark:prose-invert custom-scrollbar">
               {content ? (
                 <ReactMarkdown
                   components={{
                     img: ({ src, alt }) => (
                       <div className="flex flex-col items-center my-6">
                         <img src={src} alt={alt} className="rounded-xl max-w-full shadow-md" />
-                        {alt && <p className="text-sm text-neutral-500 italic mt-2 text-center">{alt}</p>}
+                        {alt && <p className="text-sm text-grey-500 italic mt-2 text-center">{alt}</p>}
                       </div>
                     ),
                   }}
@@ -226,7 +224,7 @@ function BlogEditorContent() {
                   {content}
                 </ReactMarkdown>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-neutral-400 opacity-60">
+                <div className="flex flex-col items-center justify-center h-full text-grey-400 opacity-60">
                   <RiFileEditFill size={48} className="mb-4" />
                   <p className="italic text-center">Nội dung hiển thị tại đây…</p>
                 </div>
@@ -236,7 +234,7 @@ function BlogEditorContent() {
         </div>
 
         {/* NÚT SUBMIT */}
-        <div className="flex justify-end pt-8 border-t border-neutral-200 dark:border-neutral-700">
+        <div className="flex justify-end pt-8 mt-4">
           <Button
             onClick={handlePublish}
             disabled={!title.trim() || !content.trim()}
@@ -248,8 +246,7 @@ function BlogEditorContent() {
         </div>
 
         <MarkdownHelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
-      </GlassCard>
-    </PageLayout>
+    </div>
   );
 }
 

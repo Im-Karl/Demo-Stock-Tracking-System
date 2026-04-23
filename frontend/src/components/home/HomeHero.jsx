@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { RiFireFill, RiNewsFill, RiTeamFill, RiLightbulbFill, RiSparklingFill, RiChatSmile3Fill } from 'react-icons/ri';
 import Button from '../base-ui/Button';
-import GlassCard from '../base-ui/GlassCard';
+import FeatureCard from '../base-ui/FeatureCard';
 
 export default function HomeHero() {
   const features = [
@@ -10,28 +10,24 @@ export default function HomeHero() {
       desc: 'Giá cả thị trường, xu hướng, và các tin tức liên quan được cập nhật liên tục',
       icon: RiFireFill,
       color: 'text-grey-800 dark:text-grey-300 bg-primary-100 dark:bg-primary-900/50',
-      border: 'border-primary-300 dark:border-primary-700',
     },
     {
       title: 'Tin tức chọn lọc',
       desc: 'Tổng hợp & phân tích từ nhiều nguồn đáng tin cậy',
       icon: RiNewsFill,
       color: 'text-grey-800 dark:text-grey-300 bg-secondary-100 dark:bg-secondary-900/50',
-      border: 'border-secondary-300 dark:border-secondary-700',
     },
     {
       title: 'Cộng đồng đầu tư',
       desc: 'Chia sẻ quan điểm, học hỏi từ người cùng chí hướng',
       icon: RiTeamFill,
       color: 'text-grey-800 dark:text-grey-300 bg-emerald-100 dark:bg-emerald-900/50',
-      border: 'border-emerald-300 dark:border-emerald-700',
     },
     {
       title: 'Gợi ý thông minh',
       desc: 'Hỗ trợ ra quyết định dựa trên dữ liệu & xu hướng',
       icon: RiLightbulbFill,
       color: 'text-grey-800 dark:text-grey-300 bg-amber-100 dark:bg-amber-900/50',
-      border: 'border-amber-300 dark:border-amber-700',
     },
   ];
 
@@ -110,7 +106,9 @@ export default function HomeHero() {
             viewport={{ once: true }}
             className="mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 font-heading text-grey-900 dark:text-grey-50">FinSavvy là gì?</h2>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 font-heading text-grey-900 dark:text-grey-50">
+              FinSavvy là gì?
+            </h2>
             <p className="text-lg text-grey-600 dark:text-grey-400">
               FinSavvy là hệ thống phân tích và đánh giá thị trường toàn diện, bao gồm dự đoán giá cổ phiếu, cảnh báo
               bất thường, thu thập thông tin từ các trang báo lớn, và cùng nhau chia sẻ tại qua các bài viết.
@@ -118,32 +116,21 @@ export default function HomeHero() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {features.map((item, i) => {
-              const Icon = item.icon;
-
-              return (
-                <GlassCard
-                  key={i}
-                  as={motion.div}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1, duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className="flex flex-col items-start gap-5 hover:!shadow-md transition-shadow cursor-default"
-                >
-                  <div
-                    className={`w-14 h-14 flex items-center justify-center shrink-0 rounded-sm ${item.color}`}
-                  >
-                    <Icon size={28} />
-                  </div>
-
-                  <div>
-                    <h4 className="text-xl font-bold mb-2 font-heading text-grey-900 dark:text-grey-50">{item.title}</h4>
-                    <p className="text-grey-600 dark:text-grey-400">{item.desc}</p>
-                  </div>
-                </GlassCard>
-              );
-            })}
+            {features.map((item, i) => (
+              <FeatureCard
+                key={i}
+                as={motion.div}
+                direction="vertical"
+                icon={item.icon}
+                colorClass={item.color}
+                title={item.title}
+                desc={item.desc}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                viewport={{ once: true }}
+              />
+            ))}
           </div>
         </div>
       </section>

@@ -8,7 +8,7 @@ import clsx from 'clsx';
  * Uses Base UI Field primitives for accessibility.
  * The floating effect is pure CSS via :placeholder-shown + :focus-within.
  */
-export default function TextField({ label, icon: Icon, className, intent = 'default', ...props }) {
+export default function TextField({ label, icon: Icon, className, intent = 'default', bgTheme = 'page', ...props }) {
   const hasIcon = !!Icon;
 
   return (
@@ -59,8 +59,9 @@ export default function TextField({ label, icon: Icon, className, intent = 'defa
             // Floated left position (reset to border edge)
             hasIcon ? 'peer-focus:left-3 peer-[:not(:placeholder-shown)]:left-3' : '',
             // Background mask (covers the border behind the label)
-            'peer-focus:bg-grey-50 peer-focus:dark:bg-black',
-            'peer-[:not(:placeholder-shown)]:bg-grey-50 peer-[:not(:placeholder-shown)]:dark:bg-black',
+            bgTheme === 'page' && 'peer-focus:bg-grey-50 peer-focus:dark:bg-black peer-[:not(:placeholder-shown)]:bg-grey-50 peer-[:not(:placeholder-shown)]:dark:bg-black',
+            bgTheme === 'card' && 'peer-focus:bg-white peer-focus:dark:bg-grey-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:dark:bg-grey-900',
+            bgTheme === 'modal' && 'peer-focus:bg-white dark:peer-focus:bg-black peer-[:not(:placeholder-shown)]:bg-white dark:peer-[:not(:placeholder-shown)]:bg-black',
             // Color when focused
             intent === 'error'
               ? 'peer-focus:text-red-500'

@@ -4,6 +4,8 @@ import { RiMailFill, RiKeyFill } from 'react-icons/ri';
 import { authService } from '../../services/authService';
 import Button from '../base-ui/Button';
 import PageLayout from '../base-ui/PageLayout';
+import GlassCard from '../base-ui/GlassCard';
+import TextField from '../base-ui/TextField';
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState('');
@@ -31,82 +33,77 @@ export default function ForgotPasswordForm() {
     }
   };
 
-  const inputClass = `
-    w-full pl-10 pr-4 py-3 rounded-xl 
-    bg-white dark:bg-neutral-900 
-    text-neutral-900 dark:text-neutral-100 
-    placeholder-neutral-400 dark:placeholder-neutral-500 
-    caret-blue-600 dark:caret-blue-400 
-    border border-neutral-300 dark:border-neutral-700 
-    focus:outline-none focus:ring-2 focus:ring-blue-500 
-    transition
-  `;
-
   if (status === 'success') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-900">
+      <PageLayout className="flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full p-8 rounded-3xl bg-white/60 dark:bg-neutral-800/60 backdrop-blur-xl border border-emerald-500/40 shadow-2xl text-center"
+          className="w-full max-w-md mx-auto"
         >
-          <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
-            <RiKeyFill size={32} />
-          </div>
-          <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">Đã cấp lại mật khẩu</h2>
-          <p className="text-neutral-600 dark:text-neutral-300 mb-6">{message}</p>
+          <GlassCard className="text-center border-emerald-500/40 dark:border-emerald-500/30">
+            <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+              <RiKeyFill size={32} />
+            </div>
+            <h2 className="text-2xl font-bold font-heading text-emerald-600 dark:text-emerald-400 mb-2">
+              Đã cấp lại mật khẩu
+            </h2>
+            <p className="text-grey-600 dark:text-grey-300 mb-6">{message}</p>
 
-          <Button render={<a href="/login" />} intent="success" className="w-full">
-            Quay lại Đăng nhập
-          </Button>
+            <Button render={<a href="/login" />} intent="success" className="w-full">
+              Quay lại Đăng nhập
+            </Button>
+          </GlassCard>
         </motion.div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <PageLayout className="flex items-center justify-center p-4">
+    <PageLayout className="flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="relative z-10 w-full max-w-md p-8 rounded-3xl bg-white/60 dark:bg-neutral-800/60 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700/50 shadow-2xl"
+        className="w-full max-w-md mx-auto"
       >
-        <div className="text-center mb-8">
-          <h2 className="text-3xl text-blue-600 dark:text-blue-400 font-extrabold mb-2">Quên mật khẩu</h2>
-          <p className="text-neutral-600 dark:text-neutral-400 text-sm">Nhập email để hệ thống cấp lại mật khẩu mới</p>
-        </div>
-
-        {message && (
-          <div
-            className={`text-sm text-center mb-4 p-3 rounded-xl border ${status === 'error' ? 'bg-red-100 dark:bg-red-500/10 text-red-600 border-red-300 dark:border-red-500/30' : 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/30'}`}
-          >
-            {message}
+        <GlassCard>
+          <div className="text-center mb-8">
+            <h2 className="text-3xl text-primary-600 dark:text-primary-400 font-extrabold mb-2 font-heading">
+              Quên mật khẩu
+            </h2>
+            <p className="text-grey-600 dark:text-grey-400 text-sm">Nhập email để hệ thống cấp lại mật khẩu mới</p>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">
-              Email đăng ký
-            </label>
-            <div className="relative">
-              <RiMailFill className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
-              <input
-                type="email"
-                required
-                placeholder="example@email.com"
-                className={inputClass}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+          {message && (
+            <div
+              className={`text-sm text-center mb-6 p-3 rounded-xl border ${
+                status === 'error'
+                  ? 'bg-red-50 dark:bg-red-500/10 text-red-600 border-red-200 dark:border-red-500/30'
+                  : 'bg-primary-50 text-primary-600 border-primary-200 dark:bg-primary-500/10 dark:text-primary-400 dark:border-primary-500/30'
+              }`}
+            >
+              {message}
             </div>
-          </div>
+          )}
 
-          <Button type="submit" intent="primary" disabled={loading} className="w-full">
-            {loading ? 'Đang xử lý...' : 'Lấy mật khẩu mới'}
-          </Button>
-        </form>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <TextField
+              bgTheme="card"
+              label="Email đăng ký"
+              icon={RiMailFill}
+              type="email"
+              required
+              placeholder="example@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <Button type="submit" intent="primary" disabled={loading} className="w-full mt-2">
+              {loading ? 'Đang xử lý...' : 'Lấy mật khẩu mới'}
+            </Button>
+          </form>
+        </GlassCard>
       </motion.div>
     </PageLayout>
   );

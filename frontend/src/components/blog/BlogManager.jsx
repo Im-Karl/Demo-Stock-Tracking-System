@@ -147,7 +147,7 @@ export default function BlogManager() {
               </div>
 
               {/* Bookmark Flags */}
-              <div className="absolute bottom-8 -right-8 flex flex-col gap-2 items-end z-10 opacity-90 group-hover:opacity-100 transition-opacity">
+              <div className="absolute bottom-4 -right-8 flex flex-col gap-2 items-end z-10 opacity-90 group-hover:opacity-100 transition-opacity">
                 {type === 'published' && (
                   <>
                     <BookmarkButton

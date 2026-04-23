@@ -4,11 +4,10 @@ import { uploadService } from '../../services/uploadService';
 import { navigate } from 'astro:transitions/client';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'react-hot-toast';
-import { RiFileEditFill, RiQuestionFill, RiImageAddFill, RiLoader4Fill } from 'react-icons/ri';
+import { RiFileEditFill, RiQuestionFill, RiImageAddFill, RiLoader4Fill, RiEarthFill, RiLockFill } from 'react-icons/ri';
 import MarkdownHelpModal from './MarkdownHelpModal';
 import Button from '../base-ui/Button';
-import PageLayout from '../base-ui/PageLayout';
-import GlassCard from '../base-ui/GlassCard';
+import Switch from '../base-ui/Switch';
 
 export default function EditBlogForm({ blogId }) {
   const [formData, setFormData] = useState({
@@ -110,38 +109,14 @@ export default function EditBlogForm({ blogId }) {
 
   if (loading) {
     return (
-      <PageLayout showAmbient={false} className="py-20 text-center">
-        <div className="text-neutral-500">Đang tải bài viết...</div>
-      </PageLayout>
+      <div className="py-20 text-center w-full">
+        <div className="text-grey-500">Đang tải bài viết...</div>
+      </div>
     );
   }
 
   return (
-    <PageLayout showAmbient={false} className="py-12 px-6">
-      <GlassCard className="relative max-w-6xl mx-auto p-8">
-        <div className="absolute top-6 right-6 z-20 flex gap-2">
-          <Button
-            type="button"
-            intent="neutral"
-            size="icon"
-            className="!rounded-full shadow-lg"
-            onClick={() => imageInputRef.current?.click()}
-            disabled={uploading}
-            title="Chèn ảnh vào bài"
-          >
-            {uploading ? <RiLoader4Fill className="animate-spin" size={20} /> : <RiImageAddFill size={20} />}
-          </Button>
-          <Button
-            type="button"
-            intent="primary"
-            size="icon"
-            className="!rounded-full shadow-lg"
-            onClick={() => setShowHelp(true)}
-            title="Hướng dẫn Markdown"
-          >
-            <RiQuestionFill size={20} />
-          </Button>
-        </div>
+    <div className="relative w-full">
 
         <input
           type="file"
@@ -151,26 +126,57 @@ export default function EditBlogForm({ blogId }) {
           accept="image/png, image/jpeg, image/webp"
         />
 
-        <h2 className="text-3xl font-extrabold mb-10 flex items-center gap-3 text-blue-600 dark:text-blue-400">
-          <RiFileEditFill /> Chỉnh sửa bài viết
-        </h2>
-
         <form onSubmit={handleSubmit}>
-          <div className="mb-10 space-y-5">
-            <input
-              className="w-full text-4xl md:text-5xl font-extrabold bg-transparent border-b border-neutral-300 dark:border-neutral-700 pb-3 outline-none text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:border-blue-500 transition"
-              placeholder="Tiêu đề bài viết..."
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            />
-            <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
+          <div className="mb-10 flex flex-col gap-5">
+            <div className="flex flex-col lg:flex-row lg:items-end gap-6 justify-between border-b border-grey-200 dark:border-grey-800 pb-3 group focus-within:border-primary-500 transition-colors">
               <input
-                type="checkbox"
-                checked={formData.isPublic}
-                onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
-                className="w-5 h-5 rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500"
+                className="flex-1 w-full text-4xl md:text-5xl font-extrabold bg-transparent outline-none text-grey-900 dark:text-grey-100 placeholder:text-grey-400"
+                placeholder="Tiêu đề bài viết..."
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
-              <span className="font-medium text-neutral-700 dark:text-neutral-300">
+
+              <div className="flex items-center gap-3 shrink-0 mb-1">
+                {lastSaved && (
+                  <div className="hidden sm:flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span className="text-xs font-medium text-grey-500">
+                      Đã lưu nháp: {lastSaved.toLocaleTimeString()}
+                    </span>
+                  </div>
+                )}
+                
+                {lastSaved && <div className="w-px h-6 bg-grey-200 dark:bg-grey-800 mx-1 hidden sm:block"></div>}
+                
+                <Button
+                  type="button"
+                  intent="neutral"
+                  size="icon"
+                  onClick={() => imageInputRef.current?.click()}
+                  disabled={uploading}
+                  title="Chèn ảnh vào bài"
+                >
+                  {uploading ? <RiLoader4Fill className="animate-spin" size={20} /> : <RiImageAddFill size={20} />}
+                </Button>
+                <Button
+                  type="button"
+                  intent="primary"
+                  size="icon"
+                  onClick={() => setShowHelp(true)}
+                  title="Hướng dẫn Markdown"
+                >
+                  <RiQuestionFill size={20} />
+                </Button>
+              </div>
+            </div>
+            <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
+              <Switch
+                checked={formData.isPublic}
+                onCheckedChange={(checked) => setFormData({ ...formData, isPublic: checked })}
+                checkedIcon={<RiEarthFill />}
+                uncheckedIcon={<RiLockFill />}
+              />
+              <span className="font-medium text-grey-700 dark:text-grey-300">
                 {formData.isPublic ? 'Công khai' : 'Riêng tư'}
               </span>
             </label>
@@ -178,11 +184,11 @@ export default function EditBlogForm({ blogId }) {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
             <div className="flex flex-col">
-              <label className="mb-3 text-xs font-bold uppercase text-neutral-500 dark:text-neutral-400">
+              <label className="mb-3 text-xs font-bold uppercase text-grey-500">
                 Soạn thảo Markdown
               </label>
               <textarea
-                className="w-full min-h-[520px] p-5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 font-mono text-sm leading-relaxed focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full min-h-[520px] p-5 rounded-xl bg-grey-50 dark:bg-grey-900/40 border-none text-grey-900 dark:text-grey-100 placeholder:text-grey-500 font-mono text-sm leading-relaxed focus:ring-2 focus:ring-primary-500 outline-none custom-scrollbar"
                 placeholder="# Viết nội dung tại đây..."
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
@@ -190,17 +196,17 @@ export default function EditBlogForm({ blogId }) {
             </div>
 
             <div className="flex flex-col">
-              <label className="mb-3 text-xs font-bold uppercase text-neutral-500 dark:text-neutral-400">
+              <label className="mb-3 text-xs font-bold uppercase text-grey-500">
                 Xem trước
               </label>
-              <div className="w-full min-h-[520px] p-6 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 overflow-y-auto prose prose-lg max-w-none prose-neutral dark:prose-invert">
+              <div className="w-full min-h-[520px] p-6 rounded-xl bg-grey-50 dark:bg-grey-900/40 border-none overflow-y-auto prose prose-lg max-w-none prose-neutral dark:prose-invert custom-scrollbar">
                 {formData.content ? (
                   <ReactMarkdown
                     components={{
                       img: ({ src, alt }) => (
                         <div className="flex flex-col items-center my-6">
                           <img src={src} alt={alt} className="rounded-xl max-w-full shadow-md" />
-                          {alt && <p className="text-sm text-neutral-500 italic mt-2 text-center">{alt}</p>}
+                          {alt && <p className="text-sm text-grey-500 italic mt-2 text-center">{alt}</p>}
                         </div>
                       ),
                     }}
@@ -208,14 +214,14 @@ export default function EditBlogForm({ blogId }) {
                     {formData.content}
                   </ReactMarkdown>
                 ) : (
-                  <p className="text-neutral-400 italic mt-24 text-center">Nội dung xem trước sẽ hiển thị tại đây…</p>
+                  <p className="text-grey-400 italic mt-24 text-center">Nội dung xem trước sẽ hiển thị tại đây…</p>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="flex justify-between items-center pt-8 border-t border-neutral-200 dark:border-neutral-700">
-            <Button type="button" intent="neutral" onClick={() => navigate('/blog/manage')}>
+          <div className="flex justify-end items-center gap-4 pt-8 mt-4">
+            <Button type="button" intent="ghost" onClick={() => navigate('/blog/manage')}>
               Hủy bỏ
             </Button>
             <Button type="submit" intent="primary" disabled={saving}>
@@ -224,14 +230,7 @@ export default function EditBlogForm({ blogId }) {
           </div>
         </form>
 
-        {lastSaved && (
-          <div className="absolute bottom-4 right-8 text-sm text-neutral-500">
-            Đã lưu nháp: {lastSaved.toLocaleTimeString()}
-          </div>
-        )}
-
         <MarkdownHelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
-      </GlassCard>
-    </PageLayout>
+    </div>
   );
 }

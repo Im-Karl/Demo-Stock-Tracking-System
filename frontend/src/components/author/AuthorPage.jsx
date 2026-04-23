@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { RiGroupFill, RiHeartFill, RiFileTextFill, RiUserAddFill, RiSearchLine } from 'react-icons/ri';
+import {
+  RiGroupFill,
+  RiHeartFill,
+  RiFileTextFill,
+  RiUserAddFill,
+  RiSearchLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+  RiCheckFill,
+} from 'react-icons/ri';
 import { toast } from 'react-hot-toast';
 import { authService } from '../../services/authService';
 import FollowModal from './FollowModal';
 import BlogCard from '../blog/BlogCard';
-import PageLayout from '../base-ui/PageLayout';
-import GlassCard from '../base-ui/GlassCard';
 import Button from '../base-ui/Button';
+import Avatar from '../base-ui/Avatar';
+import TextField from '../base-ui/TextField';
+
+import FeatureCard from '../base-ui/FeatureCard';
 
 export default function AuthorPage({ author, blogs = [], stats, initialTotalPages = 1, initialCurrentPage = 1 }) {
+  const [isMounted, setIsMounted] = useState(false);
   const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null });
   const [followingCount, setFollowingCount] = useState(author?.following?.length || 0);
 
@@ -20,6 +32,7 @@ export default function AuthorPage({ author, blogs = [], stats, initialTotalPage
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     setDisplayBlogs(blogs);
     setTotalPages(initialTotalPages);
     setCurrentPage(initialCurrentPage);
@@ -85,134 +98,151 @@ export default function AuthorPage({ author, blogs = [], stats, initialTotalPage
   };
 
   return (
-    <PageLayout showAmbient={false}>
-      <main className="relative z-10 max-w-7xl mx-auto px-6 py-16">
-        {author && (
-          <GlassCard padding="xl" className="text-center mb-14">
-            <div className="mx-auto mb-4 w-28 h-28 rounded-full overflow-hidden shadow-xl border-4 border-white dark:border-neutral-800 bg-neutral-200 flex items-center justify-center">
-              {author.avatar ? (
-                <img src={author.avatar} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-tr from-blue-500 to-violet-500 flex items-center justify-center text-white text-4xl font-extrabold">
-                  {(author.displayName || author.username)?.charAt(0).toUpperCase()}
+    <>
+      <main className="relative min-h-screen pt-10 pb-20">
+        <div className="relative container mx-auto px-4 max-w-5xl">
+          {author && (
+            <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-8 mb-14">
+              {/* Left Side: Avatar, Name, Desc */}
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-center sm:text-left flex-1">
+                <div className="shrink-0 flex justify-center sm:justify-start">
+                  <Avatar
+                    src={author.avatar}
+                    alt={author.displayName || author.username}
+                    className="w-20 h-20 *:text-2xl"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  {/* Name and Desc are now exactly h-20 so they perfectly vertically center with the avatar */}
+                  <div className="min-h-[5rem] flex flex-col justify-center">
+                    <h1 className="text-2xl font-extrabold mb-1 text-grey-900 dark:text-grey-50">
+                      {author.displayName || author.username}
+                    </h1>
+                    <p className="text-grey-500 dark:text-grey-400">{author.tagline || 'Người đam mê viết lách'}</p>
+                  </div>
+
+                  {isMounted && !isOwnProfile && (
+                    <div className="flex justify-center sm:justify-start mt-4">
+                      <Button
+                        onClick={handleFollow}
+                        disabled={loadingFollow}
+                        intent={isFollowing ? 'neutral' : 'primary'}
+                      >
+                        {isFollowing ? (
+                          <>
+                            <RiCheckFill size={16} /> Đang theo dõi
+                          </>
+                        ) : (
+                          <>
+                            <RiUserAddFill size={16} /> Theo dõi
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Side: Stats */}
+              <div className="grid sm:grid-cols-2 gap-2 w-full lg:w-auto shrink-0 *:p-4 flex-1">
+                <FeatureCard
+                  direction="horizontal"
+                  title={stats?.totalBlogs || displayBlogs.length}
+                  desc="Bài viết"
+                  icon={RiFileTextFill}
+                  colorClass="text-grey-800 dark:text-grey-300 bg-primary-100 dark:bg-primary-900/50"
+                />
+
+                <FeatureCard
+                  direction="horizontal"
+                  title={followingCount}
+                  desc="Đang theo dõi"
+                  icon={RiUserAddFill}
+                  colorClass="text-grey-800 dark:text-grey-300 bg-violet-100 dark:bg-violet-900/50"
+                  onClick={() => openModal('following')}
+                />
+
+                <FeatureCard
+                  direction="horizontal"
+                  title={followerCount}
+                  desc="Người theo dõi"
+                  icon={RiGroupFill}
+                  colorClass="text-grey-800 dark:text-grey-300 bg-emerald-100 dark:bg-emerald-900/50"
+                  onClick={() => openModal('followers')}
+                />
+
+                <FeatureCard
+                  direction="horizontal"
+                  title={stats?.totalLikes || 0}
+                  desc="Lượt thích"
+                  icon={RiHeartFill}
+                  colorClass="text-grey-800 dark:text-grey-300 bg-amber-100 dark:bg-amber-900/50"
+                />
+              </div>
+            </div>
+          )}
+
+          <hr className="border-grey-200 dark:border-grey-800 mb-10" />
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
+            <h2 className="text-2xl font-extrabold text-grey-900 dark:text-grey-50">
+              Bài viết của {author?.displayName || 'tác giả'}
+            </h2>
+            <form onSubmit={handleSearchSubmit} className="w-full md:w-96">
+              <TextField
+                label="Tìm trong bài viết của tác giả..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                icon={RiSearchLine}
+              />
+            </form>
+          </div>
+
+          {isSearching ? (
+            <div className="text-center py-20 text-grey-500">Đang tìm kiếm...</div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {displayBlogs.map((blog) => (
+                  <BlogCard key={blog.slug} blog={blog} />
+                ))}
+              </div>
+
+              {displayBlogs.length === 0 && (
+                <div className="text-center py-16 text-grey-500 bg-grey-50 dark:bg-grey-900/30 rounded-sm border border-grey-200 dark:border-grey-800">
+                  Không tìm thấy bài viết nào phù hợp.
                 </div>
               )}
-            </div>
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-2 text-neutral-900 dark:text-white">
-              {author.displayName || author.username}
-            </h1>
-            <p className="text-neutral-500 dark:text-neutral-400 italic mb-6">
-              "{author.tagline || 'Người đam mê viết lách'}"
-            </p>
 
-            <div className="flex flex-wrap justify-center gap-8 mb-8">
-              <div className="text-center">
-                <RiFileTextFill size={18} className="mx-auto mb-1 text-neutral-400" />
-                {/* Lấy tổng bài trên DB chứ không phải số bài đang hiển thị */}
-                <div className="text-xl font-bold">{stats?.totalBlogs || displayBlogs.length}</div>
-                <div className="text-xs text-neutral-400">Bài viết</div>
-              </div>
-              <div
-                className="text-center cursor-pointer hover:scale-105 transition transform group"
-                onClick={() => openModal('followers')}
-              >
-                <RiGroupFill size={18} className="mx-auto mb-1 text-neutral-400 group-hover:text-blue-500" />
-                <div className="text-xl font-bold">{followerCount}</div>
-                <div className="text-xs text-neutral-400 group-hover:text-blue-500">Người theo dõi</div>
-              </div>
-              <div
-                className="text-center cursor-pointer hover:scale-105 transition transform group"
-                onClick={() => openModal('following')}
-              >
-                <RiUserAddFill size={18} className="mx-auto mb-1 text-neutral-400 group-hover:text-violet-500" />
-                <div className="text-xl font-bold">{followingCount}</div>
-                <div className="text-xs text-neutral-400 group-hover:text-violet-500">Đang theo dõi</div>
-              </div>
-              <div className="text-center">
-                <RiHeartFill size={18} className="mx-auto mb-1 text-neutral-400" />
-                <div className="text-xl font-bold">{stats?.totalLikes || 0}</div>
-                <div className="text-xs text-neutral-400">Lượt thích</div>
-              </div>
-            </div>
-
-            {!isOwnProfile && (
-              <div className="flex justify-center">
-                <Button
-                  onClick={handleFollow}
-                  disabled={loadingFollow}
-                  intent={isFollowing ? 'neutral' : 'primary'}
-                  className="!rounded-full px-8"
-                >
-                  {isFollowing ? 'Đang theo dõi' : 'Theo dõi'}
-                </Button>
-              </div>
-            )}
-          </GlassCard>
-        )}
-
-        <hr className="border-neutral-200 dark:border-neutral-800 mb-10" />
-
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
-          <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">
-            Bài viết của {author?.displayName || 'tác giả'}
-          </h2>
-          <form onSubmit={handleSearchSubmit} className="relative w-full md:w-96 group">
-            <input
-              type="text"
-              placeholder="Tìm trong bài viết của tác giả..."
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              className="w-full py-3 pl-5 pr-12 rounded-full bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-neutral-900 dark:text-neutral-100 transition-all text-sm"
-            />
-            <button
-              type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full text-neutral-400 group-hover:text-blue-500 transition-colors"
-            >
-              <RiSearchLine size={18} />
-            </button>
-          </form>
+              {/*  THANH PHÂN TRANG */}
+              {totalPages > 1 && (
+                <nav className="flex items-center justify-center gap-2 mt-16" aria-label="Pagination">
+                  <Button
+                    intent="ghost"
+                    size="sm"
+                    disabled={currentPage <= 1}
+                    className={currentPage <= 1 ? 'opacity-40 pointer-events-none' : ''}
+                    onClick={() => fetchAuthorBlogs(keyword, currentPage - 1)}
+                  >
+                    <RiArrowLeftSLine size={18} /> Trước
+                  </Button>
+                  <span className="px-4 py-2 text-sm font-bold text-grey-700 dark:text-grey-300">
+                    {currentPage} / {totalPages}
+                  </span>
+                  <Button
+                    intent="ghost"
+                    size="sm"
+                    disabled={currentPage >= totalPages}
+                    className={currentPage >= totalPages ? 'opacity-40 pointer-events-none' : ''}
+                    onClick={() => fetchAuthorBlogs(keyword, currentPage + 1)}
+                  >
+                    Sau <RiArrowRightSLine size={18} />
+                  </Button>
+                </nav>
+              )}
+            </>
+          )}
         </div>
-
-        {isSearching ? (
-          <div className="text-center py-20 text-neutral-500">Đang tìm kiếm...</div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {displayBlogs.map((blog) => (
-                <BlogCard key={blog.slug} blog={blog} />
-              ))}
-            </div>
-
-            {displayBlogs.length === 0 && (
-              <div className="text-center py-16 text-neutral-500 bg-neutral-50 dark:bg-neutral-800/30 rounded-2xl border border-neutral-200 dark:border-neutral-800">
-                Không tìm thấy bài viết nào phù hợp.
-              </div>
-            )}
-
-            {/*  THANH PHÂN TRANG */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-4 mt-16">
-                <Button
-                  intent="neutral"
-                  disabled={currentPage <= 1}
-                  onClick={() => fetchAuthorBlogs(keyword, currentPage - 1)}
-                >
-                  Trang trước
-                </Button>
-                <span className="font-bold text-neutral-700 dark:text-neutral-300">
-                  Trang {currentPage} / {totalPages}
-                </span>
-                <Button
-                  intent="neutral"
-                  disabled={currentPage >= totalPages}
-                  onClick={() => fetchAuthorBlogs(keyword, currentPage + 1)}
-                >
-                  Trang sau
-                </Button>
-              </div>
-            )}
-          </>
-        )}
       </main>
 
       <FollowModal
@@ -221,6 +251,6 @@ export default function AuthorPage({ author, blogs = [], stats, initialTotalPage
         onClose={() => setModalConfig({ isOpen: false, type: null })}
         authorId={author?._id}
       />
-    </PageLayout>
+    </>
   );
 }
