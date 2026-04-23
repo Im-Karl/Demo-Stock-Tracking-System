@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { RiFireFill, RiNewsFill, RiTeamFill, RiLightbulbFill, RiSparklingFill, RiChatSmile3Fill } from 'react-icons/ri';
 import Button from '../base-ui/Button';
 import FeatureCard from '../base-ui/FeatureCard';
+import ZippingGrid from './ZippingGrid';
 
 export default function HomeHero() {
   const features = [
@@ -32,16 +33,10 @@ export default function HomeHero() {
   ];
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-center overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1521696328906-2b116060d0b5"
-          alt="Hero background"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-grey-900/60" />
-      </div>
+    <div className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-grey-300 dark:bg-grey-700/50">
+      {/* Animated Grid Background */}
+      <ZippingGrid dotCount={20} trailLength={10} moveInterval={50} cellSize={30} />
+      <div className="absolute inset-0 bg-white/40 dark:bg-black/60 pointer-events-none" />
 
       <div className="container mx-auto p-10 relative z-10">
         <motion.div
@@ -49,11 +44,11 @@ export default function HomeHero() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 text-white font-heading">
+          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 text-grey-900 dark:text-white font-heading">
             Đánh giá thông minh <br className="hidden lg:block" /> thị trường Việt Nam
           </h1>
 
-          <ul className="text-lg mb-8 leading-12 text-white/90">
+          <ul className="text-lg mb-8 leading-12 text-grey-700 dark:text-white/90">
             {[
               {
                 Icon: RiSparklingFill,

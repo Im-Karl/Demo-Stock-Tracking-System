@@ -13,6 +13,7 @@ import { uploadService } from '../../services/uploadService';
 import Button from '../base-ui/Button';
 import TextField from '../base-ui/TextField';
 import Avatar from '../base-ui/Avatar';
+import ConfirmModal from '../base-ui/ConfirmModal';
 
 export default function UserProfile() {
   const [user, setUser] = useState({
@@ -34,6 +35,7 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState(null);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // State cho Avatar
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -121,6 +123,10 @@ export default function UserProfile() {
   };
 
   const handleLogout = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.location.href = '/login';
@@ -290,6 +296,15 @@ export default function UserProfile() {
           <RiLogoutBoxRFill size={18} /> Đăng xuất khỏi hệ thống
         </Button>
       </section>
+
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={confirmLogout}
+        title="Đăng xuất"
+        message="Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?"
+        confirmLabel="Đăng xuất"
+      />
     </div>
   );
 }

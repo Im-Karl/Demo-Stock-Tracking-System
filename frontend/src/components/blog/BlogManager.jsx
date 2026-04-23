@@ -12,6 +12,7 @@ import {
 import toast from 'react-hot-toast';
 import Button from '../base-ui/Button';
 import Tab from '../base-ui/Tab';
+import ConfirmModal from '../base-ui/ConfirmModal';
 
 const BookmarkButton = ({ children, softClass, boldClass, rotateClass = '', onClick, title, as = 'button', href }) => {
   const Component = as;
@@ -40,6 +41,13 @@ export default function BlogManager() {
     trashed: [],
   });
   const [loading, setLoading] = useState(true);
+  const [confirmConfig, setConfirmConfig] = useState({ 
+    isOpen: false, 
+    onConfirm: () => {}, 
+    title: '', 
+    message: '',
+    isLoading: false
+  });
 
   const fetchMyBlogs = async () => {
     try {
@@ -60,15 +68,25 @@ export default function BlogManager() {
     fetchMyBlogs();
   }, []);
 
-  const handleSoftDelete = async (id) => {
-    if (!confirm('Bạn có chắc muốn chuyển bài này vào thùng rác?')) return;
-    try {
-      await blogService.moveToTrash(id);
-      toast.success('Đã chuyển vào thùng rác');
-      fetchMyBlogs();
-    } catch {
-      toast.error('Lỗi xóa bài');
-    }
+  const handleSoftDelete = (id) => {
+    setConfirmConfig({
+      isOpen: true,
+      title: 'Chuyển vào thùng rác',
+      message: 'Bạn có chắc chắn muốn chuyển bài viết này vào thùng rác? Bạn có thể khôi phục nó sau này.',
+      onConfirm: async () => {
+        setConfirmConfig(prev => ({ ...prev, isLoading: true }));
+        try {
+          await blogService.moveToTrash(id);
+          toast.success('Đã chuyển vào thùng rác');
+          fetchMyBlogs();
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+        } catch {
+          toast.error('Lỗi xóa bài');
+        } finally {
+          setConfirmConfig(prev => ({ ...prev, isLoading: false }));
+        }
+      }
+    });
   };
 
   const handleRestore = async (id) => {
@@ -81,15 +99,25 @@ export default function BlogManager() {
     }
   };
 
-  const handleHardDelete = async (id) => {
-    if (!confirm('CẢNH BÁO: Xóa vĩnh viễn?')) return;
-    try {
-      await blogService.hardDelete(id);
-      toast.success('Đã xóa vĩnh viễn');
-      fetchMyBlogs();
-    } catch {
-      toast.error('Lỗi xóa');
-    }
+  const handleHardDelete = (id) => {
+    setConfirmConfig({
+      isOpen: true,
+      title: 'Xóa vĩnh viễn',
+      message: 'Hành động này không thể hoàn tác. Bài viết sẽ bị xóa vĩnh viễn khỏi hệ thống.',
+      onConfirm: async () => {
+        setConfirmConfig(prev => ({ ...prev, isLoading: true }));
+        try {
+          await blogService.hardDelete(id);
+          toast.success('Đã xóa vĩnh viễn');
+          fetchMyBlogs();
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+        } catch {
+          toast.error('Lỗi xóa');
+        } finally {
+          setConfirmConfig(prev => ({ ...prev, isLoading: false }));
+        }
+      }
+    });
   };
 
   const handleToggleStatus = async (slug) => {
@@ -276,6 +304,15 @@ export default function BlogManager() {
         {activeTab === 'drafts' && renderList(blogs.drafts, 'drafts')}
         {activeTab === 'trashed' && renderList(blogs.trashed, 'trashed')}
       </div>
+
+      <ConfirmModal 
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={confirmConfig.onConfirm}
+        title={confirmConfig.title}
+        message={confirmConfig.message}
+        isLoading={confirmConfig.isLoading}
+      />
     </div>
   );
 }

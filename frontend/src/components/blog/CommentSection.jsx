@@ -12,6 +12,7 @@ import {
 import Button from '../base-ui/Button';
 import Avatar from '../base-ui/Avatar';
 import Tab from '../base-ui/Tab';
+import ConfirmModal from '../base-ui/ConfirmModal';
 
 export default function CommentSection({ blogId }) {
   const [comments, setComments] = useState([]);
@@ -22,6 +23,7 @@ export default function CommentSection({ blogId }) {
 
   const [sortOrder, setSortOrder] = useState('desc');
   const [visibleRoots, setVisibleRoots] = useState(5);
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, commentId: null });
 
   const currentUser = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user')) : null;
 
@@ -107,12 +109,20 @@ export default function CommentSection({ blogId }) {
     }
   };
 
-  const handleDelete = async (commentId) => {
-    if (!confirm('Bạn có chắc muốn xóa bình luận này?')) return;
+  const handleDelete = (commentId) => {
+    setConfirmConfig({
+      isOpen: true,
+      commentId: commentId
+    });
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmConfig.commentId) return;
     try {
-      await commentService.deleteComment(commentId);
+      await commentService.deleteComment(confirmConfig.commentId);
       toast.success('Đã xóa bình luận!');
       fetchComments();
+      setConfirmConfig({ isOpen: false, commentId: null });
     } catch (err) {
       toast.error('Không thể xóa bình luận');
     }
@@ -334,6 +344,14 @@ export default function CommentSection({ blogId }) {
           )}
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ isOpen: false, commentId: null })}
+        onConfirm={confirmDelete}
+        title="Xóa bình luận"
+        message="Bạn có chắc chắn muốn xóa bình luận này? Hành động này không thể hoàn tác."
+      />
     </div>
   );
 }
