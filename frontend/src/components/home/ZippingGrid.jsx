@@ -22,12 +22,7 @@ const DARK_VIBRANT_COLORS = [
 
 const DIRECTIONS = ['right', 'left', 'up', 'down'];
 
-export default function ZippingGrid({ 
-  cellSize = 48, 
-  dotCount = 15, 
-  trailLength = 12,
-  moveInterval = 80 
-}) {
+export default function ZippingGrid({ cellSize = 48, dotCount = 15, trailLength = 12, moveInterval = 80 }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -59,18 +54,27 @@ export default function ZippingGrid({
         const colors = isDark ? DARK_VIBRANT_COLORS : VIBRANT_COLORS;
         this.color = colors[Math.floor(Math.random() * colors.length)];
         this.direction = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
-        
+
         const cols = Math.floor(canvas.width / cellSize);
         const rows = Math.floor(canvas.height / cellSize);
 
         // Start from an edge based on direction, but with random depth so they don't all arrive at once
         const depth = Math.floor(Math.random() * 20); // up to 20 cells deep outside
-        
-        if (this.direction === 'right') { this.col = -1 - depth; this.row = Math.floor(Math.random() * rows); }
-        else if (this.direction === 'left') { this.col = cols + depth; this.row = Math.floor(Math.random() * rows); }
-        else if (this.direction === 'down') { this.row = -1 - depth; this.col = Math.floor(Math.random() * cols); }
-        else { this.row = rows + depth; this.col = Math.floor(Math.random() * cols); }
-        
+
+        if (this.direction === 'right') {
+          this.col = -1 - depth;
+          this.row = Math.floor(Math.random() * rows);
+        } else if (this.direction === 'left') {
+          this.col = cols + depth;
+          this.row = Math.floor(Math.random() * rows);
+        } else if (this.direction === 'down') {
+          this.row = -1 - depth;
+          this.col = Math.floor(Math.random() * cols);
+        } else {
+          this.row = rows + depth;
+          this.col = Math.floor(Math.random() * cols);
+        }
+
         this.trail = [];
         this.lastMoveTime = Date.now();
       }
@@ -88,7 +92,7 @@ export default function ZippingGrid({
 
           const cols = Math.floor(canvas.width / cellSize);
           const rows = Math.floor(canvas.height / cellSize);
-          
+
           if (this.col < -2 || this.col >= cols + 2 || this.row < -2 || this.row >= rows + 2) {
             this.reset();
           }
@@ -127,7 +131,7 @@ export default function ZippingGrid({
       const isDark = document.documentElement.classList.contains('dark');
       const cols = Math.ceil(canvas.width / cellSize);
       const rows = Math.ceil(canvas.height / cellSize);
-      
+
       // Draw background neutral cells
       ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)';
       const squareSize = cellSize * 0.9;
@@ -141,7 +145,7 @@ export default function ZippingGrid({
         }
       }
 
-      dots.forEach(dot => {
+      dots.forEach((dot) => {
         dot.update();
         dot.draw();
       });
@@ -157,10 +161,5 @@ export default function ZippingGrid({
     };
   }, [cellSize, dotCount, trailLength, moveInterval]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none z-0"
-    />
-  );
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />;
 }

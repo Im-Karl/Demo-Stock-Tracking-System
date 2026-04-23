@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 /**
  * MD2-style outlined text field with floating label.
- * 
+ *
  * Uses Base UI Field primitives for accessibility.
  * The floating effect is pure CSS via :placeholder-shown + :focus-within.
  */
@@ -12,13 +12,7 @@ export default function TextField({ label, icon: Icon, className, intent = 'defa
   const hasIcon = !!Icon;
 
   return (
-    <Field.Root
-      className={clsx(
-        'group/field relative w-full',
-        props.disabled && 'opacity-60',
-        className,
-      )}
-    >
+    <Field.Root className={clsx('group/field relative w-full', props.disabled && 'opacity-60', className)}>
       {/* Icon */}
       {Icon && (
         <Icon
@@ -59,13 +53,14 @@ export default function TextField({ label, icon: Icon, className, intent = 'defa
             // Floated left position (reset to border edge)
             hasIcon ? 'peer-focus:left-3 peer-[:not(:placeholder-shown)]:left-3' : '',
             // Background mask (covers the border behind the label)
-            bgTheme === 'page' && 'peer-focus:bg-grey-50 peer-focus:dark:bg-black peer-[:not(:placeholder-shown)]:bg-grey-50 peer-[:not(:placeholder-shown)]:dark:bg-black',
-            bgTheme === 'card' && 'peer-focus:bg-white peer-focus:dark:bg-grey-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:dark:bg-grey-900',
-            bgTheme === 'modal' && 'peer-focus:bg-white dark:peer-focus:bg-black peer-[:not(:placeholder-shown)]:bg-white dark:peer-[:not(:placeholder-shown)]:bg-black',
+            bgTheme === 'page' &&
+              'peer-focus:bg-grey-50 peer-focus:dark:bg-black peer-[:not(:placeholder-shown)]:bg-grey-50 peer-[:not(:placeholder-shown)]:dark:bg-black',
+            bgTheme === 'card' &&
+              'peer-focus:bg-white peer-focus:dark:bg-grey-900 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:dark:bg-grey-900',
+            bgTheme === 'modal' &&
+              'peer-focus:bg-white dark:peer-focus:bg-black peer-[:not(:placeholder-shown)]:bg-white dark:peer-[:not(:placeholder-shown)]:bg-black',
             // Color when focused
-            intent === 'error'
-              ? 'peer-focus:text-red-500'
-              : 'peer-focus:text-primary-500',
+            intent === 'error' ? 'peer-focus:text-red-500' : 'peer-focus:text-primary-500',
           )}
         >
           {label}

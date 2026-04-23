@@ -36,8 +36,6 @@ export default function AuthForm({ type }) {
     }
   };
 
-
-
   return (
     <PageLayout className="flex items-center justify-center">
       <motion.div
@@ -57,7 +55,13 @@ export default function AuthForm({ type }) {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <TextField bgTheme="card" label="Tên đăng nhập" icon={RiUserFill} required onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
+            <TextField
+              bgTheme="card"
+              label="Tên đăng nhập"
+              icon={RiUserFill}
+              required
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            />
 
             {!isLogin && (
               <TextField

@@ -22,25 +22,22 @@ const avatarStyles = cva(
       size: 'md',
       shape: 'circle',
     },
-  }
+  },
 );
 
-const fallbackStyles = cva(
-  'font-semibold uppercase flex items-center justify-center w-full h-full',
-  {
-    variants: {
-      size: {
-        sm: 'text-[10px]',
-        md: 'text-sm',
-        lg: 'text-base',
-        xl: 'text-xl',
-      },
+const fallbackStyles = cva('font-semibold uppercase flex items-center justify-center w-full h-full', {
+  variants: {
+    size: {
+      sm: 'text-[10px]',
+      md: 'text-sm',
+      lg: 'text-base',
+      xl: 'text-xl',
     },
-    defaultVariants: {
-      size: 'md',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    size: 'md',
+  },
+});
 
 // We keep full Tailwind classes here so the scanner picks them up
 const FALLBACK_COLORS = [
@@ -69,16 +66,9 @@ function getHashColor(str) {
   return FALLBACK_COLORS[Math.abs(hash) % FALLBACK_COLORS.length];
 }
 
-export default function Avatar({
-  src,
-  alt = 'Avatar',
-  fallback,
-  size,
-  shape,
-  className,
-}) {
+export default function Avatar({ src, alt = 'Avatar', fallback, size, shape, className }) {
   const hashIdentifier = useMemo(() => {
-    // We prioritize the full `alt` string for hashing to ensure consistent colors 
+    // We prioritize the full `alt` string for hashing to ensure consistent colors
     // across different usages (e.g. one passing full name as fallback, one passing initial)
     if (typeof alt === 'string' && alt !== 'Avatar' && alt.trim().length > 0) return alt.trim();
     if (typeof fallback === 'string' && fallback.trim().length > 0) return fallback.trim();

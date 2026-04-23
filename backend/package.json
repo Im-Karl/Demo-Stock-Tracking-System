@@ -22,7 +22,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently -n \"API,Finance,Crawler\" -c \"blue,green,yellow\" \"node services/api/server.js\" \"node services/finance/server.js\" \"node services/crawler/Scraping/server.js\""
+    "start": "concurrently -n \"API,Finance,Crawler\" -c \"blue,green,yellow\" \"node services/api/server.js\" \"node services/finance/server.js\" \"node services/crawler/Scraping/server.js\"",
+    "seed": "node services/finance/seed.js"
   },
   "keywords": [],
   "author": "",

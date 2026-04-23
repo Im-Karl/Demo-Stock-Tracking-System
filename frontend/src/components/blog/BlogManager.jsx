@@ -41,12 +41,12 @@ export default function BlogManager() {
     trashed: [],
   });
   const [loading, setLoading] = useState(true);
-  const [confirmConfig, setConfirmConfig] = useState({ 
-    isOpen: false, 
-    onConfirm: () => {}, 
-    title: '', 
+  const [confirmConfig, setConfirmConfig] = useState({
+    isOpen: false,
+    onConfirm: () => {},
+    title: '',
     message: '',
-    isLoading: false
+    isLoading: false,
   });
 
   const fetchMyBlogs = async () => {
@@ -74,18 +74,18 @@ export default function BlogManager() {
       title: 'Chuyển vào thùng rác',
       message: 'Bạn có chắc chắn muốn chuyển bài viết này vào thùng rác? Bạn có thể khôi phục nó sau này.',
       onConfirm: async () => {
-        setConfirmConfig(prev => ({ ...prev, isLoading: true }));
+        setConfirmConfig((prev) => ({ ...prev, isLoading: true }));
         try {
           await blogService.moveToTrash(id);
           toast.success('Đã chuyển vào thùng rác');
           fetchMyBlogs();
-          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+          setConfirmConfig((prev) => ({ ...prev, isOpen: false }));
         } catch {
           toast.error('Lỗi xóa bài');
         } finally {
-          setConfirmConfig(prev => ({ ...prev, isLoading: false }));
+          setConfirmConfig((prev) => ({ ...prev, isLoading: false }));
         }
-      }
+      },
     });
   };
 
@@ -105,18 +105,18 @@ export default function BlogManager() {
       title: 'Xóa vĩnh viễn',
       message: 'Hành động này không thể hoàn tác. Bài viết sẽ bị xóa vĩnh viễn khỏi hệ thống.',
       onConfirm: async () => {
-        setConfirmConfig(prev => ({ ...prev, isLoading: true }));
+        setConfirmConfig((prev) => ({ ...prev, isLoading: true }));
         try {
           await blogService.hardDelete(id);
           toast.success('Đã xóa vĩnh viễn');
           fetchMyBlogs();
-          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+          setConfirmConfig((prev) => ({ ...prev, isOpen: false }));
         } catch {
           toast.error('Lỗi xóa');
         } finally {
-          setConfirmConfig(prev => ({ ...prev, isLoading: false }));
+          setConfirmConfig((prev) => ({ ...prev, isLoading: false }));
         }
-      }
+      },
     });
   };
 
@@ -305,9 +305,9 @@ export default function BlogManager() {
         {activeTab === 'trashed' && renderList(blogs.trashed, 'trashed')}
       </div>
 
-      <ConfirmModal 
+      <ConfirmModal
         isOpen={confirmConfig.isOpen}
-        onClose={() => setConfirmConfig(prev => ({ ...prev, isOpen: false }))}
+        onClose={() => setConfirmConfig((prev) => ({ ...prev, isOpen: false }))}
         onConfirm={confirmConfig.onConfirm}
         title={confirmConfig.title}
         message={confirmConfig.message}

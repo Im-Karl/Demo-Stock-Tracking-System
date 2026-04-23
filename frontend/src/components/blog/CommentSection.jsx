@@ -112,7 +112,7 @@ export default function CommentSection({ blogId }) {
   const handleDelete = (commentId) => {
     setConfirmConfig({
       isOpen: true,
-      commentId: commentId
+      commentId: commentId,
     });
   };
 

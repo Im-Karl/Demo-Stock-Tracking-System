@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
-export default function StockNewsClient({ symbol }) {
+export default function StockNewsClient({ symbol, hasVideo }) {
   const [news, setNews] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -59,38 +59,52 @@ export default function StockNewsClient({ symbol }) {
       : '';
 
   return (
-    <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1 custom-scrollbar">
+    <div
+      className={`space-y-4 [&_h4]:font-sans! ${
+        hasVideo ? 'lg:max-h-[350px] lg:overflow-y-auto' : 'lg:max-h-[700px] lg:overflow-y-auto'
+      }`}
+    >
       {news.map((item, i) => (
-        <a key={item.url + i} href={item.url} target="_blank" className="group block">
-          <div className="flex gap-3 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-colors">
-            {/*  Sửa màu nền ảnh lỗi sang neutral */}
-            <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-800">
+        <a key={item.url + i} href={item.url} target="_blank" className="group block outline-none">
+          <div className="flex gap-4 p-3 rounded-sm hover:bg-grey-100 dark:hover:bg-grey-800/40 transition-all">
+            {/* Image Container */}
+            <div className="w-20 h-20 flex-shrink-0 rounded-sm overflow-hidden bg-grey-100 dark:bg-grey-800 shadow-inner">
               <img
                 src={item.image || `https://ui-avatars.com/api/?name=${symbol}&background=random`}
                 alt={item.title}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
               />
             </div>
 
-            <div className="flex-1">
-              {/*  Sửa text-gray sang text-neutral */}
-              <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+            <div className="flex-1 flex flex-col justify-between py-0.5">
+              <h4 className="text-sm font-bold text-grey-800 dark:text-grey-100 line-clamp-2 leading-snug group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                 {item.title}
               </h4>
 
-              <div className="mt-2 flex items-center justify-between text-[10px] text-neutral-500">
-                <span className="bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 px-1.5 py-0.5 rounded">
+              <div className="mt-2 flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary-600 dark:text-primary-400">
                   {item.source || 'Tổng hợp'}
                 </span>
-                <span>{formatDate(item.published)}</span>
+                <span className="text-[10px] font-bold text-grey-400 uppercase tracking-tighter">
+                  {formatDate(item.published)}
+                </span>
               </div>
             </div>
           </div>
         </a>
       ))}
 
-      <div ref={loadMoreRef} className="py-4 text-center text-xs text-neutral-500">
-        {loading ? 'Đang tải thêm...' : hasMore ? 'Cuộn xuống để xem thêm' : '— Hết tin —'}
+      <div ref={loadMoreRef} className="py-6 text-center">
+        {loading ? (
+          <div className="flex items-center justify-center gap-2 text-primary-500">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-ping"></span>
+            <span className="text-[10px] font-black uppercase tracking-widest">Đang cập nhật...</span>
+          </div>
+        ) : (
+          <span className="text-[10px] font-black uppercase tracking-widest text-grey-300 dark:text-grey-600">
+            {hasMore ? 'Cuộn xuống để xem thêm' : '— Đã hết tin tức —'}
+          </span>
+        )}
       </div>
     </div>
   );

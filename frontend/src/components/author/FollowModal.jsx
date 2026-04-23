@@ -62,7 +62,6 @@ export default function FollowModal({ isOpen, onClose, authorId, type }) {
     }
   };
 
-
   const modalTitle = type === 'followers' ? 'Người theo dõi' : 'Đang theo dõi';
 
   return (
@@ -90,11 +89,7 @@ export default function FollowModal({ isOpen, onClose, authorId, type }) {
                   className="flex items-center justify-between p-3 rounded-xl hover:bg-grey-50 dark:hover:bg-grey-800/50 transition-colors"
                 >
                   <a href={`/author/${user._id}`} className="flex items-center gap-3 flex-1 group">
-                    <Avatar
-                      src={user.avatar}
-                      alt={user.displayName || user.username}
-                      size="lg"
-                    />
+                    <Avatar src={user.avatar} alt={user.displayName || user.username} size="lg" />
 
                     <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-[15px] text-grey-900 dark:text-grey-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors truncate">

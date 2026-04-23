@@ -30,7 +30,7 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
             className={`relative w-full ${maxWidth} max-h-[90vh] bg-white/95 dark:bg-black/90 backdrop-blur-2xl rounded-sm shadow-lg flex flex-col ${className}`}
           >

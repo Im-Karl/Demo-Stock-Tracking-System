@@ -36,11 +36,7 @@ export default function ForgotPasswordForm() {
   if (status === 'success') {
     return (
       <PageLayout className="flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md mx-auto"
-        >
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md mx-auto">
           <GlassCard className="text-center border-emerald-500/40 dark:border-emerald-500/30">
             <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
               <RiKeyFill size={32} />

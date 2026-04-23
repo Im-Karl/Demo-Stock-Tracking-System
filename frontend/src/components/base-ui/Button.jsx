@@ -18,41 +18,11 @@ const button = cva(
   {
     variants: {
       intent: {
-        primary: [
-          'bg-primary-500',
-          'text-white',
-          'hover:bg-primary-600',
-          'active:bg-primary-700',
-          'shadow-sm',
-        ],
-        secondary: [
-          'bg-secondary-500',
-          'text-white',
-          'hover:bg-secondary-600',
-          'active:bg-secondary-700',
-          'shadow-sm',
-        ],
-        success: [
-          'bg-emerald-500',
-          'text-white',
-          'hover:bg-emerald-600',
-          'active:bg-emerald-700',
-          'shadow-sm',
-        ],
-        danger: [
-          'bg-red-500',
-          'text-white',
-          'hover:bg-red-600',
-          'active:bg-red-700',
-          'shadow-sm',
-        ],
-        warning: [
-          'bg-amber-500',
-          'text-white',
-          'hover:bg-amber-600',
-          'active:bg-amber-700',
-          'shadow-sm',
-        ],
+        primary: ['bg-primary-500', 'text-white', 'hover:bg-primary-600', 'active:bg-primary-700', 'shadow-sm'],
+        secondary: ['bg-secondary-500', 'text-white', 'hover:bg-secondary-600', 'active:bg-secondary-700', 'shadow-sm'],
+        success: ['bg-emerald-500', 'text-white', 'hover:bg-emerald-600', 'active:bg-emerald-700', 'shadow-sm'],
+        danger: ['bg-red-500', 'text-white', 'hover:bg-red-600', 'active:bg-red-700', 'shadow-sm'],
+        warning: ['bg-amber-500', 'text-white', 'hover:bg-amber-600', 'active:bg-amber-700', 'shadow-sm'],
         neutral: [
           'bg-grey-100',
           'text-grey-800',

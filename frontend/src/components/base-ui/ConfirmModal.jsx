@@ -15,14 +15,18 @@ export default function ConfirmModal({
   confirmLabel = 'Xác nhận',
   cancelLabel = 'Hủy',
   intent = 'danger',
-  isLoading = false
+  isLoading = false,
 }) {
   const getIcon = () => {
     switch (intent) {
-      case 'danger': return <RiErrorWarningFill className="text-red-500" size={32} />;
-      case 'primary': return <RiInformationFill className="text-primary-500" size={32} />;
-      case 'warning': return <RiAlertFill className="text-amber-500" size={32} />;
-      default: return <RiInformationFill className="text-grey-500" size={32} />;
+      case 'danger':
+        return <RiErrorWarningFill className="text-red-500" size={32} />;
+      case 'primary':
+        return <RiInformationFill className="text-primary-500" size={32} />;
+      case 'warning':
+        return <RiAlertFill className="text-amber-500" size={32} />;
+      default:
+        return <RiInformationFill className="text-grey-500" size={32} />;
     }
   };
 
@@ -30,13 +34,9 @@ export default function ConfirmModal({
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div className="p-6">
         <div className="flex items-start gap-4">
-          <div className="shrink-0 pt-1">
-            {getIcon()}
-          </div>
+          <div className="shrink-0 pt-1">{getIcon()}</div>
           <div className="flex-1">
-            <p className="text-grey-600 dark:text-grey-300 leading-relaxed">
-              {message}
-            </p>
+            <p className="text-grey-600 dark:text-grey-300 leading-relaxed">{message}</p>
           </div>
         </div>
 
@@ -44,12 +44,7 @@ export default function ConfirmModal({
           <Button intent="ghost" onClick={onClose} disabled={isLoading}>
             {cancelLabel}
           </Button>
-          <Button 
-            intent={intent} 
-            onClick={onConfirm} 
-            loading={isLoading}
-            className="min-w-[100px]"
-          >
+          <Button intent={intent} onClick={onConfirm} loading={isLoading} className="min-w-[100px]">
             {confirmLabel}
           </Button>
         </div>

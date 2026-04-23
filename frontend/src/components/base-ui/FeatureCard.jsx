@@ -25,9 +25,7 @@ const FeatureCard = React.forwardRef(function FeatureCard(
       as={as}
       onClick={onClick}
       className={clsx(
-        isHorizontal
-          ? 'flex items-center gap-4 p-4 min-w-[160px]'
-          : 'flex flex-col items-start gap-5 cursor-default',
+        isHorizontal ? 'flex items-center gap-4 p-4 min-w-[160px]' : 'flex flex-col items-start gap-5 cursor-default',
         isClickable && 'cursor-pointer hover:-translate-y-1 hover:!shadow-md !transition-all duration-300 group',
         className,
       )}
@@ -40,9 +38,7 @@ const FeatureCard = React.forwardRef(function FeatureCard(
           colorClass,
         )}
       >
-        <Icon
-          size={isHorizontal ? 24 : 28}
-        />
+        <Icon size={isHorizontal ? 24 : 28} />
       </div>
 
       <div className={isHorizontal ? 'text-left' : ''}>
@@ -54,11 +50,7 @@ const FeatureCard = React.forwardRef(function FeatureCard(
         >
           {title}
         </h4>
-        <p
-          className={clsx(
-            isHorizontal ? 'text-xs font-medium text-grey-500' : 'text-grey-600 dark:text-grey-400',
-          )}
-        >
+        <p className={clsx(isHorizontal ? 'text-xs font-medium text-grey-500' : 'text-grey-600 dark:text-grey-400')}>
           {desc}
         </p>
       </div>

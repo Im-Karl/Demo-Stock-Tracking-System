@@ -2,7 +2,8 @@
 import Layout from "../../layouts/Layout.astro";
 import StockDetailClient from "../../components/stock/StockDetailClient.jsx";
 import StockNewsClient from "../../components/stock/StockNewsClient.jsx";
-import { RiPhoneFill } from 'react-icons/ri';
+import StockHeader from "../../components/stock/StockHeader.jsx";
+import PageTitle from "../../components/common/PageTitle.astro";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -31,158 +32,77 @@ if (error || !companyInfo) {
 ---
 
 <Layout title={`${symbol} - ${companyInfo.organ_name_vi}`}>
-  <div class="min-h-screen bg-gray-50 dark:bg-neutral-900 pb-20">
-    <!-- Header background -->
-    <div class="h-64 bg-gradient-to-r 
-from-neutral-100 to-white 
-dark:from-neutral-900 dark:to-neutral-800 w-full absolute top-0 left-0 z-0"></div>
+  <main class="min-h-screen pb-20 pt-10">
+    <div class="container mx-auto px-4 max-w-6xl relative z-10">
+      
+      <!-- BREADCRUMBS & TITLE -->
+      <PageTitle 
+        title={`${symbol} — ${companyInfo.organ_name_vi}`}
+        breadcrumbs={[
+          { label: 'Trang chủ', href: '/' },
+          { label: 'Thị trường', href: '/stock' },
+          { label: symbol },
+        ]}
+      />
 
-    <div class="container mx-auto px-4 pt-32 relative z-10">
-      <!-- INFO CARD -->
-      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 mb-8 flex flex-col md:flex-row gap-8 items-start border border-gray-100 dark:border-slate-700">
-        
-        <!-- Logo -->
-        <div class="w-24 h-24 md:w-32 md:h-32 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-inner">
-          <span class="text-4xl font-extrabold text-blue-700 dark:text-blue-400">
-            {symbol[0]}
-          </span>
-        </div>
-
-        <div class="flex-1 w-full">
-          <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
-            <div class="flex items-center gap-3">
-              <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
-                {symbol}
-              </h1>
-              <span class="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                {companyInfo.exchange || "OTC"}
-              </span>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-3">
-              {companyInfo.url && (
-                <a
-                  href={companyInfo.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2
-                        px-4 py-2 rounded-xl
-                        text-sm font-semibold
-                        bg-slate-100 text-slate-700
-                        hover:bg-slate-200
-                        dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600
-                        transition"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M2 12h20" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
-                  Website
-                </a>
-              )}
-
-              {companyInfo.facebookUrl && (
-                <a
-                  href={companyInfo.facebookUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2
-                        px-4 py-2 rounded-xl
-                        text-sm font-semibold
-                        bg-blue-600 text-white
-                        hover:bg-blue-700
-                        transition"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036c-2.148 0-2.797 1.603-2.797 2.898v1.072h4.442l-.542 3.667h-3.9v7.98H9.101Z" />
-                  </svg>
-                  Facebook
-                </a>
-              )}
-            </div>
-          </div>
-
-          <h2 class="text-xl font-bold text-gray-700 dark:text-gray-200 mb-1">
-            {companyInfo.organ_name_vi}
-          </h2>
-          <p class="text-gray-400 text-sm mb-5 uppercase font-medium">
-            {companyInfo.organ_name_en}
-          </p>
-
-          <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6 bg-gray-50 dark:bg-slate-700/50 p-4 rounded-lg border border-gray-100 dark:border-slate-700 text-sm">
-            {companyInfo.introduce}
-          </p>
-
-          {companyInfo.hotline && companyInfo.hotline.length > 0 && (
-            <div class="bg-orange-50 dark:bg-orange-900/10 px-4 py-2 rounded-lg border border-orange-100 dark:border-orange-900/30">
-              <span class="block text-[10px] text-orange-400 uppercase font-bold mb-1">
-                Hotline Hỗ Trợ
-              </span>
-              <div class="flex flex-wrap gap-3">
-                {companyInfo.hotline.map((phone: string) => (
-                  <a
-                    href={`tel:${phone}`}
-                    class="text-orange-700 dark:text-orange-400 font-bold hover:underline flex items-center gap-1"
-                  >
-                    <RiPhoneFill /> {phone}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      <!-- INFO SECTION (Cardless Header) -->
+      <StockHeader symbol={symbol} companyInfo={companyInfo} client:load />
 
       <!-- MAIN GRID -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2">
-            <StockDetailClient symbol={symbol} client:load />
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        
+        <!-- LEFT: Market Details & Charts -->
+        <div class="lg:col-span-2 space-y-12">
+          <StockDetailClient symbol={symbol} client:load />
         </div>
 
-        {companyInfo.latestVideoId && (
-          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div class="p-5 border-b border-slate-100 dark:border-slate-700">
-              <div class="flex items-start justify-between">
-                <h3 class="font-bold text-lg text-slate-800 dark:text-slate-200">
+        <!-- RIGHT: Side Panel (News & Clock) -->
+        <div class="space-y-10">
+          
+          {/* YouTube & Clock Section (Cardless Style) */}
+          {companyInfo.latestVideoId && (
+            <div class="space-y-4">
+              <div class="flex items-end justify-between border-b border-grey-200 dark:border-grey-800 pb-3">
+                <h3 class="font-bold text-lg text-grey-800 dark:text-grey-200 uppercase tracking-tight">
                   Hoạt động nổi bật
                 </h3>
 
                 <div class="text-right">
-                  <div class="text-xs text-slate-400">Giờ Việt Nam</div>
+                  <div class="text-[10px] font-black uppercase text-grey-400 tracking-widest mb-1">Thanh Khoản (VN)</div>
                   <div
                     id="vn-clock"
-                    class="text-2xl font-mono font-extrabold tracking-wide text-blue-600 dark:text-blue-400"
+                    class="text-2xl font-mono font-black tracking-tighter text-primary-600 dark:text-primary-400"
                   >
                     --:--:--
                   </div>
                 </div>
               </div>
+
+              <div class="relative aspect-video overflow-hidden bg-black rounded-sm shadow-inner group">
+                <iframe
+                  class="w-full h-full opacity-90 group-hover:opacity-100 transition-opacity"
+                  src={`https://www.youtube.com/embed/${companyInfo.latestVideoId}?rel=0`}
+                  frameborder="0"
+                  allowfullscreen
+                ></iframe>
+              </div>
             </div>
+          )}
 
-            <div class="relative h-[520px] overflow-hidden bg-black">
-  <iframe
-    class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2
-           h-[120%] aspect-[9/16]"
-    src={`https://www.youtube.com/embed/${companyInfo.latestVideoId}?rel=0`}
-    frameborder="0"
-    allowfullscreen
-  ></iframe>
-</div>
-          </div>
-        )}
-
-        <div class="space-y-4">
-          <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700">
-            <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-4 pb-3 border-b border-gray-100 dark:border-slate-700">
+          {/* News Feed Section */}
+          <div class="space-y-4">
+            <h3 class="font-bold text-lg text-grey-800 dark:text-grey-200 border-b border-grey-200 dark:border-grey-800 pb-3 uppercase tracking-tight">
               Tin tức {symbol}
             </h3>
-            <StockNewsClient symbol={symbol} client:load />
+            <StockNewsClient symbol={symbol} client:load hasVideo={!!companyInfo.latestVideoId} />
           </div>
+
         </div>
       </div>
     </div>
-  </div>
+  </main>
+    </div>
+  </main>
 </Layout>
 
 <script is:inline>

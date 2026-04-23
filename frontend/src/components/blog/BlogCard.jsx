@@ -8,7 +8,7 @@ export default function BlogCard({ blog, hideAuthor = false }) {
   const authorAvatar = blog.author?.avatar || null;
   const authorFallback = authorName ? authorName.charAt(0) : '';
   const authorHref = `/author/${blog.author?._id}`;
-  
+
   const imageFallback = (
     <img
       src="/images/fin_savvy.svg"

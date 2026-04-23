@@ -31,17 +31,13 @@ const tabStyles = cva(
           'hover:bg-grey-50',
           'dark:hover:bg-grey-800/50',
         ],
-        true: [
-          'border-primary-500',
-          'text-primary-600',
-          'dark:text-primary-400',
-        ],
+        true: ['border-primary-500', 'text-primary-600', 'dark:text-primary-400'],
       },
     },
     defaultVariants: {
       active: false,
     },
-  }
+  },
 );
 
 export default function Tab({ active, href, onClick, className, children, icon }) {
@@ -59,11 +55,7 @@ export default function Tab({ active, href, onClick, className, children, icon }
   const Component = href ? 'a' : 'button';
 
   return (
-    <Component
-      href={href}
-      onClick={onClick}
-      className={clsx(tabStyles({ active: isLinkActive }), className)}
-    >
+    <Component href={href} onClick={onClick} className={clsx(tabStyles({ active: isLinkActive }), className)}>
       {icon}
       {children}
     </Component>

@@ -179,14 +179,18 @@ def hello():
 
 export default function MarkdownHelpModal({ isOpen, onClose }) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Hướng dẫn sử dụng Markdown" maxWidth="max-w-6xl" className="h-[80vh]">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Hướng dẫn sử dụng Markdown"
+      maxWidth="max-w-6xl"
+      className="h-[80vh]"
+    >
       <div className="flex-1 overflow-y-auto p-6 custom-scrollbar h-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
           {/* Markdown source */}
           <div className="flex flex-col h-full">
-            <label className="text-xs font-bold uppercase mb-2 text-grey-500">
-              Markdown
-            </label>
+            <label className="text-xs font-bold uppercase mb-2 text-grey-500">Markdown</label>
             <textarea
               readOnly
               value={markdownHelpContent}
