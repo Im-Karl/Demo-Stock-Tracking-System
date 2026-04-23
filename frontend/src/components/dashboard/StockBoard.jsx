@@ -1,8 +1,18 @@
 import React, { useState, useMemo } from 'react';
-import { RiArrowUpFill, RiArrowDownFill, RiHeartFill, RiTrophyFill, RiPulseFill, RiErrorWarningFill, RiSearchLine, RiVipDiamondFill, RiMedalFill } from 'react-icons/ri';
+import {
+  RiArrowUpFill,
+  RiArrowDownFill,
+  RiHeartFill,
+  RiTrophyFill,
+  RiPulseFill,
+  RiErrorWarningFill,
+  RiSearchLine,
+  RiVipDiamondFill,
+  RiMedalFill,
+} from 'react-icons/ri';
 import { useStockSocket } from '../../hooks/useStockSocket';
 import { motion, AnimatePresence } from 'framer-motion';
-import Input from '../base-ui/Input';
+import TextField from '../base-ui/TextField';
 import Badge from '../base-ui/Badge';
 
 export default function StockBoard() {
@@ -137,24 +147,27 @@ export default function StockBoard() {
                 onClick={() => setExchangeFilter(ex)}
                 className="!px-3.5 !py-1.5"
               >
-                {ex === 'ALL' ? 'Tất cả' : isFav ? (
+                {ex === 'ALL' ? (
+                  'Tất cả'
+                ) : isFav ? (
                   <span className="flex items-center gap-1.5">
                     <RiHeartFill className={active ? '' : 'text-pink-500'} /> Yêu thích
                   </span>
-                ) : ex}
+                ) : (
+                  ex
+                )}
               </Badge>
             );
           })}
         </div>
 
         <div className="w-full sm:w-64">
-          <Input
+          <TextField
             icon={RiSearchLine}
             type="text"
-            placeholder="Tìm mã cổ phiếu..."
+            label="Tìm mã cổ phiếu"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="!py-2 !text-sm"
           />
         </div>
       </div>
@@ -177,7 +190,9 @@ export default function StockBoard() {
           </thead>
 
           <tbody>
-            <tr><td colSpan="9" className="h-4"></td></tr>
+            <tr>
+              <td colSpan="9" className="h-4"></td>
+            </tr>
             <AnimatePresence>
               {filteredStocks.map((stock, index) => {
                 const isUp = stock.percentChange >= 0;
@@ -208,9 +223,7 @@ export default function StockBoard() {
                           <div className="font-bold text-grey-900 dark:text-grey-100 group-hover/link:text-primary-600 dark:group-hover/link:text-primary-400 transition-colors">
                             {stock.symbol}
                           </div>
-                          <div className="text-[10px] text-grey-500 uppercase tracking-wide">
-                            {stock.organ_name_en}
-                          </div>
+                          <div className="text-[10px] text-grey-500 uppercase tracking-wide">{stock.organ_name_en}</div>
                         </div>
                       </a>
                     </td>

@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import { authService } from '../../services/authService';
-import ThemeToggle from '../ui/ThemeToggle';
-import { RiExternalLinkFill, RiKeyFill, RiLogoutBoxRFill, RiUserFill as UserIcon, RiCameraFill, RiLoader4Fill } from 'react-icons/ri';
+import {
+  RiExternalLinkFill,
+  RiKeyFill,
+  RiLogoutBoxRFill,
+  RiCameraFill,
+  RiLoader4Fill,
+  RiArrowRightSFill,
+} from 'react-icons/ri';
 import { uploadService } from '../../services/uploadService';
-import PageLayout from '../base-ui/PageLayout';
-import GlassCard from '../base-ui/GlassCard';
 import Button from '../base-ui/Button';
-import Input from '../base-ui/Input';
+import TextField from '../base-ui/TextField';
+import Avatar from '../base-ui/Avatar';
 
 export default function UserProfile() {
   const [user, setUser] = useState({
@@ -17,7 +22,7 @@ export default function UserProfile() {
     displayName: '',
     phone: '',
     tagline: '',
-    avatar: '', // 👈 Đã có trường avatar
+    avatar: '',
   });
 
   const [passData, setPassData] = useState({
@@ -59,14 +64,11 @@ export default function UserProfile() {
 
     setUploadingAvatar(true);
     try {
-      // 1. Up lên Supabase
       const uploadRes = await uploadService.uploadImage(file);
       const imageUrl = uploadRes.data.url;
 
-      // 2. Lưu vào DB của mình
       await authService.updateProfile({ avatar: imageUrl });
 
-      // 3. Cập nhật UI & LocalStorage
       setUser({ ...user, avatar: imageUrl });
       const currentUser = JSON.parse(localStorage.getItem('user'));
       localStorage.setItem('user', JSON.stringify({ ...currentUser, avatar: imageUrl }));
@@ -129,212 +131,164 @@ export default function UserProfile() {
   // ===== RENDER LỖI & LOADING =====
   if (fetchError) {
     return (
-      <PageLayout showAmbient={false} className="flex items-center justify-center p-4">
-        <GlassCard
-          intent="success"
-          className="!border-red-500/40 !bg-red-50 dark:!bg-red-900/20 text-center max-w-md p-8"
-        >
-          <h3 className="font-bold text-xl mb-2 text-red-600 dark:text-red-400">Có lỗi xảy ra</h3>
-          <p className="text-red-700 dark:text-red-300">{fetchError}</p>
-          <p className="text-sm text-red-500/80 mt-4">Hãy kiểm tra lại Server API hoặc đăng nhập lại.</p>
-        </GlassCard>
-      </PageLayout>
+      <div className="text-center max-w-md mx-auto py-20">
+        <h3 className="font-bold text-xl mb-2 text-red-600 dark:text-red-400">Có lỗi xảy ra</h3>
+        <p className="text-red-700 dark:text-red-300">{fetchError}</p>
+        <p className="text-sm text-red-500/80 mt-4">Hãy kiểm tra lại Server API hoặc đăng nhập lại.</p>
+      </div>
     );
   }
 
   if (!user.username && !fetchError)
     return (
-      <PageLayout showAmbient={false} className="flex items-center justify-center">
-        <div className="text-neutral-500 animate-pulse font-medium">⏳ Đang tải thông tin từ Server...</div>
-      </PageLayout>
+      <div className="text-grey-500 animate-pulse font-medium py-20 text-center">
+        ⏳ Đang tải thông tin từ Server...
+      </div>
     );
 
   // ===== RENDER GIAO DIỆN CHÍNH =====
   return (
-    <PageLayout showAmbient={false} className="py-16 px-4">
-      <div className="relative z-10 max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-10">
-          <div>
-            <h1 className="text-4xl font-extrabold text-neutral-900 dark:text-white">Hồ sơ người dùng</h1>
-            <span className="block text-lg font-medium text-neutral-500 dark:text-neutral-400 mt-2">
-              Quản lý thông tin & bảo mật tài khoản
-            </span>
+    <div className="space-y-0 divide-y divide-grey-200 dark:divide-grey-800">
+      {/* ===== AVATAR & IDENTITY ===== */}
+      <section className="flex items-center gap-6 pb-10">
+        <div
+          onClick={() => !uploadingAvatar && fileInputRef.current?.click()}
+          className="relative shrink-0 group cursor-pointer"
+        >
+          {uploadingAvatar && (
+            <div className="absolute inset-0 z-20 bg-black/60 rounded-full flex items-center justify-center">
+              <RiLoader4Fill className="animate-spin text-white" size={32} />
+            </div>
+          )}
+
+          <div className="absolute inset-0 z-10 bg-black/50 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 gap-1">
+            <RiCameraFill className="text-white" size={24} />
+            {/* <span className="text-[10px] text-white font-bold uppercase">Đổi ảnh</span> */}
           </div>
 
-          <div className="ml-4">{/* <ThemeToggle client:load /> */}</div>
+          <Avatar
+            src={user.avatar && user.avatar !== '/images/default-avatar.png' ? user.avatar : null}
+            alt={user.displayName || user.username || 'User'}
+            fallback={user.displayName || user.username || 'U'}
+            size="xl"
+          />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* ===== CỘT 1: THÔNG TIN CÁ NHÂN ===== */}
-          <GlassCard padding="xl">
-            {/* AVATAR UPLOAD */}
-            <div className="flex flex-col items-center mb-8">
-              <div
-                onClick={() => !uploadingAvatar && fileInputRef.current?.click()}
-                className="relative w-28 h-28 rounded-full group cursor-pointer border-4 border-white dark:border-neutral-800 shadow-xl overflow-hidden bg-neutral-200 dark:bg-neutral-800 transition-transform hover:scale-105"
-              >
-                {uploadingAvatar && (
-                  <div className="absolute inset-0 bg-black/60 z-20 flex items-center justify-center">
-                    <RiLoader4Fill className="animate-spin text-white" size={32} />
-                  </div>
-                )}
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl font-bold text-grey-900 dark:text-grey-50 truncate">
+            {user.displayName || user.username}
+          </h2>
+          <p className="text-sm text-grey-500 dark:text-grey-400 truncate">@{user.username}</p>
+          {user.tagline && <p className="text-sm text-grey-600 dark:text-grey-400 mt-1 line-clamp-1">{user.tagline}</p>}
+        </div>
 
-                <div className="absolute inset-0 bg-black/50 z-10 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <RiCameraFill className="text-white mb-1" size={24} />
-                  <span className="text-[10px] text-white font-bold uppercase">Đổi ảnh</span>
-                </div>
+        {user._id && (
+          <Button render={<a href={`/author/${user._id}`} />} intent="ghost" className="shrink-0">
+            <RiExternalLinkFill size={16} /> Xem trang
+          </Button>
+        )}
 
-                {user.avatar ? (
-                  <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center text-white text-4xl font-extrabold">
-                    {(user.displayName || user.username)?.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleAvatarChange}
+          accept="image/png, image/jpeg, image/webp"
+          className="hidden"
+        />
+      </section>
 
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleAvatarChange}
-                accept="image/png, image/jpeg, image/webp"
-                className="hidden"
-              />
-            </div>
+      {/* ===== THÔNG TIN CÁ NHÂN ===== */}
+      <section className="py-10 space-y-5">
+        <h3 className="text-sm font-bold uppercase tracking-wider text-grey-700 dark:text-grey-300">
+          Thông tin cá nhân
+        </h3>
 
-            <div className="space-y-5">
-              <div>
-                <label className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-1 block">
-                  Tên đăng nhập
-                </label>
-                <Input disabled value={user.username || ''} className="opacity-60 bg-neutral-100 dark:bg-neutral-800" />
-              </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <TextField label="Tên đăng nhập" disabled value={user.username || ''} />
+          <TextField label="Email" disabled value={user.email || ''} />
+        </div>
 
-              <div>
-                <label className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-1 block">Email</label>
-                <Input disabled value={user.email || ''} className="opacity-60 bg-neutral-100 dark:bg-neutral-800" />
-              </div>
+        <TextField
+          label="Tên hiển thị"
+          value={user.displayName || ''}
+          onChange={(e) => setUser({ ...user, displayName: e.target.value })}
+        />
 
-              <div>
-                <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-1 block">
-                  Tên hiển thị
-                </label>
-                <Input
-                  value={user.displayName || ''}
-                  onChange={(e) => setUser({ ...user, displayName: e.target.value })}
-                  placeholder="Nhập tên hiển thị"
-                />
-              </div>
+        <TextField
+          label="Tiểu sử ngắn (Tagline)"
+          value={user.tagline || ''}
+          onChange={(e) => setUser({ ...user, tagline: e.target.value })}
+        />
 
-              <div>
-                <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-1 block">
-                  Tiểu sử ngắn (Tagline)
-                </label>
-                <Input
-                  value={user.tagline || ''}
-                  onChange={(e) => setUser({ ...user, tagline: e.target.value })}
-                  placeholder="Ví dụ: Người đam mê viết lách"
-                />
-              </div>
+        <TextField
+          label="Số điện thoại"
+          value={user.phone || ''}
+          onChange={(e) => setUser({ ...user, phone: e.target.value })}
+        />
 
-              <div>
-                <label className="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-1 block">
-                  Số điện thoại
-                </label>
-                <Input
-                  value={user.phone || ''}
-                  onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                  placeholder="Nhập số điện thoại"
-                />
-              </div>
+        <Button onClick={handleUpdateInfo} disabled={loading} intent="primary" className="mt-2">
+          {loading ? 'Đang lưu...' : 'Lưu thay đổi'}
+        </Button>
+      </section>
 
-              <Button onClick={handleUpdateInfo} disabled={loading} intent="primary" className="w-full mt-2">
-                {loading ? 'Đang lưu...' : 'Lưu thay đổi'}
-              </Button>
-            </div>
-          </GlassCard>
+      {/* ===== ĐỔI MẬT KHẨU ===== */}
+      <section className="py-10">
+        <div
+          onClick={() => setShowChangePassword(!showChangePassword)}
+          className="flex items-center justify-between cursor-pointer group"
+        >
+          <h3 className="text-sm font-bold uppercase tracking-wider text-grey-700 dark:text-grey-300 flex items-center gap-4 group-hover:text-primary-500 transition-colors">
+            <RiKeyFill size={20} /> Đổi mật khẩu
+          </h3>
+          <RiArrowRightSFill
+            size={20}
+            className={`text-grey-400 transition-transform duration-300 ${showChangePassword ? 'rotate-90' : ''}`}
+          />
+        </div>
 
-          {/* ===== CỘT 2: BẢO MẬT & MỞ RỘNG ===== */}
-          <div className="space-y-8">
-            <GlassCard padding="lg">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <h3 className="font-bold text-lg text-neutral-900 dark:text-white">Trang công khai</h3>
-                  <p className="text-sm text-neutral-500 mt-1">Nơi người khác có thể tìm hiểu về bạn</p>
-                </div>
+        {showChangePassword && (
+          <div className="space-y-4 mt-6">
+            <TextField
+              label="Mật khẩu cũ"
+              type="password"
+              value={passData.oldPassword}
+              onChange={(e) => setPassData({ ...passData, oldPassword: e.target.value })}
+            />
+            <TextField
+              label="Mật khẩu mới"
+              type="password"
+              value={passData.newPassword}
+              onChange={(e) => setPassData({ ...passData, newPassword: e.target.value })}
+            />
+            <TextField
+              label="Xác nhận mật khẩu mới"
+              type="password"
+              value={passData.confirmPassword}
+              onChange={(e) =>
+                setPassData({
+                  ...passData,
+                  confirmPassword: e.target.value,
+                })
+              }
+            />
 
-                {user._id && (
-                  <Button
-                    render={<a href={`/author/${user._id}`} />}
-                    intent="primarySoft"
-                    size="sm"
-                    className="w-full sm:w-auto flex-shrink-0"
-                  >
-                    <RiExternalLinkFill size={16} /> Xem trang
-                  </Button>
-                )}
-              </div>
-            </GlassCard>
+            {showPasswordHint && (
+              <p className="text-xs text-red-500 dark:text-red-400 font-medium">Mật khẩu xác nhận chưa khớp!</p>
+            )}
 
-            <GlassCard padding="lg">
-              <div
-                onClick={() => setShowChangePassword(!showChangePassword)}
-                className="flex items-center justify-between cursor-pointer group"
-              >
-                <h3 className="font-bold text-lg text-neutral-900 dark:text-white flex items-center gap-2 group-hover:text-blue-500 transition-colors">
-                  <RiKeyFill className="text-neutral-400 group-hover:text-blue-500" /> Đổi mật khẩu
-                </h3>
-                <span
-                  className={`text-neutral-400 transition-transform duration-300 ${showChangePassword ? 'rotate-90' : ''}`}
-                >
-                  ▶
-                </span>
-              </div>
-
-              {showChangePassword && (
-                <div className="space-y-4 mt-6 animate-in slide-in-from-top-2 duration-200">
-                  <Input
-                    type="password"
-                    placeholder="Mật khẩu cũ"
-                    value={passData.oldPassword}
-                    onChange={(e) => setPassData({ ...passData, oldPassword: e.target.value })}
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Mật khẩu mới"
-                    value={passData.newPassword}
-                    onChange={(e) => setPassData({ ...passData, newPassword: e.target.value })}
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Xác nhận mật khẩu mới"
-                    value={passData.confirmPassword}
-                    onChange={(e) =>
-                      setPassData({
-                        ...passData,
-                        confirmPassword: e.target.value,
-                      })
-                    }
-                  />
-
-                  {showPasswordHint && (
-                    <p className="text-xs text-red-500 dark:text-red-400 font-medium">Mật khẩu xác nhận chưa khớp!</p>
-                  )}
-
-                  <Button onClick={handleChangePassword} intent="neutral" className="w-full">
-                    Cập nhật mật khẩu
-                  </Button>
-                </div>
-              )}
-            </GlassCard>
-
-            <Button onClick={handleLogout} intent="dangerSoft" className="w-full h-14">
-              <RiLogoutBoxRFill size={18} /> Đăng xuất khỏi hệ thống
+            <Button onClick={handleChangePassword} intent="neutral" className="w-full">
+              Cập nhật mật khẩu
             </Button>
           </div>
-        </div>
-      </div>
-    </PageLayout>
+        )}
+      </section>
+
+      {/* ===== ĐĂNG XUẤT ===== */}
+      <section className="pt-10">
+        <Button onClick={handleLogout} intent="danger" className="w-full">
+          <RiLogoutBoxRFill size={18} /> Đăng xuất khỏi hệ thống
+        </Button>
+      </section>
+    </div>
   );
 }

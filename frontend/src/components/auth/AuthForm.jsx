@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { authService } from '../../services/authService';
 import { RiUserFill, RiMailFill, RiLockFill } from 'react-icons/ri';
 import Button from '../base-ui/Button';
-import Input from '../base-ui/Input';
+import TextField from '../base-ui/TextField';
 import PageLayout from '../base-ui/PageLayout';
 import GlassCard from '../base-ui/GlassCard';
 
@@ -35,16 +35,7 @@ export default function AuthForm({ type }) {
     }
   };
 
-  const inputClass = `
-    w-full pl-10 pr-4 py-3 rounded-xl
-    bg-white dark:bg-neutral-900
-    text-neutral-900 dark:text-neutral-100
-    placeholder-neutral-400 dark:placeholder-neutral-500
-    caret-blue-600 dark:caret-blue-400
-    border border-neutral-300 dark:border-neutral-700
-    focus:outline-none focus:ring-2 focus:ring-blue-500
-    transition
-  `;
+
 
   return (
     <PageLayout className="flex items-center justify-center">
@@ -56,47 +47,38 @@ export default function AuthForm({ type }) {
       >
         <GlassCard>
           <div className="text-center mb-8">
-            <h2 className="text-3xl text-blue-600 dark:text-blue-400 font-extrabold mb-2">
+            <h2 className="text-3xl text-primary-600 dark:text-primary-400 font-extrabold mb-2">
               {isLogin ? 'Chào mừng trở lại' : 'Tạo tài khoản mới'}
             </h2>
-            <p className="text-neutral-600 dark:text-neutral-400 text-sm">
+            <p className="text-grey-600 dark:text-grey-400 text-sm">
               {isLogin ? 'Đăng nhập để tiếp tục theo dõi thị trường' : 'Tham gia cộng đồng đầu tư FinSavvy'}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">
-                Tên đăng nhập
-              </label>
-              <Input icon={RiUserFill} required onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
-            </div>
+            <TextField label="Tên đăng nhập" icon={RiUserFill} required onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
 
             {!isLogin && (
-              <div>
-                <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">Email</label>
-                <Input
-                  icon={RiMailFill}
-                  type="email"
-                  required
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-              </div>
+              <TextField
+                label="Email"
+                icon={RiMailFill}
+                type="email"
+                required
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
             )}
 
-            <div>
-              <label className="text-sm text-neutral-700 dark:text-neutral-300 font-medium mb-1 block">Mật khẩu</label>
-              <Input
-                icon={RiLockFill}
-                type="password"
-                required
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              />
-            </div>
+            <TextField
+              label="Mật khẩu"
+              icon={RiLockFill}
+              type="password"
+              required
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            />
 
             {isLogin && (
               <div className="text-right">
-                <a href="/forgot-password" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                <a href="/forgot-password" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
                   Quên mật khẩu?
                 </a>
               </div>

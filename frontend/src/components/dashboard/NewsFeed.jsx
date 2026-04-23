@@ -60,21 +60,21 @@ export default function NewsFeed() {
         <Tab
           active={activeTab === 'symbol'}
           onClick={() => setActiveTab('symbol')}
-          icon={<RiStockFill size={18} />}
+          // icon={<RiStockFill size={18} />}
         >
-          Chứng khoán VN
+          Việt Nam
         </Tab>
         <Tab
           active={activeTab === 'general'}
           onClick={() => setActiveTab('general')}
-          icon={<RiNewspaperFill size={18} />}
+          // icon={<RiNewspaperFill size={18} />}
         >
-          Kinh tế Vĩ mô
+          Kinh tế vĩ mô
         </Tab>
         <Tab
           active={activeTab === 'world'}
           onClick={() => setActiveTab('world')}
-          icon={<RiEarthFill size={18} />}
+          // icon={<RiEarthFill size={18} />}
         >
           Quốc tế
         </Tab>
@@ -82,17 +82,26 @@ export default function NewsFeed() {
         {/* TOOLTIP TIP */}
         <div className="ml-auto flex items-center pr-2">
           <Tooltip.Root>
-            <Tooltip.Trigger delay={50} className="text-grey-400 hover:text-grey-600 dark:hover:text-grey-200 transition-colors cursor-help p-2 rounded-sm outline-none">
+            <Tooltip.Trigger
+              delay={50}
+              className="text-grey-400 hover:text-grey-600 dark:hover:text-grey-200 transition-colors cursor-help p-2 rounded-sm outline-none"
+            >
               <RiInformationFill size={20} />
             </Tooltip.Trigger>
             <Tooltip.Portal>
               <Tooltip.Positioner side="bottom" sideOffset={8}>
-                <Tooltip.Popup className="bg-white dark:bg-grey-800 text-grey-900 dark:text-grey-100 px-5 py-4 rounded-sm shadow-md text-sm w-72 z-50 outline-none">
-                  <h4 className="font-bold mb-3 text-primary-600 dark:text-primary-400 font-heading text-lg">Mẹo theo dõi</h4>
-                  <ul className="space-y-3 list-disc pl-5 text-grey-600 dark:text-grey-400">
-                    <li>Chọn <b className="text-grey-800 dark:text-grey-200">Chứng khoán VN</b> để xem tin liên quan trực tiếp mã CK.</li>
-                    <li>Chọn <b className="text-grey-800 dark:text-grey-200">Quốc Tế</b> để theo dõi FED và thị trường Mỹ. <span className="text-xs text-grey-500 block mt-1">(Một số nguồn quốc tế yêu cầu trả phí)</span></li>
-                  </ul>
+                <Tooltip.Popup className="bg-white dark:bg-grey-800 text-grey-600 dark:text-grey-400 px-5 py-4 rounded-sm shadow-md text-sm w-72 z-50 outline-none">
+                  <h4 className="font-bold mb-3 font-heading text-lg text-grey-800 dark:text-grey-200">Mẹo theo dõi</h4>
+                  <ol className="space-y-3 list-decimal pl-3">
+                    <li>
+                      Chọn <b className="text-grey-800 dark:text-grey-200">Việt Nam</b> để xem tin tức liên quan trực
+                      tiếp mã chứng khoán.
+                    </li>
+                    <li>
+                      Chọn <b className="text-grey-800 dark:text-grey-200">Quốc Tế</b> để theo dõi FED và thị trường Mỹ.{' '}
+                      <span className="text-xs text-grey-500 block mt-1">(Một số nguồn quốc tế yêu cầu trả phí)</span>
+                    </li>
+                  </ol>
                 </Tooltip.Popup>
               </Tooltip.Positioner>
             </Tooltip.Portal>
@@ -112,12 +121,12 @@ export default function NewsFeed() {
         {isLoading
           ? [1, 2, 3, 4, 5, 6].map((i) => <SkeletonCard key={i} />)
           : data?.pages.map((group, i) => (
-            <React.Fragment key={i}>
-              {group.map((article, index) => (
-                <NewsItem key={`${article.url}-${index}`} article={article} />
-              ))}
-            </React.Fragment>
-          ))}
+              <React.Fragment key={i}>
+                {group.map((article, index) => (
+                  <NewsItem key={`${article.url}-${index}`} article={article} />
+                ))}
+              </React.Fragment>
+            ))}
 
         {!isLoading && data?.pages[0]?.length === 0 && (
           <div className="text-center py-10 text-grey-500 dark:text-grey-400 font-medium">Chưa có tin tức nào.</div>
@@ -132,11 +141,15 @@ export default function NewsFeed() {
             <span className="text-sm font-medium">Đang tải thêm tin...</span>
           </div>
         ) : hasNextPage ? (
-          <span className="text-xs text-grey-400 dark:text-grey-500 uppercase tracking-widest font-bold">Cuộn xuống để xem thêm</span>
+          <span className="text-xs text-grey-400 dark:text-grey-500 uppercase tracking-widest font-bold">
+            Cuộn xuống để xem thêm
+          </span>
         ) : (
           !isLoading &&
           data?.pages[0]?.length > 0 && (
-            <span className="text-xs text-grey-400 dark:text-grey-500 uppercase tracking-widest font-bold">— Bạn đã xem hết tin —</span>
+            <span className="text-xs text-grey-400 dark:text-grey-500 uppercase tracking-widest font-bold">
+              — Bạn đã xem hết tin —
+            </span>
           )
         )}
       </div>

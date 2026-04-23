@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Skeleton } from '../ui/Skeleton';
 import { RiHeartFill } from 'react-icons/ri';
 import { toast } from 'react-hot-toast';
 import { blogService } from '../../services/blogService';
 import Button from '../base-ui/Button';
-import PageLayout from '../base-ui/PageLayout';
-import GlassCard from '../base-ui/GlassCard';
+import Badge from '../base-ui/Badge';
+import Avatar from '../base-ui/Avatar';
 import CommentSection from './CommentSection';
 
 export default function BlogDetail({ slug }) {
@@ -71,82 +70,84 @@ export default function BlogDetail({ slug }) {
 
   if (loading)
     return (
-      <PageLayout showAmbient={false} className="py-10">
-        <div className="max-w-3xl mx-auto">
-          <Skeleton className="h-10 w-3/4 mb-4" />
-          <Skeleton className="h-64 w-full" />
-        </div>
-      </PageLayout>
+      <div className="animate-pulse space-y-4 py-10">
+        <div className="h-10 w-3/4 bg-grey-200 dark:bg-grey-800 rounded-sm" />
+        <div className="h-4 w-1/3 bg-grey-200 dark:bg-grey-800 rounded-sm" />
+        <div className="h-64 w-full bg-grey-200 dark:bg-grey-800 rounded-sm mt-8" />
+      </div>
     );
 
-  if (!blog)
-    return (
-      <PageLayout showAmbient={false}>
-        <div className="text-center py-10">Bài viết không tồn tại.</div>
-      </PageLayout>
-    );
+  if (!blog) return <div className="text-center py-20 text-grey-500">Bài viết không tồn tại.</div>;
 
   const isAuthor = currentUser && blog.author && currentUser.username === blog.author.username;
+  const authorName = blog.author?.displayName || blog.author?.username;
 
   return (
-    <PageLayout showAmbient={false} className="py-8">
-      <GlassCard className="max-w-3xl mx-auto px-6 py-10 mb-20">
-        {isAuthor && (
-          <div className="mb-8 p-4 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
-            <div className="text-sm">
-              <span className="font-bold text-blue-700 dark:text-blue-400">Quản lý bài viết</span>
-              <span
-                className={`ml-2 px-2 py-1 rounded text-xs font-semibold ${blog.isPublic ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' : 'bg-neutral-200 text-neutral-700 dark:bg-neutral-600/40 dark:text-neutral-300'}`}
-              >
-                {blog.isPublic ? 'Đang Công Khai ' : 'Đang Riêng Tư '}
-              </span>
-            </div>
-            <Button
-              onClick={handleTogglePublic}
-              disabled={isUpdating}
-              intent={blog.isPublic ? 'warning' : 'success'}
-              size="sm"
-            >
-              {isUpdating ? 'Đang xử lý...' : blog.isPublic ? 'Chuyển thành Riêng tư' : 'Công khai ngay'}
-            </Button>
+    <article>
+      {/* AUTHOR ADMIN BAR */}
+      {isAuthor && (
+        <div className="mb-8 flex flex-col sm:flex-row gap-4 sm:items-center justify-between p-4 rounded-sm border-2 border-primary-300 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-bold text-primary-700 dark:text-primary-300">Quản lý bài viết</span>
+            <Badge intent={blog.isPublic ? 'success' : 'danger'}>{blog.isPublic ? 'Công khai' : 'Riêng tư'}</Badge>
           </div>
-        )}
-
-        <header className="mb-10 text-center border-b border-neutral-200 dark:border-neutral-700 pb-6">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-neutral-900 dark:text-white">
-            {blog.title}
-          </h1>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-neutral-600 dark:text-neutral-400">
-            <div>
-              Đăng bởi{' '}
-              <span className="font-semibold text-blue-600 dark:text-blue-400">
-                <a href={`/author/${blog.author._id}`} className="hover:underline cursor-pointer">
-                  {blog.author.displayName || blog.author.username}
-                </a>
-              </span>
-              {' • '}
-              <span>
-                {blog.publishedDate ? new Date(blog.publishedDate).toLocaleDateString('vi-VN') : 'Chưa xuất bản'}
-              </span>
-            </div>
-            <Button
-              onClick={handleLike}
-              intent={isLiked ? 'dangerSoft' : 'neutral'}
-              size="sm"
-              className="!rounded-full"
-            >
-              <RiHeartFill size={16} fill={isLiked ? 'currentColor' : 'none'} className={isLiked ? 'text-red-500' : ''} />{' '}
-              {likesCount} Hữu ích
-            </Button>
-          </div>
-        </header>
-
-        <div className="prose prose-lg max-w-none prose-neutral dark:prose-invert">
-          <ReactMarkdown>{blog.content}</ReactMarkdown>
+          <Button
+            onClick={handleTogglePublic}
+            disabled={isUpdating}
+            intent={blog.isPublic ? 'warning' : 'success'}
+            size="sm"
+          >
+            {isUpdating ? 'Đang xử lý...' : blog.isPublic ? 'Chuyển Riêng tư' : 'Công khai ngay'}
+          </Button>
         </div>
+      )}
 
-        <CommentSection blogId={blog._id} />
-      </GlassCard>
-    </PageLayout>
+      {/* ARTICLE HEADER */}
+      <header className="mb-10 pb-8 border-b border-grey-200 dark:border-grey-800">
+        <h1 className="text-3xl md:text-4xl font-extrabold leading-tight text-grey-900 dark:text-grey-50 font-heading mb-6">
+          {blog.title}
+        </h1>
+
+        <div className="flex items-center justify-between gap-4">
+          {/* Author info */}
+          <div className="flex items-center gap-3">
+            <a href={`/author/${blog.author._id}`}>
+              <Avatar src={blog.author.avatar} alt={authorName} fallback={authorName} size="md" />
+            </a>
+            <div>
+              <a
+                href={`/author/${blog.author._id}`}
+                className="text-sm font-bold text-grey-900 dark:text-grey-100 hover:text-primary-500 transition-colors"
+              >
+                {authorName}
+              </a>
+              <p className="text-xs text-grey-500 dark:text-grey-400">
+                {blog.publishedDate ? new Date(blog.publishedDate).toLocaleDateString('vi-VN') : 'Chưa xuất bản'}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={handleLike}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-colors cursor-pointer ${
+              isLiked
+                ? 'bg-primary-500 text-white hover:bg-primary-600'
+                : 'bg-grey-100 dark:bg-grey-800 text-grey-600 dark:text-grey-300 hover:bg-grey-200 dark:hover:bg-grey-700'
+            }`}
+          >
+            <RiHeartFill size={16} className={isLiked ? 'text-white' : ''} />
+            {likesCount}
+          </button>
+        </div>
+      </header>
+
+      {/* ARTICLE CONTENT */}
+      <div className="prose prose-lg max-w-none prose-grey dark:prose-invert prose-headings:font-heading prose-a:text-primary-500 prose-a:no-underline hover:prose-a:underline">
+        <ReactMarkdown>{blog.content}</ReactMarkdown>
+      </div>
+
+      {/* COMMENTS */}
+      <CommentSection blogId={blog._id} />
+    </article>
   );
 }

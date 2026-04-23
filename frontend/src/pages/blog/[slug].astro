@@ -8,15 +8,17 @@ if (!slug) return Astro.redirect('/404');
 ---
 
 <Layout title="Chi tiết bài viết">
-  <main class="relative z-10 max-w-6xl mx-auto px-6 pt-10 pb-20">
-    <PageTitle
-      breadcrumbs={[
-        { label: 'Trang chủ', href: '/' },
-        { label: 'Cộng đồng', href: '/blog' },
-        { label: 'Bài viết' },
-      ]}
-    />
+  <main class="relative min-h-screen pt-10 pb-20">
+    <div class="relative container mx-auto px-4">
+      <PageTitle
+        breadcrumbs={[
+          { label: 'Trang chủ', href: '/' },
+          { label: 'Cộng đồng', href: '/blog' },
+          { label: 'Bài viết' },
+        ]}
+      />
 
-    <BlogDetail slug={slug} client:only="react" />
+      <BlogDetail slug={slug} client:only="react" />
+    </div>
   </main>
 </Layout>

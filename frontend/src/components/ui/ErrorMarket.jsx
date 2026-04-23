@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { RiRefreshFill, RiHomeFill, RiErrorWarningFill } from 'react-icons/ri';
+import Button from '../base-ui/Button';
 
 export default function ErrorMarket({ code = 404 }) {
   const titleMap = {
@@ -16,20 +17,16 @@ export default function ErrorMarket({ code = 404 }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50 dark:bg-neutral-900 text-slate-900 dark:text-slate-100 px-4 overflow-hidden relative">
-      {/* Background decoration (optional) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 dark:opacity-10">
-        <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-500 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-red-500 rounded-full blur-[100px]" />
-      </div>
+    <div className="min-h-[80vh] flex flex-col items-center justify-center text-grey-900 dark:text-grey-100 px-4 relative">
+      {/* Background decoration has been removed per cardless design logic */}
 
       {/* Main Chart SVG */}
-      <div className="relative z-10 mb-8 p-8 rounded-3xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 shadow-xl">
+      <div className="relative z-10 mb-8 p-8 flex flex-col items-center">
         <svg width="300" height="180" viewBox="0 0 300 180" className="overflow-visible">
           {/* Definitions for Gradients */}
           <defs>
             <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
+              <stop offset="0%" stopColor="var(--color-primary-500, #3b82f6)" stopOpacity="0.8" />
               <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.8" />
             </linearGradient>
             <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
@@ -50,7 +47,8 @@ export default function ErrorMarket({ code = 404 }) {
               y1={y}
               y2={y}
               stroke="currentColor"
-              strokeOpacity="0.1"
+              className="text-grey-300 dark:text-grey-800"
+              strokeOpacity="1"
               strokeDasharray="4 4"
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
@@ -79,21 +77,18 @@ export default function ErrorMarket({ code = 404 }) {
               y1="0"
               x2="10"
               y2="80"
-              stroke="#ef4444"
+              className="stroke-red-500"
               strokeWidth="2"
-              initial={{ opacity: 0, y: -20 }}
               animate={{
-                opacity: 1,
-                y: 0,
-                rotate: [0, 5, -5, 10, 90], // Shake then tip over
-                y: [0, 0, 0, 0, 200], // Fall down eventually
-                opacity: [1, 1, 1, 1, 0], // Fade out
+                opacity: [0, 1, 1, 1, 1, 0, 0],
+                y: [-20, 0, 0, 0, 0, 200, 200],
+                rotate: [0, 0, 15, -15, 20, 90, 90],
               }}
               transition={{
-                duration: 2.5,
-                times: [0, 0.2, 0.4, 0.6, 1],
+                duration: 4,
+                times: [0, 0.05, 0.15, 0.25, 0.35, 0.5, 1],
                 repeat: Infinity,
-                repeatDelay: 1,
+                ease: "easeInOut",
               }}
             />
             {/* Body */}
@@ -102,49 +97,65 @@ export default function ErrorMarket({ code = 404 }) {
               y="20"
               width="12"
               height="40"
-              fill="#ef4444"
+              className="fill-red-500"
               rx="2"
-              initial={{ opacity: 0, y: -20 }}
               animate={{
-                opacity: 1,
-                y: 0,
-                rotate: [0, 5, -5, 10, 90],
-                y: [0, 0, 0, 0, 200],
-                opacity: [1, 1, 1, 1, 0],
+                opacity: [0, 1, 1, 1, 1, 0, 0],
+                y: [-20, 0, 0, 0, 0, 200, 200],
+                rotate: [0, 0, 15, -15, 20, 90, 90],
               }}
               transition={{
-                duration: 2.5,
-                times: [0, 0.2, 0.4, 0.6, 1],
+                duration: 4,
+                times: [0, 0.05, 0.15, 0.25, 0.35, 0.5, 1],
                 repeat: Infinity,
-                repeatDelay: 1,
+                ease: "easeInOut",
               }}
             />
 
             {/* Question marks floating up */}
-            {[1, 2].map((i) => (
-              <motion.text
-                key={i}
-                x="20"
-                y="10"
-                fill="#94a3b8"
-                fontSize="16"
-                fontWeight="bold"
-                initial={{ opacity: 0, y: 0, x: 0 }}
-                animate={{
-                  opacity: [0, 1, 0],
-                  y: -40,
-                  x: i % 2 === 0 ? 20 : -20,
-                }}
-                transition={{
-                  duration: 2,
-                  delay: 1.5 + i * 0.5,
-                  repeat: Infinity,
-                  repeatDelay: 0.5,
-                }}
-              >
-                ?
-              </motion.text>
-            ))}
+            <motion.text
+              x="20"
+              y="10"
+              className="fill-grey-400 dark:fill-grey-600"
+              fontSize="16"
+              fontWeight="bold"
+              animate={{
+                opacity: [0, 0, 1, 0, 0],
+                y: [0, 0, -20, -40, -40],
+                x: [10, 10, 20, 30, 30],
+                scale: [0.5, 0.5, 1.2, 1, 1],
+              }}
+              transition={{
+                duration: 4,
+                times: [0, 0.5, 0.65, 0.8, 1],
+                repeat: Infinity,
+                ease: "easeOut",
+              }}
+            >
+              ?
+            </motion.text>
+
+            <motion.text
+              x="20"
+              y="10"
+              className="fill-grey-400 dark:fill-grey-600"
+              fontSize="16"
+              fontWeight="bold"
+              animate={{
+                opacity: [0, 0, 1, 0, 0],
+                y: [0, 0, -20, -40, -40],
+                x: [-10, -10, -20, -30, -30],
+                scale: [0.5, 0.5, 1.2, 1, 1],
+              }}
+              transition={{
+                duration: 4,
+                times: [0, 0.6, 0.75, 0.9, 1],
+                repeat: Infinity,
+                ease: "easeOut",
+              }}
+            >
+              ?
+            </motion.text>
           </g>
         </svg>
 
@@ -152,7 +163,7 @@ export default function ErrorMarket({ code = 404 }) {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="absolute -top-4 -right-4 bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-200 dark:border-red-800 flex items-center gap-1"
+          className="absolute -top-4 -right-4 bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-3 py-1 rounded-sm text-xs font-bold border border-red-200 dark:border-red-800 flex items-center gap-1"
         >
           <RiErrorWarningFill size={12} />
           {code}
@@ -166,35 +177,33 @@ export default function ErrorMarket({ code = 404 }) {
         transition={{ delay: 0.2 }}
         className="text-center"
       >
-        <h1 className="text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">
+        <h1 className="text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-violet-600 dark:from-primary-400 dark:to-violet-400">
           {titleMap[code]}
         </h1>
 
-        <p className="text-slate-600 dark:text-slate-400 text-center max-w-md mb-8 leading-relaxed">
+        <p className="text-grey-600 dark:text-grey-400 text-center max-w-md mb-8 leading-relaxed">
           {descMap[code] || 'Đã có lỗi không xác định xảy ra.'}
         </p>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <Button
             onClick={() => location.reload()}
-            className="cursor-pointer flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-500 shadow-lg shadow-blue-500/20 transition-all"
+            intent="primary"
+            className="w-full sm:w-auto min-w-[140px]"
           >
             <RiRefreshFill size={18} />
             Thử lại ngay
-          </motion.button>
+          </Button>
 
-          <motion.a
-            href="/"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-all"
+          <Button
+            render={<a href="/" />}
+            intent="neutral"
+            className="w-full sm:w-auto min-w-[140px]"
           >
             <RiHomeFill size={18} />
             Về trang chủ
-          </motion.a>
+          </Button>
         </div>
       </motion.div>
     </div>

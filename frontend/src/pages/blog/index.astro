@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PageTitle from "../../components/common/PageTitle.astro";
-import BlogCard from "../../components/blog/BlogCard.jsx";
+import BlogList from "../../components/blog/BlogList.jsx";
 
 const searchParams = Astro.url.searchParams;
 const keyword = searchParams.get("search") || "";
@@ -26,10 +26,10 @@ try {
 }
 ---
 
-<Layout title="Danh sách Blog">
-  <section class="relative min-h-screen text-grey-800 dark:text-grey-100 overflow-hidden">
-    <main class="relative z-10 max-w-7xl mx-auto px-6 py-16">
-      
+<Layout title="Cộng đồng">
+  <main class="relative min-h-screen pt-10 pb-20">
+    <div class="relative container mx-auto px-4">
+
       <PageTitle
         title="Góc Phân Tích"
         breadcrumbs={[
@@ -38,56 +38,15 @@ try {
         ]}
       />
 
-      <form method="GET" action="/blog" class="max-w-2xl mb-12 relative group">
-        <input 
-          type="text" 
-          name="search" 
-          value={keyword}
-          placeholder="Tìm kiếm bài viết, mã cổ phiếu..." 
-          class="w-full py-4 pl-6 pr-14 rounded-sm bg-white dark:bg-grey-900 border border-grey-300 dark:border-grey-700 shadow-sm focus:ring-2 focus:ring-primary-500 focus:outline-none text-grey-900 dark:text-grey-100 transition-all"
-        />
-        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-sm text-grey-400 hover:text-primary-500 transition-colors cursor-pointer">
-           <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        </button>
-      </form>
+      <BlogList
+        blogs={blogs}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        keyword={keyword}
+        errorMessage={errorMessage}
+        client:load
+      />
 
-      {errorMessage && (
-        <div class="mb-8 rounded-sm border border-red-300 bg-red-50 text-red-700 px-6 py-4 max-w-2xl shadow-sm">
-          <strong class="font-bold">Lỗi:</strong> {errorMessage}
-        </div>
-      )}
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {blogs.map((blog: any) => (
-          <BlogCard blog={blog} />
-        ))}
-      </div>
-
-      {totalPages > 1 && (
-        <div class="flex items-center justify-center gap-4 mt-16">
-          <a 
-            href={`/blog?search=${keyword}&page=${currentPage - 1}`} 
-            class={`px-4 py-2 rounded-sm font-semibold transition shadow-sm ${currentPage === 1 ? "opacity-50 pointer-events-none bg-grey-200 dark:bg-grey-800 text-grey-400" : "bg-white dark:bg-grey-900 border border-grey-300 dark:border-grey-700 hover:bg-grey-100 dark:hover:bg-grey-800"}`}
-          >
-            Trang trước
-          </a>
-          <span class="font-bold text-grey-700 dark:text-grey-300">
-            Trang {currentPage} / {totalPages}
-          </span>
-          <a 
-            href={`/blog?search=${keyword}&page=${currentPage + 1}`} 
-            class={`px-4 py-2 rounded-sm font-semibold transition shadow-sm ${currentPage === totalPages ? "opacity-50 pointer-events-none bg-grey-200 dark:bg-grey-800 text-grey-400" : "bg-white dark:bg-grey-900 border border-grey-300 dark:border-grey-700 hover:bg-grey-100 dark:hover:bg-grey-800"}`}
-          >
-            Trang sau
-          </a>
-        </div>
-      )}
-
-      {!errorMessage && blogs.length === 0 && (
-        <div class="text-center py-24 text-grey-500 font-medium">
-          {keyword ? `Không tìm thấy bài viết nào chứa từ khóa "${keyword}"` : "Chưa có bài viết nào."}
-        </div>
-      )}
-    </main>
-  </section>
+    </div>
+  </main>
 </Layout>

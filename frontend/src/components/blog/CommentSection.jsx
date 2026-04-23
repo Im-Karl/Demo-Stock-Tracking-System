@@ -2,8 +2,16 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { commentService } from '../../services/commentService';
 import { toast } from 'react-hot-toast';
 import { formatTimeAgo } from '../utils/timeFormat';
-import { RiMessage2Fill, RiReplyFill, RiDeleteBinFill, RiCornerDownRightFill, RiSendPlaneFill, RiArrowDownSFill, RiArrowUpSFill, RiArrowUpDownFill } from 'react-icons/ri';
+import {
+  RiMessage2Fill,
+  RiCornerDownRightFill,
+  RiSendPlaneFill,
+  RiArrowDownSFill,
+  RiArrowUpSFill,
+} from 'react-icons/ri';
 import Button from '../base-ui/Button';
+import Avatar from '../base-ui/Avatar';
+import Tab from '../base-ui/Tab';
 
 export default function CommentSection({ blogId }) {
   const [comments, setComments] = useState([]);
@@ -12,8 +20,8 @@ export default function CommentSection({ blogId }) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  const [sortOrder, setSortOrder] = useState('desc'); // desc: Mới nhất, asc: Cũ nhất
-  const [visibleRoots, setVisibleRoots] = useState(5); // Chỉ hiện 5 comment gốc ban đầu
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [visibleRoots, setVisibleRoots] = useState(5);
 
   const currentUser = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user')) : null;
 
@@ -77,7 +85,7 @@ export default function CommentSection({ blogId }) {
       toast.success('Đã gửi bình luận!');
       setNewComment('');
       setReplyingTo(null);
-      setSortOrder('desc'); // Ép về Mới nhất để user thấy comment vừa đăng
+      setSortOrder('desc');
       fetchComments();
     } catch (err) {
       toast.error('Lỗi khi gửi bình luận');
@@ -117,12 +125,13 @@ export default function CommentSection({ blogId }) {
     }
   };
 
-  const CommentItem = ({ comment, isReply = false }) => {
+  const CommentItem = ({ comment, isReply = false, hideLine = false }) => {
     const replies = repliesMap[comment._id] || [];
 
     if (comment.isDeleted && replies.length === 0) return null;
 
-    const isAuthor = currentUser && String(currentUser._id || currentUser.id) === String(comment.author._id);
+    const isCommentAuthor = currentUser && String(currentUser._id || currentUser.id) === String(comment.author._id);
+    const commentAuthorName = comment.author.displayName || comment.author.username;
 
     const [localReplyText, setLocalReplyText] = useState('');
     const replyInputRef = useRef(null);
@@ -138,108 +147,94 @@ export default function CommentSection({ blogId }) {
     }, [replyingTo]);
 
     return (
-      <div className={`flex gap-3 md:gap-4 mt-6 ${isReply ? 'ml-6 md:ml-12 relative' : ''}`}>
-        {isReply && (
-          <div className="absolute -left-4 md:-left-6 top-0 w-3 md:w-4 h-6 border-b-2 border-l-2 border-neutral-300 dark:border-neutral-700 rounded-bl-xl"></div>
+      <div className={`flex gap-3 mt-3 ${isReply ? 'ml-8 md:ml-12 relative pl-1.5 md:pl-0.5' : ''}`}>
+        {isReply && !hideLine && (
+          <div className="absolute -left-4 md:-left-6 top-0 w-3 md:w-4 h-7.5 border-b-2 border-l-2 border-grey-300 dark:border-grey-700 rounded-bl-xl"></div>
         )}
-        <a href={`/author/${comment.author._id}`} className="flex gap-3 md:gap-4">
-          {/* Avatar */}
-          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 overflow-hidden flex-shrink-0 flex items-center justify-center">
-            {comment.author.avatar ? (
-              <img src={comment.author.avatar} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-xs font-bold text-blue-500 uppercase">
-                {(comment.author.displayName || comment.author.username).charAt(0)}
-              </span>
-            )}
-          </div>
+
+        <a href={`/author/${comment.author._id}`} className="shrink-0 mt-2 h-max">
+          <Avatar src={comment.author.avatar} alt={commentAuthorName} fallback={commentAuthorName} />
         </a>
-        {/* Nội dung Comment */}
+
+        {/* Comment body */}
         <div className="flex-1 min-w-0">
-          <div className="bg-white dark:bg-neutral-800/80 p-3 md:p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700/50 shadow-sm">
-            <div className="flex items-center gap-2 mb-1.5 md:mb-2">
-              <a href={`/author/${comment.author._id}`} className="flex gap-3 md:gap-4">
-                <span className="font-bold text-[13px] md:text-sm text-neutral-900 dark:text-white">
-                  {comment.author.displayName || comment.author.username}
-                </span>
+          <div className="p-4 rounded-sm bg-grey-100 dark:bg-grey-800">
+            <div className="flex items-center gap-2 mb-1.5">
+              <a
+                href={`/author/${comment.author._id}`}
+                className="font-bold text-sm text-grey-900 dark:text-grey-100 hover:text-primary-500 transition-colors"
+              >
+                {commentAuthorName}
               </a>
-              <span className="text-[11px] text-neutral-500">{formatTimeAgo(comment.createdAt)}</span>
+              <span className="text-[11px] text-grey-500">{formatTimeAgo(comment.createdAt)}</span>
             </div>
 
             {comment.isDeleted ? (
-              <p className="text-sm text-neutral-400 dark:text-neutral-500 italic">Bình luận này đã bị xóa.</p>
+              <p className="text-sm text-grey-400 dark:text-grey-500 italic">Bình luận này đã bị xóa.</p>
             ) : (
               <div>
                 <p
-                  className={`text-[13px] md:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-wrap ${!isExpandedText && isLongText ? 'line-clamp-2' : ''}`}
+                  className={`text-sm text-grey-700 dark:text-grey-300 leading-relaxed whitespace-pre-wrap ${!isExpandedText && isLongText ? 'line-clamp-2' : ''}`}
                 >
                   {comment.content}
                 </p>
                 {isLongText && (
-                  <button
+                  <Button
                     onClick={() => setIsExpandedText(!isExpandedText)}
-                    className="text-xs font-bold text-blue-500 mt-1 hover:underline"
+                    intent="ghost"
+                    className="!h-auto !px-0 !py-0 text-xs font-bold text-primary-500 mt-1 hover:underline cursor-pointer"
                   >
                     {isExpandedText ? 'Thu gọn' : 'Xem thêm'}
-                  </button>
+                  </Button>
                 )}
               </div>
             )}
           </div>
 
           {!comment.isDeleted && (
-            <div className="flex items-center gap-4 mt-2 ml-2">
-              <button
+            <div className="flex items-center mt-2 *:text-xs">
+              <Button
                 onClick={() => {
                   setReplyingTo(replyingTo === comment._id ? null : comment._id);
                   setLocalReplyText('');
                 }}
-                className="text-[11px] md:text-xs font-bold text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors"
+                intent="ghost"
+                size="sm"
               >
                 {replyingTo === comment._id ? 'Hủy' : 'Trả lời'}
-              </button>
+              </Button>
 
-              {isAuthor && (
-                <button
-                  onClick={() => handleDelete(comment._id)}
-                  className="text-[11px] md:text-xs font-bold text-neutral-500 hover:text-red-500 transition-colors"
-                >
+              {isCommentAuthor && (
+                <Button onClick={() => handleDelete(comment._id)} intent="ghost" size="sm">
                   Xóa
-                </button>
+                </Button>
               )}
             </div>
           )}
 
-          {/* Hộp nhập RiReplyFill */}
+          {/* Reply input */}
           {replyingTo === comment._id && (
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 submitReply(localReplyText, comment._id);
               }}
-              className="mt-3 flex gap-2 md:gap-3 animate-in fade-in slide-in-from-top-2"
+              className="mt-3 flex gap-2 md:gap-3"
             >
-              <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center flex-shrink-0 text-neutral-500">
+              <div className="w-8 h-8 rounded-full bg-grey-100 dark:bg-grey-800 flex items-center justify-center flex-shrink-0 text-grey-500">
                 <RiCornerDownRightFill size={14} />
               </div>
-              <div className="flex-1 flex items-start gap-2 relative">
+              <div className="flex-1 flex flex-col items-end gap-2 relative">
                 <textarea
                   ref={replyInputRef}
-                  className="w-full p-2.5 pr-10 md:pr-12 text-xs md:text-sm rounded-xl bg-white dark:bg-neutral-900 border border-blue-300 dark:border-blue-700/50 text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 outline-none custom-scrollbar resize-none"
-                  rows="2"
-                  placeholder={`Trả lời ${comment.author.displayName || comment.author.username}...`}
+                  className="w-full p-4 rounded-sm bg-white dark:bg-black border-2 border-grey-300 dark:border-grey-700 text-grey-900 dark:text-grey-100 placeholder:text-grey-400 dark:placeholder:text-grey-500 focus:border-primary-500 outline-none resize-y min-h-[100px] text-sm leading-relaxed"
+                  placeholder={`Trả lời ${commentAuthorName}...`}
                   value={localReplyText}
                   onChange={(e) => setLocalReplyText(e.target.value)}
                   onKeyDown={(e) => handleKeyDown(e, () => submitReply(localReplyText, comment._id))}
                 />
-                <Button
-                  type="submit"
-                  intent="primary"
-                  size="icon"
-                  className="!rounded-lg flex-shrink-0 h-8 w-8 absolute bottom-1.5 right-1.5"
-                  disabled={!localReplyText.trim()}
-                >
-                  <RiSendPlaneFill size={12} className="-ml-0.5" />
+                <Button type="submit" intent="primary" size="sm" disabled={!localReplyText.trim()}>
+                  <RiSendPlaneFill className="-ml-0.5" /> Gửi bình luận
                 </Button>
               </div>
             </form>
@@ -247,26 +242,19 @@ export default function CommentSection({ blogId }) {
 
           {replies.length > 0 && (
             <div className="mt-2">
-              {/* Nút Xem thêm câu trả lời */}
               {!showReplies ? (
-                <button
-                  onClick={() => setShowReplies(true)}
-                  className="flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 px-3 py-1.5 rounded-full transition-colors mt-1"
-                >
+                <Button onClick={() => setShowReplies(true)} intent="ghost" size="sm" className="text-xs">
                   <RiCornerDownRightFill size={14} /> Xem {replies.length} câu trả lời
-                </button>
+                </Button>
               ) : (
                 <>
-                  <button
-                    onClick={() => setShowReplies(false)}
-                    className="flex items-center gap-1 text-[11px] font-bold text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 mt-1 ml-1 mb-2 transition-colors"
-                  >
+                  <Button onClick={() => setShowReplies(false)} intent="ghost" size="sm" className="text-xs">
                     <RiArrowUpSFill size={14} /> Thu gọn câu trả lời
-                  </button>
+                  </Button>
 
-                  <div className="animate-in fade-in duration-300">
-                    {replies.map((r) => (
-                      <CommentItem key={r._id} comment={r} isReply={true} />
+                  <div>
+                    {replies.map((r, i) => (
+                      <CommentItem key={r._id} comment={r} isReply={true} hideLine={i > 0} />
                     ))}
                   </div>
                 </>
@@ -278,39 +266,30 @@ export default function CommentSection({ blogId }) {
     );
   };
 
-  if (loading) return <div className="py-10 text-center text-neutral-500">Đang tải bình luận...</div>;
+  if (loading) return <div className="py-10 text-center text-grey-500">Đang tải bình luận...</div>;
 
   return (
-    <div className="mt-16 pt-10 border-t border-neutral-200 dark:border-neutral-800">
+    <div className="mt-8 pt-10 border-t border-grey-200 dark:border-grey-800">
       {/* Header Bình luận & Filter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <h3 className="text-2xl font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-          <RiMessage2Fill className="text-blue-500" /> Bình luận ({comments.length})
+        <h3 className="text-xl font-bold text-grey-900 dark:text-grey-50 flex items-center gap-4">
+          <RiMessage2Fill size={24} className="text-primary-500" /> Bình luận ({comments.length})
         </h3>
 
-        <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-lg w-fit border border-neutral-200 dark:border-neutral-700">
-          <button
-            onClick={() => setSortOrder('desc')}
-            className={`px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${sortOrder === 'desc' ? 'bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'}`}
-          >
+        <div className="flex items-center border-b border-grey-200 dark:border-grey-800">
+          <Tab active={sortOrder === 'desc'} onClick={() => setSortOrder('desc')} className="!py-2">
             Mới nhất
-          </button>
-          <button
-            onClick={() => setSortOrder('asc')}
-            className={`px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${sortOrder === 'asc' ? 'bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'}`}
-          >
+          </Tab>
+          <Tab active={sortOrder === 'asc'} onClick={() => setSortOrder('asc')} className="!py-2">
             Cũ nhất
-          </button>
+          </Tab>
         </div>
       </div>
 
       {/* ROOT INPUT */}
-      <form
-        onSubmit={handleRootSubmit}
-        className="mb-10 bg-neutral-50 dark:bg-neutral-800/40 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700/50"
-      >
+      <form onSubmit={handleRootSubmit} className="mb-10">
         <textarea
-          className="w-full p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 focus:ring-2 focus:ring-blue-500 outline-none custom-scrollbar resize-y min-h-[100px] text-sm leading-relaxed"
+          className="w-full p-4 rounded-sm bg-white dark:bg-black border-2 border-grey-300 dark:border-grey-700 text-grey-900 dark:text-grey-100 placeholder:text-grey-400 dark:placeholder:text-grey-500 focus:border-primary-500 outline-none resize-y min-h-[100px] text-sm leading-relaxed"
           placeholder={
             currentUser
               ? 'Nhập bình luận của bạn... (Nhấn Enter để gửi, Shift+Enter để xuống dòng)'
@@ -335,21 +314,21 @@ export default function CommentSection({ blogId }) {
         </div>
       </form>
 
-      {/*  KHUNG CHỨA LIST COMMENT CÓ SCROLLBAR MAX-HEIGHT */}
+      {/* COMMENT LIST */}
       {rootComments.length === 0 ? (
-        <div className="text-center py-10 text-neutral-500 bg-neutral-50 dark:bg-neutral-900/50 rounded-2xl border border-neutral-100 dark:border-neutral-800 border-dashed">
+        <div className="text-center py-10 text-grey-500 bg-grey-50 dark:bg-grey-900 rounded-sm border border-dashed border-grey-200 dark:border-grey-800">
           Chưa có bình luận nào. Hãy trở thành người đầu tiên!
         </div>
       ) : (
-        <div className="space-y-2 max-h-[800px] overflow-y-auto custom-scrollbar pr-2 pb-6">
+        <div className="space-y-2 pr-2 pb-6">
           {displayedRoots.map((c) => (
             <CommentItem key={c._id} comment={c} />
           ))}
 
           {visibleRoots < sortedRootComments.length && (
             <div className="text-center mt-8 pt-4">
-              <Button intent="neutral" onClick={() => setVisibleRoots((prev) => prev + 5)} className="!rounded-full">
-                <RiArrowDownSFill size={16} className="mr-1" /> Xem thêm bình luận cũ hơn
+              <Button intent="neutral" onClick={() => setVisibleRoots((prev) => prev + 5)}>
+                <RiArrowDownSFill size={16} className="mr-1" /> Xem thêm bình luận
               </Button>
             </div>
           )}
