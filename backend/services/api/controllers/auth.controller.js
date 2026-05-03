@@ -62,37 +62,86 @@ exports.forgotPassword = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'Email không tồn tại trong hệ thống' });
 
-    const newPassword = crypto.randomBytes(6).toString('hex');
-
-    user.password = await bcrypt.hash(newPassword, 10);
-
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-
+    // 1. Tạo token ngẫu nhiên
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    
+    // 2. Lưu token vào DB và set thời gian hết hạn (10 phút)
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 phút
     await user.save();
+
+    // 3. Tạo đường dẫn reset (URL trỏ về Frontend)
+    const resetUrl = `${process.env.URL}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
       from: '"Stock App Support" <no-reply@stockapp.com>',
       to: user.email,
-      subject: 'Cấp lại mật khẩu mới',
+      subject: 'Yêu cầu đặt lại mật khẩu',
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
-          <h3 style="color: #2563EB;">Mật khẩu mới của bạn</h3>
-          <p>Hệ thống đã tự động reset mật khẩu của bạn theo yêu cầu.</p>
-          <p>Mật khẩu đăng nhập mới là:</p>
-          <div style="background: #f4f4f5; padding: 15px; font-size: 20px; font-weight: bold; letter-spacing: 2px; text-align: center; border-radius: 5px; margin: 20px 0;">
-            ${newPassword}
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; background-color: #f9fafb; color: #1f2937;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <div style="background-color: #2563eb; padding: 20px; text-align: center;">
+              <h2 style="color: #ffffff; margin: 0; font-size: 24px;">Stock App</h2>
+            </div>
+            <div style="padding: 30px;">
+              <h3 style="color: #111827; margin-top: 0;">Chào ${user.displayName || user.username},</h3>
+              <p style="line-height: 1.6;">Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>
+              <p style="line-height: 1.6;">Để đặt lại mật khẩu, vui lòng nhấn vào nút bên dưới (Đường dẫn có hiệu lực trong <b>10 phút</b>):</p>
+              
+              <div style="text-align: center; margin: 35px 0;">
+                <a href="${resetUrl}" style="background-color: #2563eb; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; transition: background-color 0.2s;">
+                  Đặt lại mật khẩu
+                </a>
+              </div>
+              
+              <p style="font-size: 14px; color: #6b7280;">Nếu nút trên không hoạt động, bạn có thể copy và dán đường dẫn này vào trình duyệt:</p>
+              <p style="font-size: 13px; word-break: break-all; color: #2563eb; background-color: #f3f4f6; padding: 10px; border-radius: 4px;">
+                ${resetUrl}
+              </p>
+            </div>
+            <div style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb; font-size: 12px; color: #9ca3af;">
+              &copy; 2026 Stock App Team. All rights reserved.
+            </div>
           </div>
-          <p style="color: red; font-size: 13px;">* Vui lòng đăng nhập và đổi lại mật khẩu ngay để bảo mật.</p>
         </div>
       `,
     };
 
     await transporter.sendMail(mailOptions);
 
-    res.json({ success: true, message: 'Mật khẩu mới đã được gửi vào email của bạn!' });
+    res.json({ success: true, message: 'Đường dẫn đặt lại mật khẩu đã được gửi vào email của bạn!' });
   } catch (err) {
     console.error('Mail Error:', err);
     res.status(500).json({ error: 'Lỗi khi gửi email: ' + err.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    // Tìm user có token khớp và chưa hết hạn
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Đường dẫn không hợp lệ hoặc đã hết hạn' });
+    }
+
+    // Cập nhật mật khẩu mới
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    
+    // Xóa token sau khi dùng xong
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({ success: true, message: 'Mật khẩu của bạn đã được cập nhật thành công!' });
+  } catch (err) {
+    console.error('Reset Password Error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
