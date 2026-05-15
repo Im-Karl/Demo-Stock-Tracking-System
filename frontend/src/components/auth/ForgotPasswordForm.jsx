@@ -22,7 +22,7 @@ export default function ForgotPasswordForm() {
     try {
       await authService.forgotPassword(email);
       setStatus('success');
-      setMessage('Thành công! Hệ thống đã gửi MẬT KHẨU MỚI vào email của bạn. Hãy dùng nó để đăng nhập.');
+      setMessage('Hệ thống đã gửi một đường dẫn đặt lại mật khẩu vào email của bạn. Vui lòng kiểm tra hộp thư (và cả thư mục Spam) để tiếp tục.');
     } catch (err) {
       setStatus('error');
       setMessage(

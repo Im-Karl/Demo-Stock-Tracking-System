@@ -49,6 +49,11 @@ function simulateMarket() {
   });
 }
 
+app.get('/api/stocks/prices', (req, res) => {
+  res.json(currentStocks);
+});
+
+
 app.get('/api/stock/:symbol', async (req, res) => {
   try {
     const { symbol } = req.params;

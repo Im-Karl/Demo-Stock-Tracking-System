@@ -62,15 +62,12 @@ exports.forgotPassword = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'Email không tồn tại trong hệ thống' });
 
-    // 1. Tạo token ngẫu nhiên
     const resetToken = crypto.randomBytes(32).toString('hex');
     
-    // 2. Lưu token vào DB và set thời gian hết hạn (10 phút)
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 phút
     await user.save();
 
-    // 3. Tạo đường dẫn reset (URL trỏ về Frontend)
     const resetUrl = `${process.env.URL}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
@@ -120,7 +117,6 @@ exports.resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
 
-    // Tìm user có token khớp và chưa hết hạn
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() }
@@ -130,11 +126,9 @@ exports.resetPassword = async (req, res) => {
       return res.status(400).json({ message: 'Đường dẫn không hợp lệ hoặc đã hết hạn' });
     }
 
-    // Cập nhật mật khẩu mới
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     
-    // Xóa token sau khi dùng xong
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
     await user.save();

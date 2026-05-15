@@ -4,6 +4,7 @@ import ToastProvider from '../components/ui/ToastProvider.jsx';
 import Header from '../components/common/Header.jsx';
 import Footer from '../components/common/Footer.astro';
 
+
 const { title } = Astro.props;
 
 const pathname = Astro.url.pathname;
@@ -38,6 +39,7 @@ const pathname = Astro.url.pathname;
     </script>
   </head>
   <body class="bg-grey-50 dark:bg-black min-h-screen min-w-[320px] flex flex-col font-sans text-grey-800 dark:text-grey-100">
+
     <ToastProvider client:idle />
     <Header client:load />
 
@@ -49,7 +51,7 @@ const pathname = Astro.url.pathname;
     <script define:vars={{ pathname }}>
        const token = localStorage.getItem('token');
        
-       const publicPages = ['/','/login', '/register', "/forgot-password"];
+       const publicPages = ['/','/login', '/register', "/forgot-password", "/reset-password"];
 
        if (!publicPages.includes(pathname) && !token) {
            window.location.href = '/login';

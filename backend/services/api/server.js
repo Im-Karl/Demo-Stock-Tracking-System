@@ -2,7 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const http = require('http');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 const setupDeleteBlogCron = require('./cron/deleteBlog');
 
 const authRoutes = require('./routes/auth.routes');
@@ -10,6 +12,9 @@ const blogRoutes = require('./routes/blog.routes');
 const userRoutes = require('./routes/user.routes');
 const uploadRoutes = require('./routes/upload.routes');
 const commentRoutes = require('./routes/comment.routes');
+const watchlistRoutes = require('./routes/watchlist.routes');
+
+const setupCheckAlerts = require('./cron/checkAlerts');
 
 const app = express();
 const server = http.createServer(app);
@@ -31,6 +36,7 @@ mongoose
     console.log(' MongoDB Connected');
 
     setupDeleteBlogCron();
+    setupCheckAlerts();
   })
   .catch((err) => console.error('MongoDB Error:', err));
 
@@ -40,6 +46,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/watchlist', watchlistRoutes);
 
 setupWebSocket(server);
 

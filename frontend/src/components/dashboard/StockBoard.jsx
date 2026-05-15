@@ -14,6 +14,9 @@ import { useStockSocket } from '../../hooks/useStockSocket';
 import { motion, AnimatePresence } from 'framer-motion';
 import TextField from '../base-ui/TextField';
 import Badge from '../base-ui/Badge';
+import { watchlistService } from '../../services/watchlistService';
+import { toast } from 'react-hot-toast';
+import WatchlistModal from './WatchlistModal';
 
 export default function StockBoard() {
   const stocks = useStockSocket();
@@ -26,19 +29,68 @@ export default function StockBoard() {
     return ['ALL', 'FAVOURITES', ...Array.from(unique)];
   }, [stocks]);
 
-  const [wishlist, setWishlist] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('stock_wishlist');
-      return saved ? JSON.parse(saved) : [];
+  const [wishlistData, setWishlistData] = useState([]); // Lưu full object từ server
+  const wishlist = useMemo(() => wishlistData.map(item => item.symbol), [wishlistData]);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedSymbol, setSelectedSymbol] = useState(null);
+
+  // Lấy dữ liệu từ server khi mount
+  React.useEffect(() => {
+    const fetchWatchlist = async () => {
+      try {
+        const res = await watchlistService.getWatchlist();
+        setWishlistData(res.data);
+      } catch (err) {
+        console.error('Không thể lấy danh sách theo dõi');
+      }
+    };
+    fetchWatchlist();
+  }, []);
+
+  const toggleWishlist = async (symbol) => {
+    const existing = wishlistData.find(item => item.symbol === symbol);
+    if (existing) {
+      // Nếu đã có thì mở modal để chỉnh sửa, hoặc nếu click đúp thì mới xóa? 
+      // Ở đây mình sẽ quy định: nhấn vào tim là mở Modal để chỉnh sửa.
+      // Nếu muốn xóa thì sẽ có nút xóa trong Modal hoặc xử lý riêng.
+      // Nhưng để đơn giản: Nhấn tim -> Mở Modal.
+      setSelectedSymbol(symbol);
+      setModalOpen(true);
+    } else {
+      // Nếu chưa có thì mở modal để thêm mới
+      setSelectedSymbol(symbol);
+      setModalOpen(true);
     }
-    return [];
-  });
+  };
 
-  const toggleWishlist = (symbol) => {
-    const newWishlist = wishlist.includes(symbol) ? wishlist.filter((item) => item !== symbol) : [...wishlist, symbol];
+  const handleSaveAlert = async (data) => {
+    try {
+      const res = await watchlistService.addToWatchlist(data);
+      // Cập nhật local state
+      setWishlistData(prev => {
+        const exists = prev.find(item => item.symbol === data.symbol);
+        if (exists) {
+          return prev.map(item => item.symbol === data.symbol ? res.data.data : item);
+        }
+        return [...prev, res.data.data];
+      });
+      setModalOpen(false);
+      toast.success(`Đã cập nhật theo dõi ${data.symbol}`);
+    } catch (err) {
+      toast.error('Có lỗi xảy ra khi lưu');
+    }
+  };
 
-    setWishlist(newWishlist);
-    localStorage.setItem('stock_wishlist', JSON.stringify(newWishlist));
+  const handleRemove = async (symbol) => {
+    try {
+      await watchlistService.removeFromWatchlist(symbol);
+      setWishlistData(prev => prev.filter(item => item.symbol !== symbol));
+      setModalOpen(false);
+      toast.success(`Đã bỏ theo dõi ${symbol}`);
+    } catch (err) {
+      toast.error('Lỗi khi xóa');
+    }
   };
 
   const filteredStocks = useMemo(() => {
@@ -282,6 +334,14 @@ export default function StockBoard() {
           </tbody>
         </table>
       </div>
+      <WatchlistModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        symbol={selectedSymbol}
+        initialData={wishlistData.find((item) => item.symbol === selectedSymbol)}
+        onSave={handleSaveAlert}
+        onRemove={handleRemove}
+      />
     </div>
   );
 }

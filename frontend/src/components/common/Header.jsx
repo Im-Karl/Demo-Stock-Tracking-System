@@ -20,7 +20,7 @@ export default function Header() {
   const [user, setUser] = useState(getUserFromStorage);
 
   return (
-    <header className="sticky top-0 z-50 bg-white dark:bg-grey-900 shadow-md">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-grey-900/70 border-b border-white/20 dark:border-white/5 shadow-sm">
       <div className="relative px-4 h-16 flex items-center">
         <a href="/" className="flex items-center gap-2">
           {/* 1. Mobile */}
