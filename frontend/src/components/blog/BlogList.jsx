@@ -81,7 +81,7 @@ export default function BlogList({
             {initialKeyword ? `Không tìm thấy bài viết nào chứa từ khóa "${initialKeyword}"` : 'Chưa có bài viết nào.'}
           </p>
           {!initialKeyword && (
-            <Button render={<a href="/blog/create" />} intent="primary" className="mt-6">
+            <Button render={<a href="/blog/create" />} intent="primary" className="mt-6 w-max mx-auto">
               Viết bài đầu tiên
             </Button>
           )}
