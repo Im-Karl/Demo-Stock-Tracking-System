@@ -1,10 +1,28 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function StockNewsClient({ symbol, hasVideo }) {
   const [news, setNews] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [predictionFailed, setPredictionFailed] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (window.predictionFailed !== undefined) {
+        setPredictionFailed(window.predictionFailed);
+      }
+
+      const handleStatusChange = (e) => {
+        setPredictionFailed(e.detail.isError);
+      };
+
+      window.addEventListener('prediction-status-changed', handleStatusChange);
+      return () => {
+        window.removeEventListener('prediction-status-changed', handleStatusChange);
+      };
+    }
+  }, []);
 
   const loadMoreRef = useRef(null);
 
@@ -61,7 +79,13 @@ export default function StockNewsClient({ symbol, hasVideo }) {
   return (
     <div
       className={`space-y-4 [&_h4]:font-sans! ${
-        hasVideo ? 'lg:max-h-[350px] lg:overflow-y-auto' : 'lg:max-h-[700px] lg:overflow-y-auto'
+        predictionFailed
+          ? hasVideo
+            ? 'lg:max-h-[350px] lg:overflow-y-auto'
+            : 'lg:max-h-[590px] lg:overflow-y-auto'
+          : hasVideo
+            ? 'lg:max-h-[470px] lg:overflow-y-auto'
+            : 'lg:max-h-[710px] lg:overflow-y-auto'
       }`}
     >
       {news.map((item, i) => (

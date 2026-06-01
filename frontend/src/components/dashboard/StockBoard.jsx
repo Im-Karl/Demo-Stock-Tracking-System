@@ -9,6 +9,7 @@ import {
   RiSearchLine,
   RiVipDiamondFill,
   RiMedalFill,
+  RiNotification3Fill,
 } from 'react-icons/ri';
 import { useStockSocket } from '../../hooks/useStockSocket';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,19 +49,23 @@ export default function StockBoard() {
     fetchWatchlist();
   }, []);
 
-  const toggleWishlist = async (symbol) => {
-    const existing = wishlistData.find(item => item.symbol === symbol);
-    if (existing) {
-      // Nếu đã có thì mở modal để chỉnh sửa, hoặc nếu click đúp thì mới xóa? 
-      // Ở đây mình sẽ quy định: nhấn vào tim là mở Modal để chỉnh sửa.
-      // Nếu muốn xóa thì sẽ có nút xóa trong Modal hoặc xử lý riêng.
-      // Nhưng để đơn giản: Nhấn tim -> Mở Modal.
-      setSelectedSymbol(symbol);
-      setModalOpen(true);
+  const handleToggleFavourite = async (symbol, isWishlisted) => {
+    if (isWishlisted) {
+      await handleRemove(symbol);
     } else {
-      // Nếu chưa có thì mở modal để thêm mới
-      setSelectedSymbol(symbol);
-      setModalOpen(true);
+      try {
+        const res = await watchlistService.addToWatchlist({ symbol });
+        setWishlistData(prev => {
+          const exists = prev.find(item => item.symbol === symbol);
+          if (exists) {
+            return prev.map(item => item.symbol === symbol ? res.data.data : item);
+          }
+          return [...prev, res.data.data];
+        });
+        toast.success(`Đã thêm ${symbol} vào yêu thích`);
+      } catch (err) {
+        toast.error('Có lỗi xảy ra khi lưu');
+      }
     }
   };
 
@@ -237,7 +242,7 @@ export default function StockBoard() {
               <th className="px-6 text-center">Xu hướng</th>
               <th className="px-6 text-right">Khối lượng</th>
               <th className="px-6 text-center">Trạng thái</th>
-              <th className="px-6 text-center rounded-r-sm">Yêu thích</th>
+              <th className="px-6 text-center rounded-r-sm">Hành động</th>
             </tr>
           </thead>
 
@@ -318,14 +323,27 @@ export default function StockBoard() {
                       </div>
                     </td>
 
-                    <td className="px-6 py-4 text-center">
-                      <motion.button
-                        whileTap={{ scale: 0.8 }}
-                        onClick={() => toggleWishlist(stock.symbol)}
-                        className={`p-2 rounded-full cursor-pointer transition-colors outline-none focus-visible:ring-2 ring-primary-500 ${isWishlisted ? 'text-pink-500 hover:bg-pink-50 dark:hover:bg-pink-500/10' : 'text-grey-400 hover:text-pink-500 hover:bg-grey-100 dark:hover:bg-grey-800'}`}
-                      >
-                        <RiHeartFill size={18} />
-                      </motion.button>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-4">
+                        <motion.button
+                          whileTap={{ scale: 0.8 }}
+                          onClick={() => {
+                            setSelectedSymbol(stock.symbol);
+                            setModalOpen(true);
+                          }}
+                          className="cursor-pointer transition-colors outline-none text-grey-400 hover:text-primary-500"
+                        >
+                          <RiNotification3Fill size={18} />
+                        </motion.button>
+
+                        <motion.button
+                          whileTap={{ scale: 0.8 }}
+                          onClick={() => handleToggleFavourite(stock.symbol, isWishlisted)}
+                          className={`cursor-pointer transition-colors outline-none ${isWishlisted ? 'text-pink-500' : 'text-grey-400 hover:text-pink-500'}`}
+                        >
+                          <RiHeartFill size={18} />
+                        </motion.button>
+                      </div>
                     </td>
                   </motion.tr>
                 );

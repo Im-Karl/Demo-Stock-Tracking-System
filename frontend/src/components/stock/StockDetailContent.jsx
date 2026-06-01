@@ -1,12 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useStockSocket } from '../../hooks/useStockSocket';
 import { RiPulseFill, RiStackFill, RiDatabase2Fill, RiSparklingFill, RiErrorWarningFill } from 'react-icons/ri';
 import { motion } from 'framer-motion';
-import { Area, CartesianGrid, ComposedChart, Line, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, CartesianGrid, ComposedChart, Line, Tooltip, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';
 import GlassCard from '../base-ui/GlassCard';
 import Button from '../base-ui/Button';
+import InvestmentSuggestionBubble from './InvestmentSuggestionBubble';
 
 const DigitTicker = ({ value }) => {
   const characters = String(value).split('');
@@ -38,13 +39,16 @@ const DigitTicker = ({ value }) => {
   );
 };
 
-const formatUSD = (val) =>
-  new Intl.NumberFormat('en-US', {
+const PRICE_SCALE_FACTOR = 1000; // Quy đổi đơn vị nghìn đồng sang đồng
+
+const formatVND = (val) => {
+  if (val === undefined || val === null) return '';
+  return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'VND',
     minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
   }).format(val);
+};
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -64,8 +68,8 @@ const CustomTooltip = ({ active, payload, label }) => {
               </div>
               <span className="text-[11px] font-mono font-black text-grey-900 dark:text-white">
                 {Array.isArray(entry.value)
-                  ? `${formatUSD(entry.value[0])} - ${formatUSD(entry.value[1])}`
-                  : formatUSD(entry.value)}
+                  ? `${formatVND(entry.value[0])} - ${formatVND(entry.value[1])}`
+                  : formatVND(entry.value)}
               </span>
             </div>
           ))}
@@ -105,73 +109,77 @@ const PredictionsGraph = ({ forecast }) => {
   }, [forecast]);
 
   return (
-    <div className="w-full h-[400px]">
-      <ComposedChart
-        style={{ width: '100%', height: '100%' }}
-        data={processedData}
-        margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-grey-600)" />
-        <XAxis
-          dataKey="date"
-          tickFormatter={(date) => dayjs(date).format('DD/MM')}
-          axisLine={false}
-          tickLine={false}
-          tick={{ fontSize: 10, fill: 'var(--color-grey-400)', fontWeight: 600 }}
-          minTickGap={30}
-        />
-        <YAxis
-          axisLine={false}
-          tickLine={false}
-          tick={{ fontSize: 10, fill: 'var(--color-grey-400)', fontWeight: 600 }}
-          tickFormatter={formatUSD}
-          domain={['auto', 'auto']}
-        />
-        <Tooltip content={<CustomTooltip />} />
-        <Area
-          name="Khoảng tin cậy (90%)"
-          isAnimationActive={false}
-          dataKey="bands"
-          stroke="none"
-          fill="var(--color-emerald-500)"
-          fillOpacity={0.1}
-          connectNulls
-          legendType="none"
-        />
-        {/* Bridge Line */}
-        <Line
-          name="Chuyển tiếp"
-          isAnimationActive={false}
-          dataKey="connection"
-          stroke="var(--color-emerald-500)"
-          strokeWidth={2}
-          strokeDasharray="4 4"
-          dot={false}
-          activeDot={false}
-          legendType="none"
-          tooltipType="none"
-          connectNulls
-        />
-        <Line
-          name="Giá thực tế"
-          isAnimationActive={false}
-          dataKey="exact"
-          stroke="var(--color-primary-600)"
-          strokeWidth={2}
-          dot={true}
-          activeDot={{ r: 6, strokeWidth: 0 }}
-          connectNulls
-        />
-        <Line
-          name="AI Dự báo"
-          isAnimationActive={false}
-          dataKey="estimated"
-          stroke="var(--color-emerald-500)"
-          strokeWidth={2}
-          dot={true}
-          connectNulls
-        />
-      </ComposedChart>
+    <div className="w-full h-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposedChart
+          data={processedData}
+          margin={{ top: 10, right: 24, left: 8, bottom: 0 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-grey-600)" />
+          <XAxis
+            dataKey="date"
+            tickFormatter={(date) => dayjs(date).format('DD/MM')}
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 10, fill: 'var(--color-grey-400)', fontWeight: 600 }}
+            minTickGap={30}
+            padding={{ left: 8, right: 8 }}
+            height={20}
+          />
+          <YAxis
+            width={56}
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 10, fill: 'var(--color-grey-400)', fontWeight: 600 }}
+            tickFormatter={formatVND}
+            domain={['auto', 'auto']}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Area
+            name="Khoảng tin cậy (90%)"
+            isAnimationActive={false}
+            dataKey="bands"
+            stroke="none"
+            fill="var(--color-emerald-500)"
+            fillOpacity={0.1}
+            connectNulls
+            legendType="none"
+          />
+          {/* Bridge Line */}
+          <Line
+            name="Chuyển tiếp"
+            isAnimationActive={false}
+            dataKey="connection"
+            stroke="var(--color-emerald-500)"
+            strokeWidth={2}
+            strokeDasharray="4 4"
+            dot={false}
+            activeDot={false}
+            legendType="none"
+            tooltipType="none"
+            connectNulls
+          />
+          <Line
+            name="Giá thực tế"
+            isAnimationActive={false}
+            dataKey="exact"
+            stroke="var(--color-primary-600)"
+            strokeWidth={2}
+            dot={true}
+            activeDot={{ r: 6, strokeWidth: 0 }}
+            connectNulls
+          />
+          <Line
+            name="AI Dự báo"
+            isAnimationActive={false}
+            dataKey="estimated"
+            stroke="var(--color-emerald-500)"
+            strokeWidth={2}
+            dot={true}
+            connectNulls
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
     </div>
   );
 };
@@ -243,6 +251,31 @@ export default function StockDetailContent({ symbol }) {
       return res.json();
     },
   });
+
+  const convertedForecast = useMemo(() => {
+    if (!forecast) return null;
+
+    return {
+      ...forecast,
+      history: (forecast.history || []).map((p) => ({
+        ...p,
+        close: p.close * PRICE_SCALE_FACTOR,
+      })),
+      predictions: (forecast.predictions || []).map((p) => ({
+        ...p,
+        quantiles: {
+          '0.1': p.quantiles['0.1'] * PRICE_SCALE_FACTOR,
+          '0.5': p.quantiles['0.5'] * PRICE_SCALE_FACTOR,
+          '0.9': p.quantiles['0.9'] * PRICE_SCALE_FACTOR,
+        },
+      })),
+    };
+  }, [forecast]);
+
+  useEffect(() => {
+    window.predictionFailed = isError;
+    window.dispatchEvent(new CustomEvent('prediction-status-changed', { detail: { isError } }));
+  }, [isError]);
 
   if (!stockData) {
     return <LoadingState message="Đang đồng bộ thị trường..." className="h-[400px]" />;
@@ -322,27 +355,32 @@ export default function StockDetailContent({ symbol }) {
 
       {/* CHART SECTION */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-grey-200 dark:border-grey-800 pb-3">
-          <h3 className="font-bold text-lg text-grey-800 dark:text-grey-200 uppercase tracking-tight">
-            Biểu đồ dự đoán AI
-          </h3>
-          <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
-            <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-primary-500"></div>
-              <span className="text-grey-500">Thực tế</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-              <span className="text-grey-500">Dự đoán</span>
+        {!isError && (
+          <InvestmentSuggestionBubble stockData={stockData} forecast={convertedForecast} isLoading={isLoading} />
+        )}
+
+        <GlassCard padding="none" className="relative overflow-hidden">
+          {/* Card Header inside the card containing title & legends */}
+          <div className="flex items-center justify-between border-b border-grey-200 dark:border-grey-800 px-6 py-4">
+            <h4 className="font-bold text-xs text-grey-800 dark:text-grey-200 uppercase tracking-tight">
+              Biểu đồ dự đoán AI
+            </h4>
+            <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-primary-500"></div>
+                <span className="text-grey-500 dark:text-grey-400">Thực tế</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                <span className="text-grey-500 dark:text-grey-400">Dự đoán</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <GlassCard>
           {isLoading ? (
-            <LoadingState message="AI đang tính toán..." className="h-[400px]" />
+            <LoadingState message="AI đang tính toán..." className="h-[360px]" />
           ) : isError ? (
-            <div className="h-[400px] flex flex-col items-center justify-center gap-4 text-center p-8 animate-in fade-in duration-500">
+            <div className="h-[360px] flex flex-col items-center justify-center gap-4 text-center p-8 animate-in fade-in duration-500">
               <div className="w-12 h-12 rounded-sm bg-red-100 dark:bg-red-900/50 flex items-center justify-center text-grey-800 dark:text-grey-300">
                 <RiErrorWarningFill size={28} />
               </div>
@@ -357,7 +395,9 @@ export default function StockDetailContent({ symbol }) {
               <Button onClick={() => refetch()}>Thử lại</Button>
             </div>
           ) : (
-            <PredictionsGraph forecast={forecast} />
+            <div className="relative w-full h-[360px] pb-4 pt-2 px-0">
+              <PredictionsGraph forecast={convertedForecast} />
+            </div>
           )}
         </GlassCard>
       </div>
