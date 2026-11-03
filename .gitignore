@@ -1,3 +1,16 @@
-**/node_modules
 
-**/.env
+# --- bổ sung: không commit secret & dữ liệu sinh ra ---
+.env
+.env.*
+!.env.example
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+backend/data/
+backend/services/crawler/Scraping/*.db
+node_modules/
+dist/
+build/
+.astro/
+.DS_Store
